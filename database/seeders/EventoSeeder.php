@@ -27,6 +27,7 @@ class EventoSeeder extends Seeder
             $modelo->fecha_hora_fin = $item['fecha_hora_fin'];
             $modelo->descripcion = $item['descripcion'];
             $modelo->imagen = $item['imagen'];
+            $modelo->tipo = $item['tipo'];
             $modelo->location = $item['location'];
             $modelo->latitud = $item['latitud'];
             $modelo->longitud = $item['longitud'];
