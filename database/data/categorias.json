@@ -1,0 +1,58 @@
+[
+    {    
+        "id": 1,    
+        "categoria": "Deportes"  
+    },  
+    {    
+        "id": 2,    
+        "categoria": "Comida y bebida"  
+    },  
+    {    
+        "id": 3,    
+        "categoria": "Arte y cultura"  
+    },  
+    {    
+        "id": 4,    
+        "categoria": "Entretenimiento"  
+    },  
+    {    
+        "id": 5,    
+        "categoria": "Música y conciertos"  
+    },  
+    {    
+        "id": 6,    
+        "categoria": "Tecnología y ciencia"  
+    },  
+    {    
+        "id": 7,    
+        "categoria": "Educación"  
+    },  
+    {    
+        "id": 8,    
+        "categoria": "Negocios"  
+    },  
+    {    
+        "id": 9,    
+        "categoria": "Viajes y turismo"  
+    },  
+    {    
+        "id": 10,    
+        "categoria": "Salud y bienestar"  
+    },
+    {
+        "id": 11,
+        "categoria": "Ocio y amigos"
+    },
+    {
+        "id": 12,
+        "categoria": "Juegos de mesa"
+    },
+    {
+        "id": 13,
+        "categoria": "Aire libre"
+    },
+    {
+        "id": 14,
+        "categoria": "Compras"
+    }
+]

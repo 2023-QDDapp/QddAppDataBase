@@ -1,0 +1,152 @@
+[
+    {
+        "id": 1,
+        "user_id": 8,
+        "evento_id": 2,
+        "comentario": "¿Dónde es el evento?"
+    },
+    {
+        "id": 2,
+        "user_id": 10,
+        "evento_id": 8,
+        "comentario": "¿Hay que llevar algo?"
+    },
+    {
+        "id": 3,
+        "user_id": 2,
+        "evento_id": 4,
+        "comentario": "¿Dónde nos vemos?"
+    },
+    {
+        "id": 4,
+        "user_id": 12,
+        "evento_id": 1,
+        "comentario": "Yo llegaré un poco tarde."
+    },
+    {
+        "id": 5,
+        "user_id": 16,
+        "evento_id": 6,
+        "comentario": "No sé exactamente dónde es el sitio."
+    },
+    {
+        "id": 6,
+        "user_id": 3,
+        "evento_id": 8,
+        "comentario": "Yo conozco bien la zona."
+    },
+    {
+        "id": 7,
+        "user_id": 15,
+        "evento_id": 12,
+        "comentario": "Es un buen lugar. He estado un par de veces."
+    },
+    {
+        "id": 8,
+        "user_id": 5,
+        "evento_id": 2,
+        "comentario": "¡Nos vemos en un rato!"
+    },
+    {
+        "id": 9,
+        "user_id": 20,
+        "evento_id": 7,
+        "comentario": "¡Hola a todos!"
+    },
+    {
+        "id": 10,
+        "user_id": 1,
+        "evento_id": 11,
+        "comentario": "Nunca he ido por allí, será una nueva experiencia."
+    },
+    {
+        "id": 11,
+        "user_id": 7,
+        "evento_id": 3,
+        "comentario": "Vivo cerca de ese sitio."
+    },
+    {
+        "id": 12,
+        "user_id": 18,
+        "evento_id": 14,
+        "comentario": "¿Quién lleva el balón?"
+    },
+    {
+        "id": 13,
+        "user_id": 13,
+        "evento_id": 2,
+        "comentario": "¿Llevamos comida?"
+    },
+    {
+        "id": 14,
+        "user_id": 4,
+        "evento_id": 9,
+        "comentario": "Hay comida y bebida para todos."
+    },
+    {
+        "id": 15,
+        "user_id": 6,
+        "evento_id": 12,
+        "comentario": "El sitio es maravilloso."
+    },
+    {
+        "id": 16,
+        "user_id": 19,
+        "evento_id": 7,
+        "comentario": "Esta actividad es uno de mis hobbies favoritos."
+    },
+    {
+        "id": 17,
+        "user_id": 11,
+        "evento_id": 6,
+        "comentario": "¡Me encanta disfrutar de esto con amigos!"
+    },
+    {
+        "id": 18,
+        "user_id": 9,
+        "evento_id": 4,
+        "comentario": "No conocía mucha gente interesada en esto."
+    },
+    {
+        "id": 19,
+        "user_id": 14,
+        "evento_id": 8,
+        "comentario": "¿Viene más gente?"
+    },
+    {
+        "id": 20,
+        "user_id": 17,
+        "evento_id": 10,
+        "comentario": "¡Hace un día estupendo para esto!"
+    },
+    {
+        "id": 21,
+        "user_id": 3,
+        "evento_id": 7,
+        "comentario": "Tenía ganas de conocer gente con estos gustos."
+    },
+    {
+        "id": 22,
+        "user_id": 15,
+        "evento_id": 2,
+        "comentario": "Vivo al lado del lugar, seré el primero en llegar."
+    },
+    {
+        "id": 23,
+        "user_id": 8,
+        "evento_id": 12,
+        "comentario": "De acuerdo, allí nos vemos."
+    },
+    {
+        "id": 24,
+        "user_id": 10,
+        "evento_id": 5,
+        "comentario": "¡Nos lo vamos a pasar genial!"
+    },
+    {
+        "id": 25,
+        "user_id": 13,
+        "evento_id": 1,
+        "comentario": "¿Sobre qué hora terminará el evento?"
+    }
+]

@@ -1,0 +1,106 @@
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0em 0.1em !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: none !important ;
+    color: black!important;
+}
+
+nav {
+    -webkit-box-shadow: 0 4px 6px -6px #6bc7dd;
+    -moz-box-shadow: 0 4px 6px -6px #6bc7dd;
+    box-shadow: 0 4px 6px -6px #6bc7dd;
+}
+
+.access_button{
+    border-color: #6bc7dd;
+    color: #6bc7dd;
+    background-color: none;
+}
+
+.access_button:hover{
+    border-color: #6bc7dd;
+    color: #FFFFFF;
+    background-color: #6bc7dd;
+}
+
+thead{
+    background-color: #6bc7dd;
+    color: #FFFFFF;
+}
+
+.page-item.active .page-link {
+    background-color: #6bc7dd;
+    border-color: #6bc7dd;
+}
+
+.page-link, .page-link:hover{
+    color: #6bc7dd;
+}
+
+.pagination > li:hover{
+    border-color: #FFFFFF !important;
+}
+
+.actions > p {
+    margin-bottom: 2px !important;
+}
+
+.my-custom-alert {
+    border-radius: 0.5em;
+    position: absolute;
+    width: 35em;
+    background-color: #ffffff;
+    z-index: 1;
+}
+
+.my-custom-alert .option-cancel {
+    color: #ffffff;
+}
+
+.my-custom-alert .option-cancel:hover {
+    text-decoration: none;
+}
+
+.option-disabled{
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.info_field_title {
+    padding-left: 10px;
+    margin-bottom: 1em;
+    -webkit-box-shadow: 0 4px 6px -6px #6bc7dd;
+    -moz-box-shadow: 0 4px 6px -6px #6bc7dd;
+    box-shadow: 0 4px 6px -6px #6bc7dd;
+  
+}
+
+.selects .col-md-1, .selects .col-md-2, .selects .col-md-3, .selects .col-md-4{
+    padding-right: 3px !important;
+    padding-left: 3px !important;
+}
+
+.selects .form-control, .selects .input-group-text {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+
+.table_footer{
+    padding: 5px !important;
+}
+
+.login{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border: none !important;
+}
+
+.login_header{
+    -webkit-box-shadow: 0 4px 6px -6px #6bc7dd;
+    -moz-box-shadow: 0 4px 6px -6px #6bc7dd;
+    box-shadow: 0 4px 6px -6px #6bc7dd;
+    background-color: #FFFFFF !important;
+    border: none !important;
+}

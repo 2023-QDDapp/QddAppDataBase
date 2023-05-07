@@ -1,0 +1,152 @@
+[
+    {
+        "id": 1,
+        "id_usuario_bloqueador": 5,
+        "id_usuario_bloqueado": 7
+    },
+    {
+        "id": 2,
+        "id_usuario_bloqueador": 7,
+        "id_usuario_bloqueado": 9
+    },
+    {
+        "id": 3,
+        "id_usuario_bloqueador": 12,
+        "id_usuario_bloqueado": 3
+    },
+    {
+        "id": 4,
+        "id_usuario_bloqueador": 17,
+        "id_usuario_bloqueado": 2
+    },
+    {
+        "id": 5,
+        "id_usuario_bloqueador": 8,
+        "id_usuario_bloqueado": 19
+    },
+    {
+        "id": 6,
+        "id_usuario_bloqueador": 4,
+        "id_usuario_bloqueado": 11
+    },
+    {
+        "id": 7,
+        "id_usuario_bloqueador": 13,
+        "id_usuario_bloqueado": 18
+    },
+    {
+        "id": 8,
+        "id_usuario_bloqueador": 6,
+        "id_usuario_bloqueado": 16
+    },
+    {
+        "id": 9,
+        "id_usuario_bloqueador": 20,
+        "id_usuario_bloqueado": 15
+    },
+    {
+        "id": 10,
+        "id_usuario_bloqueador": 1,
+        "id_usuario_bloqueado": 14
+    },
+    {
+        "id": 11,
+        "id_usuario_bloqueador": 1,
+        "id_usuario_bloqueado": 20
+    },
+    {
+        "id": 12,
+        "id_usuario_bloqueador": 4,
+        "id_usuario_bloqueado": 6
+    },
+    {
+        "id": 13,
+        "id_usuario_bloqueador": 7,
+        "id_usuario_bloqueado": 12
+    },
+    {
+        "id": 14,
+        "id_usuario_bloqueador": 9,
+        "id_usuario_bloqueado": 2
+    },
+    {
+        "id": 15,
+        "id_usuario_bloqueador": 11,
+        "id_usuario_bloqueado": 13
+    },
+    {
+        "id": 16,
+        "id_usuario_bloqueador": 16,
+        "id_usuario_bloqueado": 3
+    },
+    {
+        "id": 17,
+        "id_usuario_bloqueador": 18,
+        "id_usuario_bloqueado": 8
+    },
+    {
+        "id": 18,
+        "id_usuario_bloqueador": 20,
+        "id_usuario_bloqueado": 15
+    },
+    {
+        "id": 19,
+        "id_usuario_bloqueador": 5,
+        "id_usuario_bloqueado": 14
+    },
+    {
+        "id": 20,
+        "id_usuario_bloqueador": 10,
+        "id_usuario_bloqueado": 17
+    },
+    {
+        "id": 21,
+        "id_usuario_bloqueador": 3,
+        "id_usuario_bloqueado": 14
+    },
+    {
+        "id": 22,
+        "id_usuario_bloqueador": 6,
+        "id_usuario_bloqueado": 18
+    },
+    {
+        "id": 23,
+        "id_usuario_bloqueador": 12,
+        "id_usuario_bloqueado": 20
+    },
+    {
+        "id": 24,
+        "id_usuario_bloqueador": 8,
+        "id_usuario_bloqueado": 10
+    },
+    {
+        "id": 25,
+        "id_usuario_bloqueador": 1,
+        "id_usuario_bloqueado": 16
+    },
+    {
+        "id": 26,
+        "id_usuario_bloqueador": 5,
+        "id_usuario_bloqueado": 9
+    },
+    {
+        "id": 27,
+        "id_usuario_bloqueador": 4,
+        "id_usuario_bloqueado": 7
+    },
+    {
+        "id": 28,
+        "id_usuario_bloqueador": 11,
+        "id_usuario_bloqueado": 15
+    },
+    {
+        "id": 29,
+        "id_usuario_bloqueador": 19,
+        "id_usuario_bloqueado": 2
+    },
+    {
+        "id": 30,
+        "id_usuario_bloqueador": 13,
+        "id_usuario_bloqueado": 17
+    }
+]
