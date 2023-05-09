@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             $modelo->nombre = $item['nombre'];
             $modelo->telefono = $item['telefono'];
             $modelo->email = $item['email'];
-            $modelo->contrasena = $item['contrasena'];
+            $modelo->password = $item['password'];
             $modelo->fecha_nacimiento = $item['fecha_nacimiento'];
             $modelo->biografia = $item['biografia'];
             $modelo->foto = $item['foto'];

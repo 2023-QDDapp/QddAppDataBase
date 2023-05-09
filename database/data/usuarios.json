@@ -4,7 +4,7 @@
         "nombre": "Álvaro Garvín Guerrero",
         "telefono": "644977970",
         "email": "alvaro.garvin@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "1988-12-08 15:30:00",
         "biografia": "Soy un chico simpatico que le gusta hacer amigos",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11c3c22425531189b0bfb571fe9acd16.jpg"
@@ -15,7 +15,7 @@
         "nombre": "Paco Fernandez Gutierrez",
         "telefono": "683748001",
         "email": "paco.fernandez@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Me gusta hacer barbacoas y comer con la familia",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen6195f8528b1f70c63b3f95c603e39475.jpg"
@@ -25,7 +25,7 @@
         "nombre": "María Becerro Sainz",
         "telefono": "645820193",
         "email": "maria.becerro@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Soy una chica que le gusta el deporte y comer",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11429b2978fc4f3a482c16a88cc0efb2.jpg"
@@ -35,7 +35,7 @@
         "nombre": "Julia Simarro Negrillo",
         "telefono": "678234510",
         "email": "julia.simarro@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Soy una chica muy religiosa y le gusta salir a meditar",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11a55ac509dc870bd7c4548b742ebf05.jpg"
@@ -45,7 +45,7 @@
         "nombre": "Jose Antonio Guzman Rodrigez",
         "telefono": "690347183",
         "email": "jose.guzamn@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Soy un chico simpatico que le gusta la ciencia y las matematicas",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen1169e10816dabf82362e173f8d551fc1.jpg"
@@ -55,7 +55,7 @@
         "nombre": "Sofia Martinez Millán",
         "telefono": "635846920",
         "email": "sofia.martinez@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Me gustan hacer deporte, salir de fiesta y comer con la familia",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11295dea0888012064e4ce5e88b0d99d.jpg"
@@ -65,7 +65,7 @@
         "nombre": "Jose Alcazar Fernandez",
         "telefono": "625483479",
         "email": "jose.alcazar@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Soy un tipo familiar",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen1129bee4912d3018b36fe47777205f6a.jpg"
@@ -75,7 +75,7 @@
         "nombre": "Lucia Garcia Sanchez",
         "telefono": "639386168",
         "email": "lucia.garcia@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Me gustan conocer gente y tener una noche loca",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen0ba821512d6813383837754889b43ccc.jpg"
@@ -85,7 +85,7 @@
         "nombre": "Ongombo Sa'Huid Gualg",
         "telefono": "636834103",
         "email": "ongombo.gualg@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Me gusta irme de cervezas con mis amigos",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen119853af72aaacf06aebd4ac7912f307.jpg"
@@ -95,7 +95,7 @@
         "nombre": "Javier Romera Ruiz",
         "telefono": "627927245",
         "email": "javier.romera@escuelaestech.es",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Me gusta irme de cervezas con mis amigos",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11a1a68c331386a31a9f76c7936267a5.jpg"
@@ -105,7 +105,7 @@
         "nombre": "Juan Perez",
         "telefono": "123456789",
         "email": "juanperez@example.com",
-        "contrasena": "secret123",
+        "password": "secret123",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Estudiante de ingeniería",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen117721de015f405a441e7679cfdad0bd.jpg"
@@ -115,7 +115,7 @@
         "nombre": "Maria Garcia",
         "telefono": "987654321",
         "email": "mariagarcia@example.com",
-        "contrasena": "password123",
+        "password": "password123",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Programadora",
         "foto": "https://this-person-does-not-exist.com/img/avatar-genc7641f763fe807f76b9d38eeac0f0b09.jpg"
@@ -125,7 +125,7 @@
         "nombre": "Luisa Martinez",
         "telefono": "698125609",
         "email": "luisamartinez@example.com",
-        "contrasena": "12345678",
+        "password": "12345678",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Diseñadora gráfica",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen119b6735ec32ae5b9267ba275ff78e29.jpg"
@@ -135,7 +135,7 @@
         "nombre": "Pedro Sanchez",
         "telefono": "612095478",
         "email": "pedrosanchez@example.com",
-        "contrasena": "p@ssw0rd",
+        "password": "p@ssw0rd",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Analista de sistemas",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen409d60a579e914c12a4a1d345f474726.jpg"
@@ -145,7 +145,7 @@
         "nombre": "Ana Torres",
         "telefono": "690440032",
         "email": "anatorres@example.com",
-        "contrasena": "mysecret",
+        "password": "mysecret",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Desarrolladora web",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11a311f3b40db0518a45f23d4b957e35.jpg"
@@ -155,7 +155,7 @@
         "nombre": "Carlos Gomez",
         "telefono": "677210988",
         "email": "carlosgomez@example.com",
-        "contrasena": "qwerty",
+        "password": "qwerty",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Estudiante de medicina",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen21958154ac2d8a8206d4fa487da9e5bf.jpg"
@@ -165,7 +165,7 @@
         "nombre": "Sofia Rodriguez",
         "telefono": "657320911",
         "email": "sofiarodriguez@example.com",
-        "contrasena": "letmein",
+        "password": "letmein",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Ingeniera química",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen1756af047f42d12da0ec84563e769fc1.jpg"
@@ -175,7 +175,7 @@
         "nombre": "Jorge Ramirez",
         "telefono": "654098765",
         "email": "jorgeramirez@example.com",
-        "contrasena": "changeme",
+        "password": "changeme",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Arquitecto",
         "foto": "https://this-person-does-not-exist.com/img/avatar-genb1010a375876df8e4ecf6b603e467013.jpg"
@@ -185,7 +185,7 @@
         "nombre": "Monica Medina",
         "telefono": "651234500",
         "email": "monicamedina@example.com",
-        "contrasena": "hello123",
+        "password": "hello123",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Consultora de negocios",
         "foto": "https://this-person-does-not-exist.com/img/avatar-genfa05ceec65a230a6a3e01b2f563386ad.jpg"
@@ -195,7 +195,7 @@
         "nombre": "Fernando Gutierrez",
         "telefono": "672948394",
         "email": "fernandogutierrez@example.com",
-        "contrasena": "password",
+        "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Consultor de negocios",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen115bce7ad4d951629a65a5ed0ebdf6df.jpg"

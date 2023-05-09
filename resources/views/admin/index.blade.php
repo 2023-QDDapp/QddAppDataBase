@@ -14,7 +14,9 @@
         </div>
     @endif
     <strong>Administradores</strong>
+    @if(auth()->user()->is_super_admin)
     <a href="{{ route('admins.create') }}" class="btn float-right"><i class="fas fa-plus text-success"></i></a>
+    @endif
     <hr>
     <table class="table data-table">
         <thead>
@@ -37,13 +39,15 @@
                     <div class="btn-group" role="group">
                         <a href="{{ route('admins.show', $admin->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
                         <a href="{{ route('admins.edit', $admin->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <form action="{{ route('admins.destroy', $admin->id) }}" method="post">
-                            @csrf
-                            {{ method_field('DELETE') }}
-                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar el administrador #{{ $admin->id}}?')" class="btn">
-                                <i class="fas fa-trash-alt text-danger"></i>
-                            </button>
-                        </form>
+                        @if (auth()->user()->is_super_admin)
+                            <form action="{{ route('admins.destroy', $admin->id) }}" method="post">
+                                @csrf
+                                {{ method_field('DELETE') }}
+                                <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar el administrador #{{ $admin->id}}?')" class="btn">
+                                    <i class="fas fa-trash-alt text-danger"></i>
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </td>
             </tr>

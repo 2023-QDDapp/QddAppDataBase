@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V1\AuthController;
+use App\Http\Controllers\V1\UserControllerApi;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use App\Http\Controllers\V1\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -50,4 +51,28 @@ Route::prefix('v1')->group(function(){
         //Todo lo que haya en este grupo requiere autenticación de usuario
         Route::post('logout', [AuthController::class, 'logout']);
     });
+});*/
+
+
+
+Route::post('/loginApi', 'App\Http\Controllers\AuthController@login');
+
+Route::middleware('jwt.auth')->group(function () {
+
+    
+    // Usuarios
+    Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario*
+    Route::post('/users', 'App\Http\Controllers\V1\UserControllerApi@store'); // Crea un nuevo usuario
+    Route::delete('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@destroy'); // Elimina un usuario
+    Route::post('/users/categoria', 'App\Http\Controllers\V1\UserControllerApi@categorias'); // Añade una categoría a un usuario
+
+    // Eventos
+    Route::get('/eventos', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
+    Route::get('/eventos/categorias/{id}', 'App\Http\Controllers\V1\EventoControllerApi@eventosPorCategoria'); // Muestra los eventos de una categoría
+    Route::get('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
+    Route::post('/eventos', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
+    Route::delete('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
+    
 });
+
+Route::middleware('jwt.refresh')->get('/token/refresh', [UserControllerApi::class, 'refresh']);

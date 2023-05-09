@@ -6,14 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'users';
+
     protected $fillable = [
-        'nombre', 'telefono', 'email', 'contrasena', 'fecha_nacimiento', 'biografia', 'foto'
+        'nombre', 'telefono', 'email', 'password', 'fecha_nacimiento', 'biografia', 'foto'
     ];
 
     public function categorias() {
@@ -58,5 +61,10 @@ class User extends Authenticatable implements JWTSubject
     public function getAgeFromDate()
     {
         return Carbon::parse($this->fecha_nacimiento)->age;
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 }

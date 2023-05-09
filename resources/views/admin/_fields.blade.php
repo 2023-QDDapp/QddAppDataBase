@@ -26,6 +26,16 @@
         </div>
     </div>
 
+    @if(auth()->user()->is_super_admin)
+    <div class="row mb-3">
+        <label for="is_super_admin" class="col-md-4 col-form-label text-md-end">Super Administrador</label>
+        <div class="col-md-6">
+            <input type="checkbox" class="form-check-input" name="is_super_admin" id="is_super_admin" value="1" @if(isset($admin) && $admin->is_super_admin) checked @endif>
+            <label class="form-check-label" for="is_super_admin">Sí</label>
+        </div>
+    </div>
+    @endif
+
     <div class="row mb-3">
         <label for="password" class="col-md-4 col-form-label text-md-end">Contraseña</label>
     

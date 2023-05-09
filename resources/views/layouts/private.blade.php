@@ -47,7 +47,7 @@
                 <a class="navbar-brand" href="{{ url('/home') }}"><img src="{{ asset('img/logo.png') }}" alt="QddApp"></a>
             </div>
             <div class="list-group list-group-flush">
-                <!-- CONTROL DE USUARIO POR ROL -->
+               
                 
                 <a href="{{ route('admins.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-users-cog"></i> {{ __('Administradores') }}</a>
                 <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-users"></i> {{ __('Usuarios') }}</a>

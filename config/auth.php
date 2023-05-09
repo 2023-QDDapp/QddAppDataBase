@@ -39,10 +39,12 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'admins',
+            'model' => App\Models\Admin::class,
         ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
+            'model' => App\Models\User::class,
         ],
         
     ],

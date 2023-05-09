@@ -45,7 +45,7 @@ class UserControllerApi extends Controller
         $user->fecha_nacimiento = $request->fecha_nacimiento;
         $user->biografia = $request->biografia;
         $user->foto = $request->foto;
-        $user->tipo = $request->tipo;
+
         $user->save();
 
         return response()->json([

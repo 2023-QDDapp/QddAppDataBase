@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -14,8 +15,11 @@ class AdminController extends Controller
      */
     public function index()
     {
-
-        $admins['admins'] = Admin::all();
+        if(Auth::user()->is_super_admin) {
+            $admins['admins'] = Admin::all();
+        } else {
+            $admins['admins'] = Admin::where('id', Auth::id())->get();
+        }
 
         return view('admin.index', $admins);
     }
@@ -47,6 +51,7 @@ class AdminController extends Controller
         $admin = new Admin();
         $admin->name = $validatedData['name'];
         $admin->email = $validatedData['email'];
+        $admin->is_super_admin = $request->input('is_super_admin') ? true : false; // Agregar esta línea
         
         
         $admin->password = bcrypt($validatedData['password']);
@@ -91,6 +96,7 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$admin->id],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            
         ]);
 
         // Actualizamos los datos del usuario
@@ -100,6 +106,10 @@ class AdminController extends Controller
         // Si el usuario proporcionó una nueva contraseña, la actualizamos
         if (!empty($data['password'])) {
             $admin->password = bcrypt($data['password']);
+        }
+
+        if (array_key_exists('is_super_admin', $validatedData)) {
+            $admin->is_super_admin = $validatedData['is_super_admin'] ? true : false;
         }
         
         $admin->save();
