@@ -63,20 +63,9 @@ class UserControllerApi extends Controller
     public function show($id)
     {
         $user = User::select('id', 'nombre', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'foto', 'biografia')
-            ->where('id', $id)
-            ->with([
-                'categorias' => function ($query) {
-                    $query->join('categoria_users', 'categorias.id', '=', 'categoria_users.categoria_id')
-                        ->select('categorias.id', 'categorias.categoria', 'categoria_users.user_id');
-                },
-                'resenas' => function ($query) {
-                    $query->select('resenas.id', 'resenas.mensaje', 'resena_users.user_id')
-                        ->join('resena_users', 'resenas.id', '=', 'resena_users.resena_id');
-                },                
-            ])
-            ->get();
-
-        return response()->json([
+				->with('categorias')->find($id);
+		
+		return response()->json([
             'usuario' => $user
         ]);
     }
