@@ -53,7 +53,7 @@ Route::prefix('v1')->group(function(){
     });
 });*/
 
-
+// JWT
 
 Route::post('/loginApi', 'App\Http\Controllers\AuthController@login');
 
