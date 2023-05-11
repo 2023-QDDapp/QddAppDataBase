@@ -39,7 +39,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       
+        $validatedData = $this->validateUserData($request);
+
+        $user = new User();
+        $user->nombre = $validatedData['nombre'];
+        $user->telefono = $validatedData['telefono'];
+        $user->email = $validatedData['email'];
+        $user->password = bcrypt($validatedData['password']);
+        $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
+        $user->biografia = $validatedData['biografia'];
+        $user->foto = $validatedData['foto'];
+        $user->save();
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -53,28 +65,15 @@ class UserController extends Controller
         return view('user.show', compact('user'));
     }
 
-    public function showDetails($id)
-    {
-        $datos = DB::table('users')
-            ->join('eventos', 'eventos.user_id', '=', 'users.id')
-            ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'eventos.location', 'categorias.categoria')
-            ->get();
-
-        return response()->json([
-            'datos' => $datos
-        ]);
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return view('user.edit', compact('user'));
     }
 
     /**
@@ -84,9 +83,24 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $validatedData = $this->validateUserData($request, $user->id);
+
+        $user->nombre = $validatedData['nombre'];
+        $user->telefono = $validatedData['telefono'];
+        $user->email = $validatedData['email'];
+        $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
+        $user->biografia = $validatedData['biografia'];
+        $user->foto = $validatedData['foto'];
+
+        if (!empty($validatedData['password'])) {
+            $user->password = bcrypt($validatedData['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'Datos del usuario actualizados correctamente.');
     }
 
     /**
@@ -95,8 +109,31 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'Usuario eliminado.');
+    }
+
+
+    private function validateUserData(Request $request, $userId = null)
+    {
+        $rules = [
+            'nombre' => 'required|string|max:255',
+            'telefono' => 'required|unique:users,telefono',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'nullable|string|min:8|confirmed',
+            'fecha_nacimiento' => 'required|date',
+            'biografia' => 'required|string|max:500',
+            'foto' => 'required|image',
+        ];
+
+        if ($userId) {
+            $rules['telefono'] .= ',' . $userId;
+            $rules['email'] .= ',' . $userId;
+        }
+
+        return $request->validate($rules);
     }
 }

@@ -54,7 +54,7 @@
         <label for="password-confirm" class="col-md-4 col-form-label text-md-end">Confirmar contraseña</label>
     
         <div class="col-md-6">
-            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" @if(!isset($user)) required @endif>
+            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" @if(!isset($admin)) required @endif>
         </div>
     </div>
 

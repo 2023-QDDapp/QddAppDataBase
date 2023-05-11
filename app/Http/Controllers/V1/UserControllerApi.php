@@ -70,20 +70,6 @@ class UserControllerApi extends Controller
         ]);
     }
 
-    public function showEventosUser($id)
-    {
-        $user = DB::table('users')
-            ->join('eventos', 'eventos.user_id', '=', 'users.id')
-            ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
-            ->where('eventos.user_id', $id)
-            ->get();
-
-        return response()->json(
-            $user
-        );
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -108,7 +94,7 @@ class UserControllerApi extends Controller
         $user->nombre = $request->nombre;
         $user->telefono = $request->telefono;
         $user->email = $request->email;
-        $user->password = $request->password->nu;
+        $user->password = $request->password;
         $user->biografia = $request->biografia;
         $user->foto = $request->foto;
 

@@ -42,18 +42,12 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $validatedData = $this->validateAdminData($request);
 
         $admin = new Admin();
         $admin->name = $validatedData['name'];
         $admin->email = $validatedData['email'];
-        $admin->is_super_admin = $request->input('is_super_admin') ? true : false; // Agregar esta línea
-        
-        
+        $admin->is_super_admin = $request->input('is_super_admin') ? true : false;
         $admin->password = bcrypt($validatedData['password']);
         $admin->save();
 
@@ -91,27 +85,19 @@ class AdminController extends Controller
      */
     public function update(Request $request, Admin $admin)
     {
-        // Validamos los datos
-        $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$admin->id],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            
-        ]);
+        $validatedData = $this->validateAdminData($request, $admin->id);
 
-        // Actualizamos los datos del usuario
         $admin->name = $validatedData['name'];
         $admin->email = $validatedData['email'];
-        
-        // Si el usuario proporcionó una nueva contraseña, la actualizamos
-        if (!empty($data['password'])) {
-            $admin->password = bcrypt($data['password']);
+
+        if (!empty($validatedData['password'])) {
+            $admin->password = bcrypt($validatedData['password']);
         }
 
         if (array_key_exists('is_super_admin', $validatedData)) {
             $admin->is_super_admin = $validatedData['is_super_admin'] ? true : false;
         }
-        
+
         $admin->save();
 
         return redirect()->route('admins.index')->with('success', 'Datos del administrador actualizados correctamente.');
@@ -129,4 +115,29 @@ class AdminController extends Controller
 
         return redirect()->route('admins.index')->with('success', 'Administrador eliminado.');
     }
+
+     /**
+     * Validate the admin data from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int|null  $adminId
+     * @return array
+     */
+    private function validateAdminData(Request $request, $adminId = null)
+{
+    $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+    ];
+
+    if ($request->filled('password')) {
+        $rules['password'] = 'required|string|min:8|confirmed';
+    }
+
+    if ($adminId) {
+        $rules['email'] .= ',' . $adminId;
+    }
+
+    return $request->validate($rules);
+}
 }
