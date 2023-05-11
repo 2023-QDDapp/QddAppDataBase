@@ -41,7 +41,7 @@ class UserControllerApi extends Controller
         $user->nombre = $request->nombre;
         $user->telefono = $request->telefono;
         $user->email = $request->email;
-        $user->contrasena = $request->contrasena;
+        $user->password = $request->password;
         $user->fecha_nacimiento = $request->fecha_nacimiento;
         $user->biografia = $request->biografia;
         $user->foto = $request->foto;
@@ -90,7 +90,20 @@ class UserControllerApi extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = new User;
+        $user->nombre = $request->nombre;
+        $user->telefono = $request->telefono;
+        $user->email = $request->email;
+        $user->password = $request->password->nu;
+        $user->biografia = $request->biografia;
+        $user->foto = $request->foto;
+
+        $user->save();
+
+        return response()->json([
+            'mensaje' => 'El usuario ha sido registrado correctamente',
+            'user' => $user
+        ]);
     }
 
     /**
