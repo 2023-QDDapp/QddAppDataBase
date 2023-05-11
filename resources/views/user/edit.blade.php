@@ -3,10 +3,10 @@
 @section('content')
 <div class="container">
     <strong>Actualizar datos de administrador</strong>
-    <form action="{{ route('admins.update', $admin->id) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('users.update', $admin->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        @include('admin._fields', ['modo' => 'Editar'])
+        @include('user._fields', ['modo' => 'Editar'])
 
     </form>
 </div>

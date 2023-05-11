@@ -59,7 +59,6 @@ Route::post('/loginApi', 'App\Http\Controllers\AuthController@login');
 
 Route::middleware('jwt.auth')->group(function () {
 
-    
     // Usuarios
     Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario*
     Route::post('/users', 'App\Http\Controllers\V1\UserControllerApi@store'); // Crea un nuevo usuario
@@ -72,6 +71,11 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
     Route::post('/eventos', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
     Route::delete('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
+
+
+    /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */ 
+    Route::get('/eventos/asistentes/{id}', 'App\Http\Controllers\V1\EventoUserControllerApi@showAsistentes'); 
+    Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
     
 });
 

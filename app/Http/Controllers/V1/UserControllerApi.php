@@ -70,6 +70,20 @@ class UserControllerApi extends Controller
         ]);
     }
 
+    public function showEventosUser($id)
+    {
+        $user = DB::table('users')
+            ->join('eventos', 'eventos.user_id', '=', 'users.id')
+            ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
+            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
+            ->where('eventos.user_id', $id)
+            ->get();
+
+        return response()->json(
+            $user
+        );
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

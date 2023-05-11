@@ -50,7 +50,7 @@ class EventoUserControllerApi extends Controller
         $datos = DB::table('evento_users')
             ->join('users', 'users.id', '=', 'evento_users.user_id')
             ->join('eventos', 'eventos.id', '=', 'evento_users.evento_id')
-            ->select('users.id', 'users.nombre', 'users.foto', 'users.tipo')
+            ->select('users.id', 'users.nombre', 'users.foto')
             ->where('eventos.id', $id)
             ->where('evento_users.estado', '=', 1)
             ->get();
