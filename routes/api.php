@@ -54,7 +54,7 @@ Route::prefix('v1')->group(function(){
 });*/
 
 
-Route::post('/loginApi', 'App\Http\Controllers\AuthController@login');
+Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
 Route::middleware('jwt.auth')->group(function () {
 
