@@ -48,7 +48,14 @@ class UserController extends Controller
         $user->password = bcrypt($validatedData['password']);
         $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
         $user->biografia = $validatedData['biografia'];
-        $user->foto = $validatedData['foto'];
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/img/user', $fileName);
+            $user->foto = 'img/user/' . $fileName;
+        }
+
         $user->save();
 
         return redirect()->route('users.index');
@@ -92,10 +99,25 @@ class UserController extends Controller
         $user->email = $validatedData['email'];
         $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
         $user->biografia = $validatedData['biografia'];
-        $user->foto = $validatedData['foto'];
 
         if (!empty($validatedData['password'])) {
             $user->password = bcrypt($validatedData['password']);
+        }
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+
+            // Eliminar foto anterior si existe
+            if (!empty($user->foto)) {
+                $oldFilePath = public_path('storage/' . $user->foto);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+
+            $file->storeAs('public/img/user', $fileName);
+            $user->foto = 'img/user/' . $fileName;
         }
 
         $user->save();
@@ -111,6 +133,14 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        // Eliminar foto del usuario si existe
+        if (!empty($user->foto)) {
+            $filePath = public_path('storage/' . $user->foto);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+        //dd($filePath);
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Usuario eliminado.');
@@ -126,7 +156,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'fecha_nacimiento' => 'required|date',
             'biografia' => 'required|string|max:500',
-            'foto' => 'required|image',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:6048',
         ];
 
         if ($userId) {

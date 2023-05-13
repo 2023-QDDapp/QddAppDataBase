@@ -77,6 +77,7 @@ Route::middleware('jwt.auth')->group(function () {
     /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
     Route::get('/eventos/asistentes/{id}', 'App\Http\Controllers\V1\EventoUserControllerApi@showAsistentes'); 
     Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
+    Route::get('/user/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
     
 });
 

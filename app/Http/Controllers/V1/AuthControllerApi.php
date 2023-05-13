@@ -24,8 +24,6 @@ class AuthControllerApi extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        //dd( $credentials);
-
         try {
             if (! $token = Auth::guard('api')->attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
