@@ -53,6 +53,8 @@ Route::prefix('v1')->group(function(){
     });
 });*/
 
+Route::get('/user/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
+
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
@@ -72,7 +74,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::delete('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
 
-    /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */ 
+    /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
     Route::get('/eventos/asistentes/{id}', 'App\Http\Controllers\V1\EventoUserControllerApi@showAsistentes'); 
     Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
     

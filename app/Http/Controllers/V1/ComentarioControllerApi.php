@@ -63,9 +63,9 @@ class ComentarioControllerApi extends Controller
             ->where('comentarios.evento_id', $id)
             ->get();
 
-        return response()->json([
-            'datos' => $datos
-        ]);
+        return response()->json(
+            $datos
+        );
     }
 
     /**

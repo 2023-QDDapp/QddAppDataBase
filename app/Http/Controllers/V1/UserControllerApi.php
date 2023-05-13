@@ -65,9 +65,50 @@ class UserControllerApi extends Controller
         $user = User::select('id', 'nombre', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'foto', 'biografia')
 				->with('categorias')->find($id);
 		
-		return response()->json([
-            'usuario' => $user
-        ]);
+		return response()->json(
+            $user
+        );
+    }
+
+    public function showEventosUser($id)
+    {
+        $user = DB::table('users')
+            ->join('eventos', 'eventos.user_id', '=', 'users.id')
+            ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
+            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
+            ->where('eventos.user_id', $id)
+            ->get();
+
+        return response()->json(
+            $user
+        );
+    }
+
+    public function pantallaParaTi($id)
+    {
+        $categoria = DB::table('categoria_users')
+            ->join('categorias', 'categorias.id', '=', 'categoria_users.categoria_id')
+            ->select('categorias.id AS id_categoria', 'categorias.categoria')
+            ->where('categoria_users.user_id', $id)
+            ->get();
+        
+        $objeto = json_decode($categoria);
+
+        foreach ($objeto as $objetos) {
+            $idCategoria[] = $objetos->id_categoria;
+        }
+
+        $eventos = DB::table('eventos')
+            ->join('users', 'eventos.user_id', '=', 'users.id')
+            ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
+            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.id AS id_categoria', 'categorias.categoria')
+            ->orderBy('eventos.fecha_hora_inicio')
+            ->whereIn('eventos.categoria_id', $idCategoria)
+            ->get();
+
+        return response()->json(
+            $eventos
+        );
     }
 
     /**

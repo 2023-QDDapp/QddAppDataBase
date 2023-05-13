@@ -50,14 +50,14 @@ class EventoUserControllerApi extends Controller
         $datos = DB::table('evento_users')
             ->join('users', 'users.id', '=', 'evento_users.user_id')
             ->join('eventos', 'eventos.id', '=', 'evento_users.evento_id')
-            ->select('users.id', 'users.nombre', 'users.foto')
+            ->select('users.id', 'users.nombre', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'users.foto')
             ->where('eventos.id', $id)
             ->where('evento_users.estado', '=', 1)
             ->get();
 
-        return response()->json([
-            'datos' => $datos
-        ]);
+        return response()->json(
+            $datos
+        );
     }
 
     /**
