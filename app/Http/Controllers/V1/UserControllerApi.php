@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Categoria;
+use App\Models\Resena;
 
 class UserControllerApi extends Controller
 {
@@ -62,11 +64,32 @@ class UserControllerApi extends Controller
      */
     public function show($id)
     {
-        $user = User::select('id', 'nombre', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'foto', 'biografia')
-				->with('categorias')->find($id);
-		
-		return response()->json(
-            $user
+        $user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', 'categorias.id AS categoria_id', 'categorias.categoria')
+            ->join('categoria_users', 'users.id', '=', 'categoria_users.user_id')
+            ->join('categorias', 'categoria_users.categoria_id', '=', 'categorias.id')
+            ->where('users.id', $id)
+            ->get();
+
+        $usuario = $user->first();
+        $categorias = $user->pluck('categoria_id')->toArray();
+        $datosCategorias = Categoria::whereIn('id', $categorias)->get(['id', 'categoria']);
+
+        $resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'resenas.mensaje')
+            ->join('users', 'users.id', '=', 'resenas.id_usuario_emisor')
+            ->where('resenas.id_usuario_receptor', $id)
+            ->get();
+
+        $datosUsuario = [
+            'id' => $usuario->id,
+            'nombre' => $usuario->nombre,
+            'foto' => $usuario->foto,
+            'biografia' => $usuario->biografia,
+            'categorias' => $datosCategorias,
+            'valoraciones' => $resenas
+        ];
+
+        return response()->json(
+            $datosUsuario
         );
     }
 
@@ -108,6 +131,29 @@ class UserControllerApi extends Controller
 
         return response()->json(
             $eventos
+        );
+    }
+
+    public function showFollowers($id)
+    {
+        $user = User::select('users.*', 'followers.id_usuario_seguidor')
+            ->join('followers', 'users.id', '=', 'followers.id_usuario_seguido')
+            ->where('users.id', $id)
+            ->get();
+
+        $usuario = $user->first();
+        $seguidores = $user->pluck('id_usuario_seguidor')->toArray();
+        $datosSeguidores = User::whereIn('id', $seguidores)->get(['id', 'nombre', 'foto']);
+
+        $datosUsuario = [
+            'id' => $usuario->id,
+            'nombre' => $usuario->nombre,
+            'foto' => $usuario->foto,
+            'seguidores' => $datosSeguidores
+        ];
+         
+        return response()->json(
+            $datosUsuario
         );
     }
 

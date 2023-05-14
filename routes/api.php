@@ -54,6 +54,12 @@ Route::prefix('v1')->group(function(){
 });*/
 
 
+Route::get('/users/{id}/followers', 'App\Http\Controllers\V1\UserControllerApi@showFollowers'); //Muestra los seguidores de un usuario
+Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@showDetailEvent');
+
+Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
+
+Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
 
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
@@ -61,15 +67,14 @@ Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 Route::middleware('jwt.auth')->group(function () {
 
     // Usuarios
-    Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario*
+    //Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
     Route::post('/users', 'App\Http\Controllers\V1\UserControllerApi@store'); // Crea un nuevo usuario
     Route::delete('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@destroy'); // Elimina un usuario
     Route::post('/users/categoria', 'App\Http\Controllers\V1\UserControllerApi@categorias'); // Añade una categoría a un usuario
 
     // Eventos
     Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
-    Route::get('/events/{id}/categorias', 'App\Http\Controllers\V1\EventoControllerApi@eventosPorCategoria'); // Muestra los eventos de una categoría
-    Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
+    //Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
     Route::post('/events', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
     Route::delete('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 

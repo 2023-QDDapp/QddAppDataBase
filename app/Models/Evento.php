@@ -29,4 +29,15 @@ class Evento extends Model
     public function notifications() {
         return $this->hasMany(Notification::class);
     }
+
+    public function creador()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function usuariosAsistentes()
+    {
+        return $this->belongsToMany(User::class, 'evento_users', 'evento_id', 'user_id');
+    }
+
 }
