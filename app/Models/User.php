@@ -82,6 +82,7 @@ class User extends Authenticatable implements JWTSubject
         return Carbon::parse($this->fecha_nacimiento)->age;
     }
 
+    //la codificacion de la contraseña aunque venga por JSON, lo hace automaticamente una vez detecta password
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);

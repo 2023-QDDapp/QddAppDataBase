@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "name": "Jesús Simarro",
+        "email": "jesus.simarro@qddapp.es",
+        "password": "password",
+        "is_super_admin": false
+    },
+    {
+        "id": 2,
+        "name": "javier Cuadros",
+        "email": "javier.cuadros@qddapp.es",
+        "password": "password",
+        "is_super_admin": false
+    },
+    {
+        "id": 3,
+        "name": "Alvaro Garvín",
+        "email": "alvaro.garvin@qddapp.es",
+        "password": "password",
+        "is_super_admin": false
+    },
+    {
+        "id": 4,
+        "name": "Miguel Carpio",
+        "email": "miguel.carpio@qddapp.es",
+        "password": "password",
+        "is_super_admin": false
+    },
+    {
+        "id": 5,
+        "name": "Qddapp",
+        "email": "qdd.app@qddapp.es",
+        "password": "password",
+        "is_super_admin": true
+    }
+
+]

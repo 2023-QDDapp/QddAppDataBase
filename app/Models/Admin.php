@@ -25,4 +25,10 @@ class Admin extends Model implements Authenticatable
         return $this->is_super_admin;
     }
 
+    //la codificacion de la contraseña aunque venga por JSON, lo hace automaticamente una vez detecta password
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
 }

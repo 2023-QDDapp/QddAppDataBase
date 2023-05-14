@@ -23,10 +23,11 @@ class AdminFactory extends Factory
     //con esta funcion se le puede asignar super administrador a un usuario
     public function superAdmin()
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'is_super_admin' => true,
             ];
         });
     }
+    
 }

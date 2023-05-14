@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer text-right">
             <a class="btn btn-primary" href="{{ route('users.index') }}">Volver</a>
         </div>
     </div>

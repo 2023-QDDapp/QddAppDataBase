@@ -51,6 +51,7 @@
                 
                 <a href="{{ route('admins.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-users-cog"></i> {{ __('Administradores') }}</a>
                 <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-users"></i> {{ __('Usuarios') }}</a>
+                <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-th-list"></i> {{ __('Eventos') }}</a>
                 
                 
             </div>
@@ -89,7 +90,7 @@
                     </div>
                 </nav>
 
-                <div class="container-fluid my-4 px-4">
+                <div class="container-fluid my-4 px-4 bg-repeat" style="min-height: 100%">
                     
                     @yield('content')
                 </div>
