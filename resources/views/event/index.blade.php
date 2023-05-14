@@ -14,7 +14,7 @@
         </div>
     @endif
     <strong>Usuarios</strong>
-    <a href="{{ route('users.create') }}" class="btn float-right"><i class="fas fa-plus text-success"></i></a>
+    <a href="{{ route('events.create') }}" class="btn float-right"><i class="fas fa-plus text-success"></i></a>
     <hr>
     <table class="table data-table">
         <thead>
@@ -30,9 +30,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($users as $user)
+            @foreach ($events as $event)
             <tr>
-                <td>{{$user->id}}</td>
+                <td>{{$event->id}}</td>
                 <td>{{$user->nombre}}</td>
                 <td>{{$user->email}}</td>
                 <td>{{$user->telefono}}</td>

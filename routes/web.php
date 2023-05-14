@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EventoController;
 
 
 /*
@@ -27,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('admins', AdminController::class);
     Route::resource('users', UserController::class);
+    Route::resource('events', EventoController::class);
 
 });
 
