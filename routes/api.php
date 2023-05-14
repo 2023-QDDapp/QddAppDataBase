@@ -54,8 +54,9 @@ Route::prefix('v1')->group(function(){
 });*/
 
 
-Route::get('/users/{id}/followers', 'App\Http\Controllers\V1\UserControllerApi@showFollowers'); //Muestra los seguidores de un usuario
-Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@showDetailEvent');
+Route::get('/users/{id}/following', 'App\Http\Controllers\V1\UserControllerApi@showFollowing'); //Muestra los seguidos de un usuario
+Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@showDetailEvent'); // Muestra el detalle de un evento
+Route::get('/users/{id}/pantallaseguidos', 'App\Http\Controllers\V1\UserControllerApi@pantallaSeguidos'); // Muestra los eventos de quien sigues
 
 Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
 

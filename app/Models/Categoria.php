@@ -16,4 +16,8 @@ class Categoria extends Model
     public function users() {
         return $this->belongsToMany(User::class, 'categoria_users');
     }
+
+    public function eventos() {
+        return $this->hasMany(Evento::class);
+    }
 }
