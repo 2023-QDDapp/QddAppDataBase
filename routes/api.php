@@ -61,7 +61,7 @@ Route::get('/users/{id}/pantallaseguidos', 'App\Http\Controllers\V1\UserControll
 Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
 
 Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
-
+Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser'); // Muestra eventos de un usuario
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
@@ -82,7 +82,7 @@ Route::middleware('jwt.auth')->group(function () {
 
     /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
     Route::get('/eventos/asistentes/{id}', 'App\Http\Controllers\V1\EventoUserControllerApi@showAsistentes'); 
-    Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
+    //Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
     Route::get('/user/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
     
 });
