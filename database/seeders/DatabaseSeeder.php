@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             CategoriaUserSeeder::class,
             BloqueoSeeder::class,
             NotificationSeeder::class,
-            AdminSeeder::class
+            AdminSeeder::class,
+            FollowerSeeder::class
         ]);
     }
 }

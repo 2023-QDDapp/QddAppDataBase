@@ -53,7 +53,7 @@ Route::prefix('v1')->group(function(){
     });
 });*/
 
-Route::get('/user/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
+
 
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
@@ -67,11 +67,11 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('/users/categoria', 'App\Http\Controllers\V1\UserControllerApi@categorias'); // Añade una categoría a un usuario
 
     // Eventos
-    Route::get('/eventos', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
-    Route::get('/eventos/categorias/{id}', 'App\Http\Controllers\V1\EventoControllerApi@eventosPorCategoria'); // Muestra los eventos de una categoría
-    Route::get('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
-    Route::post('/eventos', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
-    Route::delete('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
+    Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
+    Route::get('/events/{id}/categorias', 'App\Http\Controllers\V1\EventoControllerApi@eventosPorCategoria'); // Muestra los eventos de una categoría
+    Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
+    Route::post('/events', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
+    Route::delete('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
 
     /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */

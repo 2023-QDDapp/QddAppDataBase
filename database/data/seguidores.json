@@ -1,0 +1,101 @@
+[
+    {
+        "id": 1,
+        "id_usuario_seguido": 10,
+        "id_usuario_seguidor": 5
+    },
+    {
+        "id": 2,
+        "id_usuario_seguido": 3,
+        "id_usuario_seguidor": 7
+    },
+    {
+        "id": 3,
+        "id_usuario_seguido": 20,
+        "id_usuario_seguidor": 12
+    },
+    {
+        "id": 4,
+        "id_usuario_seguido": 14,
+        "id_usuario_seguidor": 18
+    },
+    {
+        "id": 5,
+        "id_usuario_seguido": 6,
+        "id_usuario_seguidor": 2
+    },
+    {
+        "id": 6,
+        "id_usuario_seguido": 17,
+        "id_usuario_seguidor": 15
+    },
+    {
+        "id": 7,
+        "id_usuario_seguido": 11,
+        "id_usuario_seguidor": 4
+    },
+    {
+        "id": 8,
+        "id_usuario_seguido": 8,
+        "id_usuario_seguidor": 19
+    },
+    {
+        "id": 9,
+        "id_usuario_seguido": 1,
+        "id_usuario_seguidor": 16
+    },
+    {
+        "id": 10,
+        "id_usuario_seguido": 9,
+        "id_usuario_seguidor": 13
+    },
+    {   "id": 11,
+        "id_usuario_seguido": 18,
+        "id_usuario_seguidor": 8
+    },
+    {
+        "id": 12,
+        "id_usuario_seguido": 7,
+        "id_usuario_seguidor": 14
+    },
+    {
+        "id": 13,
+        "id_usuario_seguido": 2,
+        "id_usuario_seguidor": 17
+    },
+    {
+        "id": 14,
+        "id_usuario_seguido": 15,
+        "id_usuario_seguidor": 4
+    },
+    {
+        "id": 15,
+        "id_usuario_seguido": 13,
+        "id_usuario_seguidor": 1
+    },
+    {
+        "id": 16,
+        "id_usuario_seguido": 12,
+        "id_usuario_seguidor": 19
+    },
+    {
+        "id": 17,
+        "id_usuario_seguido": 10,
+        "id_usuario_seguidor": 3
+    },
+    {
+        "id": 18,
+        "id_usuario_seguido": 5,
+        "id_usuario_seguidor": 20
+    },
+    {
+        "id": 19,
+        "id_usuario_seguido": 6,
+        "id_usuario_seguidor": 16
+    },
+    {
+        "id": 20,
+        "id_usuario_seguido": 9,
+        "id_usuario_seguidor": 7
+    }
+]
