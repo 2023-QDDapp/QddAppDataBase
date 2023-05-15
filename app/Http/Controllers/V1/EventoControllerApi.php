@@ -77,7 +77,7 @@ class EventoControllerApi extends Controller
      */
     public function showDetailEvent($id)
     {
-        $event = Evento::select('eventos.*', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'categorias.*')
+        $event = Evento::select('eventos.id', 'eventos.titulo', 'eventos.imagen', 'eventos.user_id', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'eventos.location', 'eventos.latitud', 'eventos.longitud', 'eventos.tipo', 'eventos.num_participantes', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'categorias.*')
             ->join('users', 'users.id', '=', 'eventos.user_id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
             ->where('eventos.id', $id)
