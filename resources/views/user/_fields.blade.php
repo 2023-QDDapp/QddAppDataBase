@@ -54,6 +54,12 @@
                             <label class="custom-file-label" for="foto" id="foto-label">Seleccionar archivo</label>
                         </div>
                     </div>
+                    @if (isset($user->foto))
+                        <div class="mt-3 text-center">
+                            <img src="{{ asset('storage/' . $user->foto) }}" alt="Imagen existente" width="150" class="rounded-circle">
+                            <input type="hidden" name="foto_old" value="{{ $user->foto }}">
+                        </div>
+                    @endif
                 </div>
             </div>
 

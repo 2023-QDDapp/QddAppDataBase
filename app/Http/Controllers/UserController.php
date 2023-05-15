@@ -149,19 +149,26 @@ class UserController extends Controller
 
     private function validateUserData(Request $request, $userId = null)
     {
+        $isCreating = $userId === null;
+
         $rules = [
             'nombre' => 'required|string|max:255',
             'telefono' => 'required|unique:users,telefono',
             'email' => 'required|email|unique:users,email',
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => $isCreating ? 'required|string|min:8|confirmed' : 'nullable|string|min:8|confirmed',
             'fecha_nacimiento' => 'required|date',
             'biografia' => 'required|string|max:500',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:6048',
+            'foto' => $isCreating ? 'required|image|mimes:jpeg,png,jpg,gif|max:6048' : 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048',
         ];
 
         if ($userId) {
             $rules['telefono'] .= ',' . $userId;
             $rules['email'] .= ',' . $userId;
+        }
+
+        // Validar la foto solo si se ha enviado una nueva durante la creación
+        if ($isCreating && $request->hasFile('foto')) {
+            $rules['foto'] = 'required|image|mimes:jpeg,png,jpg,gif|max:6048';
         }
 
         return $request->validate($rules);

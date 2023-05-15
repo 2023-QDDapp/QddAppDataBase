@@ -80,7 +80,6 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: one;">
                                     {{ csrf_field() }}
                                 </form>
-                                <a class="dropdown-item" href="#">Cambiar contraseña <i class="fas fa-cogs"></i></a>
                             </div>
                         </li>
                         <li class="nav-item">

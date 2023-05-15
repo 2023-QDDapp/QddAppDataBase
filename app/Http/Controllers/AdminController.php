@@ -47,8 +47,8 @@ class AdminController extends Controller
         $admin = new Admin();
         $admin->name = $validatedData['name'];
         $admin->email = $validatedData['email'];
-        $admin->is_super_admin = $request->input('is_super_admin') ? true : false;
         $admin->password = bcrypt($validatedData['password']);
+        $admin->is_super_admin = $request->input('is_super_admin') ? true : false;
         $admin->save();
 
         return redirect()->route('admins.index');
@@ -95,7 +95,8 @@ class AdminController extends Controller
         }
 
         if (array_key_exists('is_super_admin', $validatedData)) {
-            $admin->is_super_admin = $validatedData['is_super_admin'] ? true : false;
+            //$admin->is_super_admin = $validatedData['is_super_admin'] ? true : false;
+            $admin->is_super_admin = $validatedData['is_super_admin'] ?? false;
         }
 
         $admin->save();
@@ -124,20 +125,21 @@ class AdminController extends Controller
      * @return array
      */
     private function validateAdminData(Request $request, $adminId = null)
-{
-    $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-    ];
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'is_super_admin' => 'nullable|boolean',
+        ];
 
-    if ($request->filled('password')) {
-        $rules['password'] = 'required|string|min:8|confirmed';
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        if ($adminId) {
+            $rules['email'] .= ',' . $adminId;
+        }
+
+        return $request->validate($rules);
     }
-
-    if ($adminId) {
-        $rules['email'] .= ',' . $adminId;
-    }
-
-    return $request->validate($rules);
-}
 }

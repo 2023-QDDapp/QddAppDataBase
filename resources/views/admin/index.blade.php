@@ -39,7 +39,7 @@
                     <div class="btn-group" role="group">
                         <a href="{{ route('admins.show', $admin->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
                         <a href="{{ route('admins.edit', $admin->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        @if (auth()->user()->is_super_admin)
+                        @if (auth()->user()->is_super_admin && $admin->id !== auth()->user()->id)
                             <form action="{{ route('admins.destroy', $admin->id) }}" method="post">
                                 @csrf
                                 {{ method_field('DELETE') }}
