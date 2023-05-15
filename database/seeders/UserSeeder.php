@@ -27,6 +27,7 @@ class UserSeeder extends Seeder
             $modelo->fecha_nacimiento = $item['fecha_nacimiento'];
             $modelo->biografia = $item['biografia'];
             $modelo->foto = $item['foto'];
+            $modelo->siguiendo = $item['siguiendo'];
             $modelo->save();
         }
     }
