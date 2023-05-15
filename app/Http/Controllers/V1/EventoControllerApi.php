@@ -20,7 +20,7 @@ class EventoControllerApi extends Controller
         $datos = DB::table('eventos')
             ->join('users', 'eventos.user_id', '=', 'users.id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
+            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
             ->get();
 
         return response()->json(
@@ -94,6 +94,7 @@ class EventoControllerApi extends Controller
         if ($evento->tipo == 'público') {
             $datosEvento = [
                 'id_evento' => $evento->id_evento,
+                'titulo' => $evento->titulo,
                 'organizador' => $evento->nombre,
                 'id_organizador' => $evento->id_organizador,
                 'foto_organizador' => $evento->foto,
@@ -113,6 +114,7 @@ class EventoControllerApi extends Controller
         } else {
             $datosEvento = [
                 'id_evento' => $evento->id_evento,
+                'titulo' => $evento->titulo,
                 'organizador' => $evento->nombre,
                 'id_organizador' => $evento->id_organizador,
                 'foto_organizador' => $evento->foto,
