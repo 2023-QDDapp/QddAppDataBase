@@ -16,7 +16,7 @@ class EventoController extends Controller
      */
     public function index()
     {
-        $events = Evento::with('categoria', 'user')->get();
+        $events = Evento::with('categoria', 'creador')->get();
 
         return view('event.index', compact('events'));
     }

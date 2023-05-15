@@ -13,14 +13,14 @@
             {{ session('success') }}
         </div>
     @endif
-    <strong>Usuarios</strong>
+    <strong>Eventos</strong>
     <a href="{{ route('events.create') }}" class="btn float-right"><i class="fas fa-plus text-success"></i></a>
     <hr>
     <table class="table data-table">
         <thead>
             <tr>
                 <th>#</th>
-                <th>id de usuario</th>
+                <th>Organizador</th>
                 <th>Título</th>
                 <th>Categoría</th>
                 <th>fecha y hora de inicio - fecha y hora de fin</th>
@@ -34,7 +34,7 @@
             @foreach ($events as $event)
             <tr>
                 <td>{{$event->id}}</td>
-                <td>{{$event->user_id}}</td>
+                <td>{{$event->creador->nombre}}</td>
                 <td>{{$event->titulo}}</td>
                 <td>{{$event->categoria->categoria}}</td>
                 <td>{{$event->fecha_hora_inicio}} - {{$event->fecha_hora_fin}}</td>
