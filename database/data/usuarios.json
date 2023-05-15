@@ -37,14 +37,14 @@
         "email": "julia.simarro@escuelaestech.es",
         "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
-        "biografia": "Soy una chica muy religiosa y le gusta salir a meditar",
+        "biografia": "Soy una chica muy tranquila y me gusta salir a meditar",
         "foto": "https://this-person-does-not-exist.com/img/avatar-gen11a55ac509dc870bd7c4548b742ebf05.jpg"
     },
     {
         "id": 5,
         "nombre": "Jose Antonio Guzman Rodrigez",
         "telefono": "690347183",
-        "email": "jose.guzamn@escuelaestech.es",
+        "email": "jose.guzman@escuelaestech.es",
         "password": "password",
         "fecha_nacimiento": "2003-03-23 15:30:00",
         "biografia": "Soy un chico simpatico que le gusta la ciencia y las matematicas",
