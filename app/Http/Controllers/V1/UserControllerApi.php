@@ -85,7 +85,7 @@ class UserControllerApi extends Controller
             'foto' => $usuario->foto,
             'edad' => $usuario->edad,
             'biografia' => $usuario->biografia,
-            'categorias' => $datosCategorias,
+            'intereses' => $datosCategorias,
             'valoraciones' => $resenas
         ];
 
