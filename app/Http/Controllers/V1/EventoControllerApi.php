@@ -77,7 +77,7 @@ class EventoControllerApi extends Controller
      */
     public function showDetailEvent($id)
     {
-        $event = Evento::select('eventos.id', 'eventos.titulo', 'eventos.imagen', 'eventos.user_id', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'eventos.location', 'eventos.latitud', 'eventos.longitud', 'eventos.tipo', 'eventos.n_participantes', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'categorias.*')
+        $event = Evento::select('eventos.id AS id_evento', 'eventos.*', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'categorias.*')
             ->join('users', 'users.id', '=', 'eventos.user_id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
             ->where('eventos.id', $id)
@@ -92,7 +92,7 @@ class EventoControllerApi extends Controller
 
         if ($evento->tipo == 'público') {
             $datosEvento = [
-                'id_evento' => $evento->id,
+                'id_evento' => $evento->id_evento,
                 'organizador' => $evento->nombre,
                 'id_organizador' => $evento->id_organizador,
                 'foto_organizador' => $evento->foto,
@@ -111,7 +111,7 @@ class EventoControllerApi extends Controller
             ];
         } else {
             $datosEvento = [
-                'id_evento' => $evento->id,
+                'id_evento' => $evento->id_evento,
                 'organizador' => $evento->nombre,
                 'id_organizador' => $evento->id_organizador,
                 'foto_organizador' => $evento->foto,
