@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Evento;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Categoria;
 
 class EventoController extends Controller
 {
@@ -14,9 +16,9 @@ class EventoController extends Controller
      */
     public function index()
     {
-        $events['events'] = Evento::all();
+        $events = Evento::with('categoria', 'user')->get();
 
-        return view('event.index', $events);
+        return view('event.index', compact('events'));
     }
 
     /**

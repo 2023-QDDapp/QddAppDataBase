@@ -20,9 +20,10 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Teléfono</th>
+                <th>id de usuario</th>
+                <th>Título</th>
+                <th>Categoría</th>
+                <th>fecha y hora de inicio - fecha y hora de fin</th>
                 <th>Edad</th>
 
                 <th></th>
@@ -33,19 +34,19 @@
             @foreach ($events as $event)
             <tr>
                 <td>{{$event->id}}</td>
-                <td>{{$user->nombre}}</td>
-                <td>{{$user->email}}</td>
-                <td>{{$user->telefono}}</td>
-                <td>{{$user->getAgeFromDate()}}</td>
+                <td>{{$event->user_id}}</td>
+                <td>{{$event->titulo}}</td>
+                <td>{{$event->categoria->categoria}}</td>
+                <td>{{$event->fecha_hora_inicio}} - {{$event->fecha_hora_fin}}</td>
 
                 <td>
                     <div class="btn-group" role="group">
-                        <a href="{{ route('users.show', $user->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
-                        <a href="{{ route('users.edit', $user->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="post">
+                        <a href="{{ route('events.show', $event->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
+                        <a href="{{ route('events.edit', $event->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <form action="{{ route('events.destroy', $event->id) }}" method="post">
                             @csrf
                             {{ method_field('DELETE') }}
-                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar al usuario #{{ $user->id}}?')" class="btn">
+                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar al usuario #{{ $event->id}}?')" class="btn">
                                 <i class="fas fa-trash-alt text-danger"></i>
                             </button>
                         </form>

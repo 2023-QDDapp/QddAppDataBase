@@ -22,6 +22,10 @@ class Evento extends Model
         return $this->belongsTo(Categoria::class);
     }
 
+    public function userCreador() {
+        return $this->belongsTo(User::class);
+    }
+
     public function comentarios() {
         return $this->hasMany(Comentario::class);
     }
