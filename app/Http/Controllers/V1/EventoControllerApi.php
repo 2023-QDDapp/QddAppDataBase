@@ -54,6 +54,7 @@ class EventoControllerApi extends Controller
         $evento->fecha_hora_fin = $request->fecha_hora_fin;
         $evento->descripcion = $request->descripcion;
         $evento->imagen = $request->imagen;
+        $evento->tipo = $request->tipo;
         $evento->location = $request->location;
         $evento->latitud = $request->latitud;
         $evento->longitud = $request->longitud;
