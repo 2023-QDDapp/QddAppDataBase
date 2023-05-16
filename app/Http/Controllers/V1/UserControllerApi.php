@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Categoria;
+use App\Models\CategoriaUser;
+use App\Models\Evento;
+use App\Models\Follower;
 use App\Models\Resena;
 
 class UserControllerApi extends Controller
@@ -96,10 +99,9 @@ class UserControllerApi extends Controller
 
     public function showEventosUser($id)
     {
-        $user = DB::table('users')
+        $user = User::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
             ->join('eventos', 'eventos.user_id', '=', 'users.id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
             ->where('eventos.user_id', $id)
             ->get();
 
@@ -110,9 +112,8 @@ class UserControllerApi extends Controller
 
     public function pantallaParaTi($id)
     {
-        $categoria = DB::table('categoria_users')
+        $categoria = CategoriaUser::select('categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'categorias.id', '=', 'categoria_users.categoria_id')
-            ->select('categorias.id AS id_categoria', 'categorias.categoria')
             ->where('categoria_users.user_id', $id)
             ->get();
         
@@ -122,10 +123,9 @@ class UserControllerApi extends Controller
             $idCategoria[] = $objetos->id_categoria;
         }
 
-        $eventos = DB::table('eventos')
+        $eventos = Evento::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('users', 'eventos.user_id', '=', 'users.id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->orderBy('eventos.fecha_hora_inicio')
             ->whereIn('eventos.categoria_id', $idCategoria)
             ->get();
@@ -160,8 +160,7 @@ class UserControllerApi extends Controller
 
     public function pantallaSeguidos($id)
     {
-        $seguidos = DB::table('followers')
-            ->select('id_usuario_seguido')
+        $seguidos = Follower::select('id_usuario_seguido')
             ->where('id_usuario_seguidor', $id)
             ->get();
 
@@ -171,10 +170,9 @@ class UserControllerApi extends Controller
             $idSeguido[] = $objetos->id_usuario_seguido;
         }
 
-        $eventos = DB::table('eventos')
+        $eventos = Evento::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('users', 'eventos.user_id', '=', 'users.id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->orderBy('eventos.fecha_hora_inicio')
             ->whereIn('eventos.user_id', $idSeguido)
             ->get();

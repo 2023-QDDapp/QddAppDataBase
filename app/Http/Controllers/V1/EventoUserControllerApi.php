@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class EventoUserControllerApi extends Controller
@@ -45,19 +44,9 @@ class EventoUserControllerApi extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showAsistentes($id)
+    public function show($id)
     {
-        $datos = DB::table('evento_users')
-            ->join('users', 'users.id', '=', 'evento_users.user_id')
-            ->join('eventos', 'eventos.id', '=', 'evento_users.evento_id')
-            ->select('users.id', 'users.nombre', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'users.foto')
-            ->where('eventos.id', $id)
-            ->where('evento_users.estado', '=', 1)
-            ->get();
-
-        return response()->json(
-            $datos
-        );
+        //
     }
 
     /**

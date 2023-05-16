@@ -17,10 +17,9 @@ class EventoControllerApi extends Controller
      */
     public function index()
     {
-        $datos = DB::table('eventos')
+        $datos = Evento::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
             ->join('users', 'eventos.user_id', '=', 'users.id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
             ->get();
 
         return response()->json(
@@ -85,7 +84,7 @@ class EventoControllerApi extends Controller
             ->get();
 
         $evento = $event->first();
-        $numParticipantes = $evento->n_participantes;
+
         $datosAsistentes = User::join('evento_users', 'users.id', '=', 'evento_users.user_id')
             ->where('evento_users.evento_id', $id)
             ->where('evento_users.estado', '=', 1)
@@ -108,7 +107,7 @@ class EventoControllerApi extends Controller
                 'longitud' => $evento->longitud,
                 'id_categoria' => $evento->categoria_id,
                 'categoria' => $evento->categoria,
-                'num_participantes' => $numParticipantes,
+                'num_participantes' => $evento->n_participantes,
                 'asistentes' => $datosAsistentes
             ];
         } else {
@@ -126,7 +125,7 @@ class EventoControllerApi extends Controller
                 'location' => $evento->location,
                 'id_categoria' => $evento->categoria_id,
                 'categoria' => $evento->categoria,
-                'num_participantes' => $numParticipantes,
+                'num_participantes' => $evento->n_participantes,
                 'asistentes' => $datosAsistentes
             ];
         }
