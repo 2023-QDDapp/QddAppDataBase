@@ -30,7 +30,7 @@
             <div class="row mb-3">
                 <label for="usuarios" class="col-md-4 col-form-label text-md-end">Organizador:</label>
                 <div class="col-md-6">
-                    <select name="users[]" id="users" class="js-example-basic-multiple" title="Selecciona los usuarios" required>
+                    <select name="user_id" id="users" class="js-example-basic-multiple" title="Selecciona el organizador" required>
                         <option value="" disabled selected>Selecciona organizador</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}" @if ($event->user_id == $user->id) selected @endif>{{ $user->nombre }}</option>
@@ -42,7 +42,7 @@
             <div class="row mb-3">
                 <label for="categorias" class="col-md-4 col-form-label text-md-end">Categoría:</label>
                 <div class="col-md-6">
-                    <select name="categorias[]" id="categorias" class="js-example-basic-multiple" title="Selecciona las categorías" required>
+                    <select name="categoria_id" id="categorias" class="js-example-basic-multiple" title="Selecciona las categorías" required>
                         <option value="" disabled selected>Selecciona categoría</option>
                         @foreach ($categorias as $categoria)
                             <option value="{{ $categoria->id }}" @if ($event->categoria_id == $categoria->id) selected @endif>{{ $categoria->categoria }}</option>
@@ -63,24 +63,24 @@
                 <label for="tipo" class="col-md-4 col-form-label text-md-end">Tipo de evento:</label>
                 <div class="col-md-6">
                     <select name="tipo" id="tipo" class="js-example-basic-multiple" title="Selecciona el tipo de evento" required>
-                        <option selected>seleciona el tipo de evento</option>
-                        <option value="privado">privado</option>
-                        <option value="público">público</option>
+                        <option disabled selected>Selecciona el tipo de evento</option>
+                        <option value="privado" @if ($event->tipo == "privado") selected @endif>Privado</option>
+                        <option value="público" @if ($event->tipo == "público") selected @endif>Público</option>
                     </select>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <label for="fecha" class="col-md-4 col-form-label text-md-end">Fecha inicio</label>
+                <label for="fecha_hora_inicio" class="col-md-4 col-form-label text-md-end">Fecha y hora inicio</label>
                 <div class="col-md-6">
-                    <input type="date" class="form-control" name="fecha" id="fecha" value="{{ isset($event->fecha_hora_inicio) ? $event->fecha_hora_inicio : old('fecha_hora_inicio') }}" required>
+                    <input type="datetime-local" class="form-control" name="fecha_hora_inicio" id="fecha_hora_inicio" value="{{ isset($event->fecha_hora_inicio) ? date('Y-m-d\TH:i', strtotime($event->fecha_hora_inicio)) : old('fecha_hora_inicio') }}" required>
                 </div>
             </div>
-
+            
             <div class="row mb-3">
-                <label for="fecha" class="col-md-4 col-form-label text-md-end">Fecha fin</label>
+                <label for="fecha_hora_fin" class="col-md-4 col-form-label text-md-end">Fecha y hora fin</label>
                 <div class="col-md-6">
-                    <input type="date" class="form-control" name="fecha" id="fecha" value="{{ isset($event->fecha_hora_fin) ? $event->fecha_hora_fin : old('fecha_hora_fin') }}" required>
+                    <input type="datetime-local" class="form-control" name="fecha_hora_fin" id="fecha_hora_fin" value="{{ isset($event->fecha_hora_fin) ? date('Y-m-d\TH:i', strtotime($event->fecha_hora_fin)) : old('fecha_hora_fin') }}" required>
                 </div>
             </div>
 
@@ -88,6 +88,30 @@
                 <label for="location" class="col-md-4 col-form-label text-md-end">Localización</label>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="location" id="location" value="{{ isset($event->location) ? $event->location : old('location') }}" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="latitud" class="col-md-4 col-form-label text-md-end">Latitud:</label>
+                <div class="col-md-6">
+                    <input type="number" class="form-control" name="latitud" id="latitud" step="any" value="{{ isset($event->latitud) ? $event->latitud : old('latitud') }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <label for="longitud" class="col-md-4 col-form-label text-md-end">Longitud:</label>
+                <div class="col-md-6">
+                    <input type="number" class="form-control" name="longitud" id="longitud" step="any" value="{{ isset($event->longitud) ? $event->longitud : old('longitud') }}" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen:</label>
+                <div class="col-md-6">
+                    @if(isset($event->imagen))
+                    <img src="{{ asset('storage/' . $event->imagen) }}" alt="Imagen del evento" style="width: 200px;">
+                    @endif
+                    <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*">
                 </div>
             </div>
 

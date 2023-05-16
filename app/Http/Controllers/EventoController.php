@@ -42,7 +42,31 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $this->validateEventData($request);
+
+        $evento = new Evento();
+        $evento->user_id = $validatedData['user_id'];
+        $evento->categoria_id = $validatedData['categoria_id'];
+        $evento->titulo = $validatedData['titulo'];
+        $evento->fecha_hora_inicio = $validatedData['fecha_hora_inicio'];
+        $evento->fecha_hora_fin = $validatedData['fecha_hora_fin'];
+        $evento->descripcion = $validatedData['descripcion'];
+        $evento->tipo = $validatedData['tipo'];
+        $evento->location = $validatedData['location'];
+        $evento->latitud = $validatedData['latitud'];
+        $evento->longitud = $validatedData['longitud'];
+        //$evento->n_participantes = $validatedData['n_participantes'];
+
+        if ($request->hasFile('imagen')) {
+            $file = $request->file('imagen');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/img/event', $fileName);
+            $evento->imagen = 'img/event/' . $fileName;
+        }
+
+        $evento->save();
+
+        return redirect()->route('events.index')->with('success', 'se creo un nuevo evento.');
     }
 
     /**
@@ -80,9 +104,41 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Evento $evento)
     {
-        //
+        $validatedData = $this->validateEventData($request);
+
+        $evento->user_id = $validatedData['user_id'];
+        $evento->categoria_id = $validatedData['categoria_id'];
+        $evento->titulo = $validatedData['titulo'];
+        $evento->fecha_hora_inicio = $validatedData['fecha_hora_inicio'];
+        $evento->fecha_hora_fin = $validatedData['fecha_hora_fin'];
+        $evento->descripcion = $validatedData['descripcion'];
+        $evento->tipo = $validatedData['tipo'];
+        $evento->location = $validatedData['location'];
+        $evento->latitud = $validatedData['latitud'];
+        $evento->longitud = $validatedData['longitud'];
+        //$evento->n_participantes = $validatedData['n_participantes'];
+
+        if ($request->hasFile('imagen')) {
+            $file = $request->file('imagen');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+
+            // Eliminar imagen anterior si existe
+            if (!empty($evento->imagen)) {
+                $oldFilePath = public_path('storage/' . $evento->imagen);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+
+            $file->storeAs('public/img/event', $fileName);
+            $evento->imagen = 'img/event/' . $fileName;
+        }
+
+        $evento->save();
+
+        return redirect()->route('events.index')->with('success', 'Datos del evento actualizados correctamente.');
     }
 
     /**
@@ -95,23 +151,35 @@ class EventoController extends Controller
     {
         $evento->delete();
 
-        return redirect()->route('events.index')->with('success', 'Administrador eliminado.');
+        return redirect()->route('events.index')->with('success', 'Evento eliminado.');
     }
 
-    private function validateAdminData(Request $request, $adminId = null)
+    private function validateEventData(Request $request, $eventId = null)
     {
+        $isCreating = $eventId === null;
+
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'is_super_admin' => 'nullable|boolean',
+            'user_id' => 'required|exists:users,id',
+            'categoria_id' => 'required|exists:categorias,id',
+            'titulo' => 'required|string|max:255',
+            'fecha_hora_inicio' => 'required|date_format:Y-m-d\TH:i',
+            'fecha_hora_fin' => 'required|date_format:Y-m-d\TH:i|after:fecha_hora_inicio',
+            'descripcion' => 'required|string|max:500',
+            'tipo' => 'required|string',
+            'imagen' => 'nullable|string',
+            'location' => 'required|string',
+            'latitud' => 'required|numeric',
+            'longitud' => 'required|numeric',
+            //'n_participantes' => 'nullable|integer',
         ];
 
-        if ($request->filled('password')) {
-            $rules['password'] = 'required|string|min:8|confirmed';
+        if ($eventId) {
+            $rules['user_id'] .= ',' . $eventId;
         }
 
-        if ($adminId) {
-            $rules['email'] .= ',' . $adminId;
+        // Validar la imagen solo si se ha enviado una nueva durante la creación
+        if ($isCreating && $request->hasFile('imagen')) {
+            $rules['imagen'] = 'required|image|mimes:jpeg,png,jpg,gif|max:6048';
         }
 
         return $request->validate($rules);

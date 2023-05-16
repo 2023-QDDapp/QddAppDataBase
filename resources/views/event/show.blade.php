@@ -15,13 +15,13 @@
                             <strong>Título:</strong>
                             {{$event->titulo}}
                         </div>
-                    </div>
-                    <hr>
-                    <div class="row mt-3">
                         <div class="col-md-6">
                             <strong>organizador:</strong>
                             {{$event->creador->nombre}}
                         </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-3">
                         <div class="col-md-6">
                             <strong>Categoría:</strong>
                             {{$event->categoria->categoria}}
@@ -45,6 +45,12 @@
                         <div class="col-md">
                             <strong>Descripción:</strong>
                             {{$event->descripcion}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md">
+                            <strong>Localización:</strong>
+                            {{$event->location}}
                         </div>
                     </div>
                 </div>
