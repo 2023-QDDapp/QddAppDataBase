@@ -110,7 +110,7 @@
                 <a class="btn btn-primary" href="{{ route('users.index') }}">Volver</a>
             </div>
             <div class="col text-right">
-                <input type="submit" class="btn btn-success" value="{{ $modo }} user">
+                <input type="submit" class="btn btn-success" value="{{ $modo }} usuario">
             </div>
         </div>
     </div>

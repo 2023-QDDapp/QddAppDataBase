@@ -89,7 +89,7 @@
                     </div>
                 </nav>
 
-                <div class="container-fluid my-4 px-4 bg-repeat" style="min-height: 100%">
+                <div class="container-fluid my-4 px-4 bg-repeat" style="min-height: 50%">
                     
                     @yield('content')
                 </div>

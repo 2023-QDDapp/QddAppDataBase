@@ -23,9 +23,8 @@
                 <th>Organizador</th>
                 <th>Título</th>
                 <th>Categoría</th>
-                <th>fecha y hora de inicio - fecha y hora de fin</th>
-                <th>Edad</th>
-
+                <th>Inicio</th>
+                <th>Fin</th>
                 <th></th>
                 
             </tr>
@@ -37,7 +36,8 @@
                 <td>{{$event->creador->nombre}}</td>
                 <td>{{$event->titulo}}</td>
                 <td>{{$event->categoria->categoria}}</td>
-                <td>{{$event->fecha_hora_inicio}} - {{$event->fecha_hora_fin}}</td>
+                <td>{{$event->fecha_hora_inicio}}</td>
+                <td>{{$event->fecha_hora_fin}}</td>
 
                 <td>
                     <div class="btn-group" role="group">

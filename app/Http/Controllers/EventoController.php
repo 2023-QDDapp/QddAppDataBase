@@ -6,6 +6,7 @@ use App\Models\Evento;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Categoria;
+use Carbon\Carbon;
 
 class EventoController extends Controller
 {
@@ -26,9 +27,11 @@ class EventoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Evento $event)
     {
-        //
+        $categorias = Categoria::all();
+        $users = User::all();
+        return view('event.create' , compact('event','categorias', 'users'));
     }
 
     /**
@@ -48,21 +51,12 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Evento $event)
     {
-        $evento = Evento::with(['users', 'categorias'])
-            ->where('id', $id)
-            ->first();
 
-        $datos = [
-            'nombre_usuario' => $evento->users->nombre,
-            'foto_usuario' => $evento->users->foto,
-            'fecha_nacimiento_usuario' => $evento->users->fecha_nacimiento,
-            'imagen' => $evento->imagen,
-            'fecha_hora_inicio' => $evento->fecha_hora_inicio,
-            'fecha_hora_fin' => $evento->fecha_hora_fin,
-            'nombre_categoria' => $evento->categorias->nombre
-        ];
+        $event::with('categoria', 'creador')->get();
+        
+        return view('event.show', compact('event'));
     }
 
     /**
@@ -71,9 +65,12 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Evento $event)
     {
-        //
+        $categorias = Categoria::all();
+        $users = User::all();
+
+        return view('event.edit', compact('event', 'categorias', 'users'));
     }
 
     /**
@@ -94,8 +91,29 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Evento $evento)
     {
-        //
+        $evento->delete();
+
+        return redirect()->route('events.index')->with('success', 'Administrador eliminado.');
+    }
+
+    private function validateAdminData(Request $request, $adminId = null)
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'is_super_admin' => 'nullable|boolean',
+        ];
+
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        if ($adminId) {
+            $rules['email'] .= ',' . $adminId;
+        }
+
+        return $request->validate($rules);
     }
 }

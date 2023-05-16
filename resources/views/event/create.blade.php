@@ -2,11 +2,9 @@
 
 @section('content')
 <div class="container">
-    Crear administrador nuevo
-    <hr>
-    <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('events.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-        @include('user._fields', ['modo' => 'Crear'])
+        @include('event._fields', ['modo' => 'Crear'])
     </form>
 </div>
 @endsection
