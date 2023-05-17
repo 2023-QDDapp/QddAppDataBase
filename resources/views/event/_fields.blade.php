@@ -120,7 +120,7 @@
                 <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen:</label>
                 <div class="col-md-6">
                     @if(isset($event->imagen))
-                    <img src="{{ asset('storage/' . $event->imagen) }}" alt="Imagen del evento" style="width: 200px;">
+                    <img src="{{ asset('storage/' . $event->imagen) }}" alt="Imagen del evento" style="width: 250px;" class="rounded">
                     @endif
                     <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*">
                 </div>

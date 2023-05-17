@@ -52,6 +52,7 @@
                 <a href="{{ route('admins.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-users-cog"></i> {{ __('Administradores') }}</a>
                 <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-users"></i> {{ __('Usuarios') }}</a>
                 <a href="{{ route('events.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-th-list"></i> {{ __('Eventos') }}</a>
+                <a href="{{ route('categorias.index') }}" class="list-group-item list-group-item-action text-blue lead"><i class="fas fa-tags"></i> {{ __('Categorias') }}</a>
                 
                 
             </div>

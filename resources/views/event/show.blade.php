@@ -11,6 +11,11 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{ asset('storage/' . $event->imagen) }}" alt="Foto de usuario" class="rounded" style="width: 450px;">
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <strong>Título:</strong>
                             {{$event->titulo}}
@@ -56,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer text-right">
+        <div class="card-footer">
             <a class="btn btn-primary" href="{{ route('events.index') }}">Volver</a>
         </div>
     </div>
