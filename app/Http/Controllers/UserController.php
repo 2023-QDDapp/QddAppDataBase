@@ -16,9 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users['users'] = User::all();
-
-        return view('user.index', $users);
+        //el método categorias del modelo user crea la conexión entre las categorias y los users
+        $users = User::with('categorias')->get();
+    
+        return view('user.index', compact('users'));
     }
 
     /**
@@ -69,6 +70,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user::with('categorias')->get();
         return view('user.show', compact('user'));
     }
 

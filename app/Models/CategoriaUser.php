@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoriaUser extends Model
 {
-    use HasFactory;
+    //use HasFactory;
+    protected $table = 'user_categoria';
 
     protected $fillable = [
         'user_id', 'categoria_id'
     ];
 
-    public function user() {
+    public function users() {
         return $this->belongsTo(User::class);
     }
 

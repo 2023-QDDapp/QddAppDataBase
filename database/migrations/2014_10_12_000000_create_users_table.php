@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->date('fecha_nacimiento');
             $table->string('biografia', 500);
             $table->string('foto');
-            $table->boolean('siguiendo');
+            //$table->boolean('siguiendo');
             $table->timestamps();
         });
     }

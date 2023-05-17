@@ -39,7 +39,7 @@
                             <form action="{{ route('categorias.destroy', $categoria->id) }}" method="post">
                                 @csrf
                                 {{ method_field('DELETE') }}
-                                <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la categoría #{{ $categoria->id}}?')" class="btn">
+                                <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la categoría {{ $categoria->categoria}}?')" class="btn">
                                     <i class="fas fa-trash-alt text-danger"></i>
                                 </button>
                             </form>
