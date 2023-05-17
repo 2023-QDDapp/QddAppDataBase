@@ -45,18 +45,8 @@ class EventoController extends Controller
         $validatedData = $this->validateEventData($request);
 
         $evento = new Evento();
-        $evento->user_id = $validatedData['user_id'];
-        $evento->categoria_id = $validatedData['categoria_id'];
-        $evento->titulo = $validatedData['titulo'];
-        $evento->fecha_hora_inicio = $validatedData['fecha_hora_inicio'];
-        $evento->fecha_hora_fin = $validatedData['fecha_hora_fin'];
-        $evento->descripcion = $validatedData['descripcion'];
-        $evento->tipo = $validatedData['tipo'];
-        $evento->location = $validatedData['location'];
-        $evento->latitud = $validatedData['latitud'];
-        $evento->longitud = $validatedData['longitud'];
-        //$evento->n_participantes = $validatedData['n_participantes'];
-
+        $evento->fill($validatedData);
+        
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
@@ -89,12 +79,29 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Evento $event)
+    /*public function edit(Evento $event)
     {
         $categorias = Categoria::all();
         $users = User::all();
 
         return view('event.edit', compact('event', 'categorias', 'users'));
+    }*/
+
+    /*public function edit($id)
+    {
+        $evento = Evento::findOrFail($id);
+        $users = User::all(); // Obtén los usuarios desde el modelo User (ajusta el modelo según tu estructura)
+        $categorias = Categoria::all(); // Obtén las categorías desde el modelo Categoria (ajusta el modelo según tu estructura)
+
+        return view('event.edit', compact('evento', 'users', 'categorias'));
+    }*/
+    public function edit($id)
+    {
+        $event = Evento::with('user', 'categoria')->findOrFail($id);
+        $users = User::all();
+        $categorias = Categoria::all();
+
+        return view('event.edit', compact('event', 'users', 'categorias'));
     }
 
     /**
@@ -104,21 +111,40 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evento $evento)
+    /*public function update(Request $request, Evento $evento)
     {
         $validatedData = $this->validateEventData($request);
 
-        $evento->user_id = $validatedData['user_id'];
-        $evento->categoria_id = $validatedData['categoria_id'];
-        $evento->titulo = $validatedData['titulo'];
-        $evento->fecha_hora_inicio = $validatedData['fecha_hora_inicio'];
-        $evento->fecha_hora_fin = $validatedData['fecha_hora_fin'];
-        $evento->descripcion = $validatedData['descripcion'];
-        $evento->tipo = $validatedData['tipo'];
-        $evento->location = $validatedData['location'];
-        $evento->latitud = $validatedData['latitud'];
-        $evento->longitud = $validatedData['longitud'];
-        //$evento->n_participantes = $validatedData['n_participantes'];
+        $evento->fill($validatedData);
+
+        if ($request->hasFile('imagen')) {
+            $file = $request->file('imagen');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+
+            // Eliminar imagen anterior si existe
+            if (!empty($evento->imagen)) {
+                $oldFilePath = public_path('storage/' . $evento->imagen);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+
+            $file->storeAs('public/img/event', $fileName);
+            $evento->imagen = 'img/event/' . $fileName;
+        }
+
+        $evento->save();
+
+        return redirect()->route('events.index')->with('success', 'Datos del evento actualizados correctamente.');
+    }*/
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $this->validateEventData($request);
+
+        $evento = Evento::findOrFail($id);
+        
+        $evento->fill($validatedData);
 
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
@@ -147,11 +173,22 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Evento $evento)
+    public function destroy($id)
     {
+        $evento = Evento::findOrFail($id);
+
+        if (!empty($evento->imagen)) {
+            $filePath = public_path('storage/' . $evento->imagen);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        // Eliminar el evento de la base de datos
         $evento->delete();
 
-        return redirect()->route('events.index')->with('success', 'Evento eliminado.');
+        // Redireccionar a la página principal de eventos o a donde consideres apropiado
+        return redirect()->route('events.index')->with('success', 'Evento eliminado exitosamente.');
     }
 
     private function validateEventData(Request $request, $eventId = null)
@@ -170,7 +207,7 @@ class EventoController extends Controller
             'location' => 'required|string',
             'latitud' => 'required|numeric',
             'longitud' => 'required|numeric',
-            //'n_participantes' => 'nullable|integer',
+            'n_participantes' => 'nullable|integer',
         ];
 
         if ($eventId) {

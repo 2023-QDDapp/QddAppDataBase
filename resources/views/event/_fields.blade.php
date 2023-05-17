@@ -32,22 +32,33 @@
                 <div class="col-md-6">
                     <select name="user_id" id="users" class="js-example-basic-multiple" title="Selecciona el organizador" required>
                         <option value="" disabled selected>Selecciona organizador</option>
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" @if ($event->user_id == $user->id) selected @endif>{{ $user->nombre }}</option>
-                        @endforeach
+                        @isset($users)
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}" @if ($event->user_id == $user->id) selected @endif>{{ $user->nombre }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
             </div>
-
+            
             <div class="row mb-3">
                 <label for="categorias" class="col-md-4 col-form-label text-md-end">Categoría:</label>
                 <div class="col-md-6">
                     <select name="categoria_id" id="categorias" class="js-example-basic-multiple" title="Selecciona las categorías" required>
                         <option value="" disabled selected>Selecciona categoría</option>
-                        @foreach ($categorias as $categoria)
-                            <option value="{{ $categoria->id }}" @if ($event->categoria_id == $categoria->id) selected @endif>{{ $categoria->categoria }}</option>
-                        @endforeach
+                        @isset($categorias)
+                            @foreach ($categorias as $categoria)
+                                <option value="{{ $categoria->id }}" @if ($event->categoria_id == $categoria->id) selected @endif>{{ $categoria->categoria }}</option>
+                            @endforeach
+                        @endisset
                     </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="n_participantes" class="col-md-4 col-form-label text-md-end">Número de participantes:</label>
+                <div class="col-md-6">
+                    <input type="number" class="form-control" name="n_participantes" id="n_participantes" step="any" value="{{ isset($event->n_participantes) ? $event->n_participantes : old('n_participantes') }}" required>
                 </div>
             </div>
             
@@ -94,14 +105,14 @@
             <div class="row mb-3">
                 <label for="latitud" class="col-md-4 col-form-label text-md-end">Latitud:</label>
                 <div class="col-md-6">
-                    <input type="number" class="form-control" name="latitud" id="latitud" step="any" value="{{ isset($event->latitud) ? $event->latitud : old('latitud') }}" required>
+                    <input type="text" class="form-control" name="latitud" id="latitud" step="any" value="{{ isset($event->latitud) ? $event->latitud : old('latitud') }}" required>
                 </div>
             </div>
             
             <div class="row mb-3">
                 <label for="longitud" class="col-md-4 col-form-label text-md-end">Longitud:</label>
                 <div class="col-md-6">
-                    <input type="number" class="form-control" name="longitud" id="longitud" step="any" value="{{ isset($event->longitud) ? $event->longitud : old('longitud') }}" required>
+                    <input type="text" class="form-control" name="longitud" id="longitud" step="any" value="{{ isset($event->longitud) ? $event->longitud : old('longitud') }}" required>
                 </div>
             </div>
 
