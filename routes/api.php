@@ -34,9 +34,6 @@ Route::get('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show');
 Route::post('/eventos', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
 Route::delete('/eventos/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
-// Usuarios en eventos
-Route::get('/eventos/asistentes/{id}', 'App\Http\Controllers\V1\EventoUserControllerApi@showAsistentes'); // Muestra los asistentes a un evento
-
 // Comentarios
 Route::get('/comentarios/{id}', 'App\Http\Controllers\V1\ComentarioControllerApi@show'); // Muestra los comentarios de un evento
 Route::post('/comentarios', 'App\Http\Controllers\V1\ComentarioControllerApi@store'); // Crea un nuevo comentario
@@ -66,7 +63,7 @@ Route::get('/users/{id}/events', 'App\Http\Controllers\V1\UserControllerApi@show
 Route::get('/users/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
 Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
 
-Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
+Route::get('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
 Route::middleware('jwt.auth')->group(function () {
 
@@ -83,8 +80,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::delete('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
 
-    /*     PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
-    Route::get('/eventos/asistentes/{id}', 'App\Http\Controllers\V1\EventoUserControllerApi@showAsistentes'); 
+    /* PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
     //Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
     //Route::get('/user/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
     
