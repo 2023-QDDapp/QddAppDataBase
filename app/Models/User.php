@@ -16,7 +16,7 @@ class User extends Authenticatable implements JWTSubject
     protected $table = 'users';
 
     protected $fillable = [
-        'nombre', 'telefono', 'email', 'password', 'fecha_nacimiento', 'biografia', 'foto', //'siguiendo'
+        'nombre', 'telefono', 'email', 'password', 'fecha_nacimiento', 'biografia', 'foto'
     ];
 
     public function categorias() {

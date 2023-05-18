@@ -42,6 +42,22 @@ class UserControllerApi extends Controller
      */
     public function store(Request $request)
     {
+        $campo = [
+            'nombre' => 'required|string|max:255',
+            'telefono' => 'required|string|max:9|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'nullable|string|min:6',
+            'fecha_nacimiento' => 'required|date',
+            'biografia' => 'required|string|max:500',
+            'foto' => 'required|string|mimes:png,jpg,jpeg'
+        ];
+
+        $mensaje = [
+            'required' => 'El campo :attribute es obligatorio',
+            'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
+            'min' => 'La contraseña no puede ser menor de :min caracteres'
+        ];
+
         $user = new User;
         $user->nombre = $request->nombre;
         $user->telefono = $request->telefono;
@@ -202,18 +218,30 @@ class UserControllerApi extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = new User;
-        $user->nombre = $request->nombre;
-        $user->telefono = $request->telefono;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->biografia = $request->biografia;
-        $user->foto = $request->foto;
+        $campo = [
+            'nombre' => 'required|string|max:255',
+            'telefono' => 'required|string|max:9|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'nullable|string|min:6',
+            'fecha_nacimiento' => 'required|date',
+            'biografia' => 'required|string|max:500',
+            'foto' => 'required|string|mimes:png,jpg,jpeg'
+        ];
 
-        $user->save();
+        $mensaje = [
+            'required' => 'El campo :attribute es obligatorio',
+            'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
+            'min' => 'La contraseña no puede ser menor de :min caracteres'
+        ];
+
+        $this->validate($request, $campo, $mensaje);
+
+        $datosUser = request()->only(['nombre', 'telefono', 'email', 'password', 'biografia', 'foto']);
+
+        $user = User::where('id', '=', $id)->update($datosUser);
 
         return response()->json([
-            'mensaje' => 'El usuario ha sido registrado correctamente',
+            'mensaje' => 'Se ha actualizado el usuario #' . $id,
             'user' => $user
         ]);
     }
@@ -233,20 +261,73 @@ class UserControllerApi extends Controller
         ]);
     }
 
-    public function categorias(Request $request) 
+    public function addCategorias(Request $request) 
     {
         $user = User::find($request->user_id);
 
+        $categoriasUsuario = $user->categorias->pluck('id')->toArray();
+
         if (count($user->categorias) < 3) {
-            $user->categorias()->attach($request->categoria_id);
+            if (!in_array($request->categoria_id, $categoriasUsuario)) {
+                $user->categorias()->attach($request->categoria_id);
             
-            return response()->json([
-                'mensaje' => 'La categoría se ha añadido correctamente'
-            ]);
+                return response()->json([
+                    'mensaje' => 'La categoría se ha añadido a tus intereses'
+                ]);
+
+            } else {
+                return response()->json([
+                    'mensaje' => 'Esa categoría ya la has añadido'
+                ]);
+            }
 
         } else {
             return response()->json([
                 'mensaje' => 'No puedes tener más de tres categorías'
+            ]);
+        }
+    }
+
+    public function deleteCategorias(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        $user->categorias()->detach($request->categoria_id);
+
+        return response()->json([
+            'mensaje' => 'La categoría se ha eliminado de tus intereses'
+        ]);
+    }
+
+    public function unirseEvento(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        $eventosUsuario = $user->eventos->pluck('id')->toArray();
+
+        if (!in_array($request->evento_id, $eventosUsuario)) {
+            $evento = Evento::find($request->evento_id);
+
+            if ($evento->tipo == 'público') {
+                $user->eventos()->attach($request->evento_id);
+                $evento->estado = 1;
+
+                return response()->json([
+                    'mensaje' => 'Te has unido a este evento'
+                ]);
+
+            } else {
+                $user->eventos()->attach($request->evento_id);
+                $evento->estado = 0;
+
+                return response()->json([
+                    'mensaje' => 'Pendiente de que te acepten en este evento'
+                ]);
+            }
+
+        } else {
+            return response()->json([
+                'mensaje' => 'Ya te has unido a este evento'
             ]);
         }
     }

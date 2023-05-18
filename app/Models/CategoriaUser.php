@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CategoriaUser extends Model
 {
     //use HasFactory;
-    protected $table = 'user_categoria';
+    protected $table = 'categoria_users';
 
     protected $fillable = [
         'user_id', 'categoria_id'
