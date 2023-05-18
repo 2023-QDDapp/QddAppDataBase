@@ -42,31 +42,31 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-{
-    $validatedData = $this->validateUserData($request);
+    {
+        $validatedData = $this->validateUserData($request);
 
-    $user = new User();
-    $user->nombre = $validatedData['nombre'];
-    $user->telefono = $validatedData['telefono'];
-    $user->email = $validatedData['email'];
-    $user->password = bcrypt($validatedData['password']);
-    $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
-    $user->biografia = $validatedData['biografia'];
+        $user = new User();
+        $user->nombre = $validatedData['nombre'];
+        $user->telefono = $validatedData['telefono'];
+        $user->email = $validatedData['email'];
+        $user->password = bcrypt($validatedData['password']);
+        $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
+        $user->biografia = $validatedData['biografia'];
 
-    if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-        $fileName = time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/img/user', $fileName);
-        $user->foto = 'img/user/' . $fileName;
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/img/user', $fileName);
+            $user->foto = 'img/user/' . $fileName;
+        }
+
+        $user->save();
+
+        $categorias = $request->input('categorias', []);
+        $user->categorias()->attach($categorias);
+
+        return redirect()->route('users.index')->with('success', 'Se creó un nuevo usuario.');
     }
-
-    $user->save();
-
-    $categorias = $request->input('categorias', []);
-    $user->categorias()->attach($categorias);
-
-    return redirect()->route('users.index')->with('success', 'Se creó un nuevo usuario.');
-}
 
     /**
      * Display the specified resource.

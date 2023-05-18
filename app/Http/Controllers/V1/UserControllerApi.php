@@ -11,6 +11,7 @@ use App\Models\CategoriaUser;
 use App\Models\Evento;
 use App\Models\Follower;
 use App\Models\Resena;
+use Illuminate\Support\Facades\Storage;
 
 class UserControllerApi extends Controller
 {
@@ -65,7 +66,18 @@ class UserControllerApi extends Controller
         $user->password = $request->password;
         $user->fecha_nacimiento = $request->fecha_nacimiento;
         $user->biografia = $request->biografia;
-        $user->foto = $request->foto;
+        
+        // Guardar la foto
+        if ($request->has('foto')) {
+            $base64Image = $request->input('foto');
+            list($type, $data) = explode(';', $base64Image);
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+            $fileName = 'user_' . time() . '.jpg'; // Nombre del archivo
+            $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
+            Storage::put($filePath, $data);
+            $user->foto = 'img/user/' . $fileName;
+        }
 
         $user->save();
 
@@ -83,15 +95,27 @@ class UserControllerApi extends Controller
      */
     public function show($id)
     {
-        $user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'categorias.id AS categoria_id', 'categorias.categoria')
-            ->join('categoria_users', 'users.id', '=', 'categoria_users.user_id')
-            ->join('categorias', 'categoria_users.categoria_id', '=', 'categorias.id')
+        $user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
             ->where('users.id', $id)
-            ->get();
+            ->first();
 
-        $usuario = $user->first();
-        $categorias = $user->pluck('categoria_id')->toArray();
-        $datosCategorias = Categoria::whereIn('id', $categorias)->get(['id', 'categoria']);
+        if (!$user) {
+            return response()->json([
+                'mensaje' => 'El usuario no existe'
+            ], 404);
+        }
+
+        $foto = null;
+        if ($user->foto) {
+            $filePath = storage_path('app/public/' . $user->foto);
+            $fotoData = file_get_contents($filePath);
+            $foto = base64_encode($fotoData);
+        }
+
+        $categorias = Categoria::select('categorias.id', 'categorias.categoria')
+            ->join('categoria_users', 'categorias.id', '=', 'categoria_users.categoria_id')
+            ->where('categoria_users.user_id', $id)
+            ->get();
 
         $resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'users.foto', 'resenas.mensaje')
             ->join('users', 'users.id', '=', 'resenas.id_usuario_emisor')
@@ -99,18 +123,16 @@ class UserControllerApi extends Controller
             ->get();
 
         $datosUsuario = [
-            'id' => $usuario->id,
-            'nombre' => $usuario->nombre,
-            'foto' => $usuario->foto,
-            'edad' => $usuario->edad,
-            'biografia' => $usuario->biografia,
-            'intereses' => $datosCategorias,
+            'id' => $user->id,
+            'nombre' => $user->nombre,
+            'foto' => $foto, // Agregar la foto codificada en base64
+            'edad' => $user->edad,
+            'biografia' => $user->biografia,
+            'intereses' => $categorias,
             'valoraciones' => $resenas
         ];
 
-        return response()->json(
-            $datosUsuario
-        );
+        return response()->json($datosUsuario);
     }
 
     public function showEventosUser($id)
@@ -227,6 +249,32 @@ class UserControllerApi extends Controller
             'biografia' => 'required|string|max:500',
             'foto' => 'required|string|mimes:png,jpg,jpeg'
         ];
+        
+        $user = User::findOrFail($id);
+        $user->nombre = $request->nombre;
+        $user->telefono = $request->telefono;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->fecha_nacimiento = $request->fecha_nacimiento;
+        $user->biografia = $request->biografia;
+
+        // Guardar la foto
+        if ($request->has('foto')) {
+            $base64Image = $request->input('foto');
+            list($type, $data) = explode(';', $base64Image);
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+            $fileName = 'user_' . time() . '.jpg'; // Nombre del archivo
+            $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
+            Storage::put($filePath, $data);
+
+            // Eliminar la foto anterior si existe
+            if ($user->foto) {
+                Storage::delete($user->foto);
+            }
+
+            $user->foto = 'img/user/' . $fileName;
+        }
 
         $mensaje = [
             'required' => 'El campo :attribute es obligatorio',
