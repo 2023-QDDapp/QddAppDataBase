@@ -1,3 +1,6 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 @if(count($errors) > 0)
     <div class="alert alert-danger" role="alert">
         <ul>
@@ -11,7 +14,7 @@
 @endif
 
 <div class="card">
-    <div class="card-header">
+    <div class="card-header custom-header-footer">
         <h2>{{ $modo }} Usuario</h2>
     </div>
     <div class="card-body">
@@ -42,6 +45,17 @@
                 <label for="email" class="col-md-4 col-form-label text-md-end">Email</label>
                 <div class="col-md-6">
                     <input type="email" class="form-control" name="email" id="email" value="{{ isset($user->email) ? $user->email : old('email') }}" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="categorias" class="col-md-4 col-form-label text-md-end">Categoría:</label>
+                <div class="col-md-6">
+                    <select name="categorias[]" id="categorias" class="js-example-basic-multiple" multiple>
+                        @foreach ($categorias as $categoria)
+                            <option value="{{ $categoria->id }}" @if (isset($user) && in_array($categoria->id, $user->categorias->pluck('id')->toArray())) selected @endif>{{ $categoria->categoria }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
@@ -104,7 +118,7 @@
         </div>
     </div>
     
-    <div class="card-footer">
+    <div class="card-footer custom-header-footer">
         <div class="row mb-3">
             <div class="col text-left">
                 <a class="btn btn-primary" href="{{ route('users.index') }}">Volver</a>
@@ -115,7 +129,6 @@
         </div>
     </div>
 
-    
 </div>
 
 <script>
@@ -123,4 +136,10 @@
         var fileName = input.files[0].name;
         document.getElementById('foto-label').textContent = fileName;
     }
+    //Extensión de la funcionalidad de javascript para SELECT2
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+            maximumSelectionLength: 3
+        });
+    });
 </script>

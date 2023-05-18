@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header custom-header-footer">
             <strong>Datos de usuario</strong>
         </div>
         <div class="card-body">
@@ -36,14 +36,51 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-md">
+                            <strong>Categorías:</strong>
+                            @forelse ($user->categorias as $categoria)
+                                <span class="badge badge-primary">{{ $categoria->categoria }}</span>
+                            @empty
+                                <span>No tiene categorías asignadas.</span>
+                            @endforelse
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md">
                             <strong>Biografía:</strong>
                             {{$user->biografia}}
                         </div>
                     </div>
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-md">
+                            <strong>Eventos creados por el usuario:</strong>
+                            @forelse ($user->eventosCreados as $evento)
+                                <li style="list-style: none;">
+                                    <span class="badge badge-primary">{{ $evento->titulo }}</span>
+                                </li>
+                            @empty
+                                <br>
+                                <span>No a creado eventos.</span>
+                            @endforelse
+                        </div>
+                        <div class="col-md">
+                            <strong>Eventos a los que asiste el usuario:</strong>
+                            @forelse ($user->eventosAsistidos as $evento)
+                                <li style="list-style: none;">
+                                    <span class="badge badge-primary">{{ $evento->titulo }}</span>
+                                </li>
+                            @empty
+                                <br>
+                                <span>No asiste a eventos</span>
+                            @endforelse
+                        </div>
+                    </div>
+                    <hr>
+                    
                 </div>
             </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer custom-header-footer">
             <a class="btn btn-primary" href="{{ route('users.index') }}">Volver</a>
         </div>
     </div>

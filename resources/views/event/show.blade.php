@@ -4,24 +4,24 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header custom-header-footer">
             <strong>Datos del evento</strong>
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="{{ asset('storage/' . $event->imagen) }}" alt="Foto de usuario" class="rounded" style="width: 450px;">
-                        </div>
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <img src="{{ asset('storage/' . $event->imagen) }}" alt="Foto de usuario" class="rounded" style="width: 300px;">
                     </div>
+                </div>
+                <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-6">
                             <strong>Título:</strong>
                             {{$event->titulo}}
                         </div>
                         <div class="col-md-6">
-                            <strong>organizador:</strong>
+                            <strong>Organizador:</strong>
                             {{$event->creador->nombre}}
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <strong>Categoría:</strong>
-                            {{$event->categoria->categoria}}
+                            <span class="badge badge-primary">{{$event->categoria->categoria}}</span>
                         </div>
                         <div class="col-md-6">
                             <strong>Número de participantes:</strong>
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer custom-header-footer">
             <a class="btn btn-primary" href="{{ route('events.index') }}">Volver</a>
         </div>
     </div>

@@ -11,7 +11,7 @@
 @endif
 
 <div class="card">
-    <div class="card-header">
+    <div class="card-header custom-header-footer">
         <h2>{{ $modo }} Administrador</h2>
     </div>
     <div class="card-body">
@@ -65,7 +65,7 @@
     
         </div>
     </div>
-    <div class="card-footer">
+    <div class="card-footer custom-header-footer">
         <div class="row mb-3">
             <div class="col text-left">
                 <a class="btn btn-primary" href="{{ route('admins.index') }}">Volver</a>

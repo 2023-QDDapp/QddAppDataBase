@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Categoria;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -29,7 +30,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        $categorias = Categoria::all();
+        return view('user.create', compact('categorias'));
+        
     }
 
     /**
@@ -39,28 +42,31 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $validatedData = $this->validateUserData($request);
+{
+    $validatedData = $this->validateUserData($request);
 
-        $user = new User();
-        $user->nombre = $validatedData['nombre'];
-        $user->telefono = $validatedData['telefono'];
-        $user->email = $validatedData['email'];
-        $user->password = bcrypt($validatedData['password']);
-        $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
-        $user->biografia = $validatedData['biografia'];
+    $user = new User();
+    $user->nombre = $validatedData['nombre'];
+    $user->telefono = $validatedData['telefono'];
+    $user->email = $validatedData['email'];
+    $user->password = bcrypt($validatedData['password']);
+    $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
+    $user->biografia = $validatedData['biografia'];
 
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/img/user', $fileName);
-            $user->foto = 'img/user/' . $fileName;
-        }
-
-        $user->save();
-
-        return redirect()->route('users.index')->with('success', 'Se creo un nuevo usuario.');
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public/img/user', $fileName);
+        $user->foto = 'img/user/' . $fileName;
     }
+
+    $user->save();
+
+    $categorias = $request->input('categorias', []);
+    $user->categorias()->attach($categorias);
+
+    return redirect()->route('users.index')->with('success', 'Se creó un nuevo usuario.');
+}
 
     /**
      * Display the specified resource.
@@ -70,7 +76,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user::with('categorias')->get();
+        $user::with('categorias', 'eventosCreados', 'eventosAsistidos')->get();
+    
+
         return view('user.show', compact('user'));
     }
 
@@ -82,7 +90,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('user.edit', compact('user'));
+        $categorias = Categoria::all();
+        return view('user.edit', compact('user', 'categorias'));
     }
 
     /**
@@ -123,6 +132,9 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        $categorias = $request->input('categorias', []);
+        $user->categorias()->sync($categorias);
 
         return redirect()->route('users.index')->with('success', 'Datos del usuario actualizados correctamente.');
     }

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header custom-header-footer">
             <h2>Datos del administrador</h2>
         </div>
         <div class="card-body">
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer custom-header-footer">
             <a class="btn btn-primary" href="{{ route('admins.index') }}">Volver</a>
         </div>
     </div>

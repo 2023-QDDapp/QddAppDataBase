@@ -110,3 +110,8 @@ thead{
     background-repeat: repeat;
     background-size: 50%;
 }
+
+.custom-header-footer {
+    background-color: #f0f9fc; /* Color personalizado */
+    color: #075F73; /* Color de texto */
+}

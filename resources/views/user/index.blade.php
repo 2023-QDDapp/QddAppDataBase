@@ -24,8 +24,6 @@
                 <th>Email</th>
                 <th>Teléfono</th>
                 <th>Edad</th>
-                <th>Categorías</th>
-
                 <th></th>
                 
             </tr>
@@ -38,12 +36,6 @@
                 <td>{{$user->email}}</td>
                 <td>{{$user->telefono}}</td>
                 <td>{{$user->getAgeFromDate()}}</td>
-                <td> 
-                    @foreach ($user->categorias as $categoria)
-                        <li>{{ $categoria->categoria }}</li>
-                    @endforeach
-                </td>
-
                 <td>
                     <div class="btn-group" role="group">
                         <a href="{{ route('users.show', $user->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>

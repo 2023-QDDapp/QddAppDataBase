@@ -13,7 +13,13 @@ class Resena extends Model
         'id_usuario_emisor', 'id_usuario_receptor', 'mensaje'
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function emisor()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_emisor');
+    }
+
+    public function receptor()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_receptor');
     }
 }

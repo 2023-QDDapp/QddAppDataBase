@@ -15,7 +15,7 @@ class CategoriaUser extends Model
     ];
 
     public function users() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'categoria_users');
     }
 
     public function categoria() {

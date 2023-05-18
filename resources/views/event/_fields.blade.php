@@ -15,7 +15,7 @@
 @endif
 
 <div class="card">
-    <div class="card-header">
+    <div class="card-header custom-header-footer">
         <h2>{{ $modo }} Evento</h2>
     </div>
     <div class="card-body">
@@ -38,6 +38,23 @@
                             @endforeach
                         @endisset
                     </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen:</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="imagen" name="imagen" accept="image/*" lang="es" onchange="updateFileName(this)">
+                            <label class="custom-file-label" for="imagen" id="imagen-label">Seleccionar archivo</label>
+                        </div>
+                    </div>
+                    @if(isset($event->imagen))
+                        <div class="mt-3 text-center">
+                            <img src="{{ asset('storage/' . $event->imagen) }}" alt="Imagen del evento" style="width: 250px;" class="rounded">
+                        </div>
+                    @endif
                 </div>
             </div>
             
@@ -116,20 +133,10 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen:</label>
-                <div class="col-md-6">
-                    @if(isset($event->imagen))
-                    <img src="{{ asset('storage/' . $event->imagen) }}" alt="Imagen del evento" style="width: 250px;" class="rounded">
-                    @endif
-                    <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*">
-                </div>
-            </div>
-
         </div>
     </div>
     
-    <div class="card-footer">
+    <div class="card-footer custom-header-footer">
         <div class="row mb-3">
             <div class="col text-left">
                 <a class="btn btn-primary" href="{{ route('events.index') }}">Volver</a>

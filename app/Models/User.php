@@ -35,8 +35,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Comentario::class);
     }
 
-    public function resenas() {
-        return $this->hasMany(Resena::class);
+    public function resenas()
+    {
+        return $this->belongsToMany(User::class, 'resenas', 'id_usuario_emisor', 'id_usuario_receptor',);
     }
 
     public function notificaciones() {
