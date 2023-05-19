@@ -10,7 +10,7 @@ class EventoUser extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'evento_id'
+        'user_id', 'evento_id', 'estado'
     ];
 
     public function eventos() {

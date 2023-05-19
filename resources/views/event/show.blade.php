@@ -5,7 +5,7 @@
 <div class="container">
     <div class="card">
         <div class="card-header custom-header-footer">
-            <strong>Datos del evento</strong>
+            <h4><strong>Datos del evento</strong></h4>
         </div>
         <div class="card-body">
             <div class="row">
@@ -21,15 +21,16 @@
                             {{$event->titulo}}
                         </div>
                         <div class="col-md-6">
-                            <strong>Organizador:</strong>
-                            {{$event->creador->nombre}}
+                            <strong>Categoría:</strong>
+                            <span class="badge badge-primary">{{$event->categoria->categoria}}</span>
                         </div>
                     </div>
                     <hr>
                     <div class="row mt-3">
-                        <div class="col-md-6">
-                            <strong>Categoría:</strong>
-                            <span class="badge badge-primary">{{$event->categoria->categoria}}</span>
+                       <div class="col-md-6">
+                            <strong>Organizador:</strong>
+                            {{$event->creador->nombre}}
+                            <img src="{{ $event->creador->foto }}" alt="{{ $event->creador->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                         </div>
                         <div class="col-md-6">
                             <strong>Número de participantes:</strong>
@@ -58,6 +59,43 @@
                             {{$event->location}}
                         </div>
                     </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <strong>Asistentes:</strong>
+                    <br>
+                    @forelse ($event->usuariosAsistentes as $user)
+                        @if ($user->pivot->estado == true)
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <img src="{{ $user->foto }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                </div>
+                                <p><strong>{{ $user->nombre }}</strong></p>
+                            </div>
+                            <hr>
+                        @endif
+                    @empty
+                        <span>No hay ningún asistente.</span>
+                    @endforelse
+                </div>
+                <div class="col-md-6">
+                    <strong>Pendientes:</strong>
+                    <br>
+                    @forelse ($event->usuariosAsistentes as $user)
+                        @if ($user->pivot->estado == false)
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <img src="{{ $user->foto }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                </div>
+                                <p><strong>{{ $user->nombre }}</strong></p>
+                            </div>
+                            <hr>
+                        @endif
+                    @empty
+                        <span>No hay ningún asistente.</span>
+                    @endforelse
                 </div>
             </div>
         </div>

@@ -40,6 +40,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(User::class, 'resenas', 'id_usuario_emisor', 'id_usuario_receptor',);
     }
 
+    public function mensajesRecibidos()
+    {
+        return $this->hasMany(Resena::class, 'id_usuario_receptor');
+    }
+
     public function notificaciones() {
         return $this->hasMany(Notificacion::class);
     }

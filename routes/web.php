@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ResenaController;
 
 
 
@@ -34,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('events', EventoController::class);
     Route::resource('categorias', CategoriaController::class);
+    Route::resource('resenas', ResenaController::class);
 
 });
 

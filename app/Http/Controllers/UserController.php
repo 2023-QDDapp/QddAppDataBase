@@ -77,9 +77,10 @@ class UserController extends Controller
     public function show(User $user)
     {
         $user::with('categorias', 'eventosCreados', 'eventosAsistidos')->get();
+        $mensajesRecibidos = $user->mensajesRecibidos;
     
 
-        return view('user.show', compact('user'));
+        return view('user.show', compact('user', 'mensajesRecibidos'));
     }
 
     /**

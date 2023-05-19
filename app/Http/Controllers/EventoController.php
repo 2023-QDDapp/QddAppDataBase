@@ -46,6 +46,7 @@ class EventoController extends Controller
 
         $evento = new Evento();
         $evento->fill($validatedData);
+        //$evento->n_participantes = 1; asignación por defecto de participantes porque el organizador se considera un participante
         
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
@@ -68,7 +69,7 @@ class EventoController extends Controller
     public function show(Evento $event)
     {
 
-        $event::with('categoria', 'creador')->get();
+        $event::with('categoria', 'creador', 'usuariosAsistentes')->get();
         
         return view('event.show', compact('event'));
     }

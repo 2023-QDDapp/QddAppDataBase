@@ -20,25 +20,23 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Organizador</th>
                 <th>Título</th>
                 <th>Categoría</th>
+                <th>Organizador</th>
                 <th>Inicio</th>
                 <th>Fin</th>
                 <th></th>
-                
             </tr>
         </thead>
         <tbody>
             @foreach ($events as $event)
             <tr>
                 <td>{{$event->id}}</td>
-                <td>{{$event->creador->nombre}}</td>
                 <td>{{$event->titulo}}</td>
                 <td>{{$event->categoria->categoria}}</td>
+                <td>{{$event->creador->nombre}}</td>
                 <td>{{$event->fecha_hora_inicio}}</td>
                 <td>{{$event->fecha_hora_fin}}</td>
-
                 <td>
                     <div class="btn-group" role="group">
                         <a href="{{ route('events.show', $event->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
@@ -54,7 +52,6 @@
                 </td>
             </tr>
             @endforeach
-            
         </tbody>
     </table>
 </div>
