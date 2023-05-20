@@ -94,46 +94,49 @@ class UserControllerApi extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        $user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
-            ->where('users.id', $id)
-            ->first();
+	{
+		$user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+			->where('users.id', $id)
+			->first();
 
-        if (!$user) {
-            return response()->json([
-                'mensaje' => 'El usuario no existe'
-            ], 404);
-        }
+		if (!$user) {
+			return response()->json([
+				'mensaje' => 'El usuario no existe'
+			], 404);
+		}
 
-        $foto = null;
-        if ($user->foto) {
-            $filePath = storage_path('app/public/' . $user->foto);
-            $fotoData = file_get_contents($filePath);
-            $foto = base64_encode($fotoData);
-        }
+		$fotoUrl = null;
+		if ($user->foto) {
+			$fotoUrl = asset('storage/' . $user->foto);
+		}
 
-        $categorias = Categoria::select('categorias.id', 'categorias.categoria')
-            ->join('categoria_users', 'categorias.id', '=', 'categoria_users.categoria_id')
-            ->where('categoria_users.user_id', $id)
-            ->get();
+		$categorias = Categoria::select('categorias.id', 'categorias.categoria')
+			->join('categoria_users', 'categorias.id', '=', 'categoria_users.categoria_id')
+			->where('categoria_users.user_id', $id)
+			->get();
 
-        $resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'users.foto', 'resenas.mensaje')
-            ->join('users', 'users.id', '=', 'resenas.id_usuario_emisor')
-            ->where('resenas.id_usuario_receptor', $id)
-            ->get();
+		$resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'users.foto', 'resenas.mensaje')
+			->join('users', 'users.id', '=', 'resenas.id_usuario_emisor')
+			->where('resenas.id_usuario_receptor', $id)
+			->get();
+        //transformar las imagenes de los usuarios que mandan reseñas
+        $resenas->transform(function ($resena) {
+            $resena->foto = url('storage/' . $resena->foto);
+            return $resena;
+        });
 
-        $datosUsuario = [
-            'id' => $user->id,
-            'nombre' => $user->nombre,
-            'foto' => $foto, // Agregar la foto codificada en base64
-            'edad' => $user->edad,
-            'biografia' => $user->biografia,
-            'intereses' => $categorias,
-            'valoraciones' => $resenas
-        ];
+		$datosUsuario = [
+			'id' => $user->id,
+			'nombre' => $user->nombre,
+			'foto' => $fotoUrl,
+			'edad' => $user->edad,
+			'biografia' => $user->biografia,
+			'intereses' => $categorias,
+			'valoraciones' => $resenas
+		];
 
-        return response()->json($datosUsuario);
-    }
+		return response()->json($datosUsuario);
+	}
 
     public function showEventosUser($id)
     {

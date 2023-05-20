@@ -39,7 +39,7 @@ class Evento extends Model
     }
 
     public function usuariosAsistentes() {
-        return $this->belongsToMany(User::class, 'evento_users', 'evento_id', 'user_id')->withPivot('estado');
+        return $this->belongsToMany(User::class, 'evento_users', 'evento_id', 'user_id')->withPivot('estado', 'id');
     }
 
     

@@ -3,6 +3,11 @@
 @section('content')
 
 <div class="container">
+    @if (session('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
     <div class="card">
         <div class="card-header custom-header-footer">
             <h4><strong>Datos del evento</strong></h4>
@@ -68,11 +73,18 @@
                     <br>
                     @forelse ($event->usuariosAsistentes as $user)
                         @if ($user->pivot->estado == true)
-                            <div class="d-flex align-items-center">
-                                <div class="mr-3">
-                                    <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                <p class="ml-3 mb-0"><strong>{{ $user->nombre }}</strong></p>
+                                <div class="ml-auto">
+                                    <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la relación?')" class="btn btn-link text-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                                <p><strong>{{ $user->nombre }}</strong></p>
                             </div>
                             <hr>
                         @endif
@@ -85,11 +97,25 @@
                     <br>
                     @forelse ($event->usuariosAsistentes as $user)
                         @if ($user->pivot->estado == false)
-                            <div class="d-flex align-items-center">
-                                <div class="mr-3">
-                                    <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                <p class="ml-3 mb-0"><strong>{{ $user->nombre }}</strong></p>
+                                <div class="ml-auto">
+                                    <form action="{{ route('eventousers.update', $user->pivot->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-link text-success" onclick="return confirm('¿Está seguro de que desea cambiar el estado?')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la relación?')" class="btn btn-link text-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                                <p><strong>{{ $user->nombre }}</strong></p>
                             </div>
                             <hr>
                         @endif
