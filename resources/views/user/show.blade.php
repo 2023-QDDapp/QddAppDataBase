@@ -97,7 +97,7 @@
                             @foreach ($mensajesRecibidos as $mensaje)
                                 <div class="d-flex align-items-start mb-3">
                                     <div class="mr-3">
-                                        <img src="{{ $mensaje->emisor->foto }}" alt="{{ $mensaje->emisor->nombre }}" class="rounded-circle" style="width: 60px; height: 60px;">
+                                        <img src="{{ asset('storage/' . $mensaje->emisor->foto) }}" alt="{{ $mensaje->emisor->nombre }}" class="rounded-circle" style="width: 60px; height: 60px;">
                                     </div>
                                     <div class="flex-grow-1">
                                         <p><strong>{{ $mensaje->emisor->nombre }}</strong></p>

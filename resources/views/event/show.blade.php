@@ -30,7 +30,7 @@
                        <div class="col-md-6">
                             <strong>Organizador:</strong>
                             {{$event->creador->nombre}}
-                            <img src="{{ $event->creador->foto }}" alt="{{ $event->creador->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                            <img src="{{ asset('storage/' . $event->creador->foto) }}" alt="{{ $event->creador->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                         </div>
                         <div class="col-md-6">
                             <strong>Número de participantes:</strong>
@@ -70,7 +70,7 @@
                         @if ($user->pivot->estado == true)
                             <div class="d-flex align-items-center">
                                 <div class="mr-3">
-                                    <img src="{{ $user->foto }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                    <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                                 </div>
                                 <p><strong>{{ $user->nombre }}</strong></p>
                             </div>
@@ -87,7 +87,7 @@
                         @if ($user->pivot->estado == false)
                             <div class="d-flex align-items-center">
                                 <div class="mr-3">
-                                    <img src="{{ $user->foto }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                    <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                                 </div>
                                 <p><strong>{{ $user->nombre }}</strong></p>
                             </div>
