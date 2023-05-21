@@ -58,15 +58,19 @@ Route::get('/users/{id}/pantallaseguidos', 'App\Http\Controllers\V1\UserControll
 Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
 
 Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
-Route::get('/users/{id}/events', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser'); // Muestra eventos de un usuario
 
+Route::get('/users/{id}/events', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser'); // Muestra eventos de un usuario
 Route::get('/users/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
 //Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
+Route::get('/events/filter', 'App\Http\Controllers\V1\EventoControllerApi@filtrar'); // Filtro de búsqueda
 
-Route::post('/users/categoria/add', 'App\Http\Controllers\V1\UserControllerApi@addCategorias'); // Añade una categoría a un usuario
-Route::post('/users/categoria/delete', 'App\Http\Controllers\V1\UserControllerApi@deleteCategorias'); // Elimina una categoría de un usuario
+Route::post('/users/follow', 'App\Http\Controllers\V1\UserControllerApi@follow'); // Seguir a un usuario
+Route::post('/users/unfollow', 'App\Http\Controllers\V1\UserControllerApi@unfollow'); // Dejar de seguir a un usuario
 
-Route::post('/users/events/enter', 'App\Http\Controllers\V1\UserControllerApi@unirseEvento');
+//Notificaciones
+Route::post('/users/events/join', 'App\Http\Controllers\V1\UserControllerApi@unirseEvento'); // Solicitar unirse a un evento
+Route::post('/events/{eventoId}/aceptar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoAceptado'); // Aceptar usuario a un evento
+Route::post('/events/{eventoId}/denegar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoCancelado'); // Denegar usuario en un evento
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
@@ -77,7 +81,6 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('/users', 'App\Http\Controllers\V1\UserControllerApi@store'); // Crea un nuevo usuario
     Route::put('/users/{id}/edit', 'App\Http\Controllers\V1\UserControllerApi@update'); // Edita un usuario
     Route::delete('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@destroy'); // Elimina un usuario
-    //Route::post('/users/categoria', 'App\Http\Controllers\V1\UserControllerApi@categorias'); // Añade una categoría a un usuario
 
     // Eventos
     Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
