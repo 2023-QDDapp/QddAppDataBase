@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             EventoUserSeeder::class,
             CategoriaUserSeeder::class,
             BloqueoSeeder::class,
-            NotificationSeeder::class,
             AdminSeeder::class,
             FollowerSeeder::class
         ]);

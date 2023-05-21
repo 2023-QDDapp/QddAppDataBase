@@ -11,6 +11,9 @@ use App\Models\CategoriaUser;
 use App\Models\Evento;
 use App\Models\Follower;
 use App\Models\Resena;
+use App\Notifications\AcceptedEventNotification;
+use App\Notifications\JoinEventNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserControllerApi extends Controller
@@ -50,14 +53,18 @@ class UserControllerApi extends Controller
             'password' => 'nullable|string|min:6',
             'fecha_nacimiento' => 'required|date',
             'biografia' => 'required|string|max:500',
-            'foto' => 'required|string|mimes:png,jpg,jpeg'
+            'foto' => 'required|string|mimes:png,jpg,jpeg',
+            'categorias' => 'required|array|size:3'
         ];
 
         $mensaje = [
             'required' => 'El campo :attribute es obligatorio',
             'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
-            'min' => 'La contraseña no puede ser menor de :min caracteres'
+            'min' => 'La contraseña no puede ser menor de :min caracteres',
+            'size' => 'No puedes elegir más de tres categorías'
         ];
+
+        $categoriasSeleccionadas = $request->input('categorias');
 
         $user = new User;
         $user->nombre = $request->nombre;
@@ -79,7 +86,10 @@ class UserControllerApi extends Controller
             $user->foto = 'img/user/' . $fileName;
         }
 
+        $this->validate($request, $campo, $mensaje);
         $user->save();
+
+        $user->categorias()->attach($categoriasSeleccionadas);
 
         return response()->json([
             'mensaje' => 'El usuario ha sido registrado correctamente',
@@ -252,6 +262,12 @@ class UserControllerApi extends Controller
             'biografia' => 'required|string|max:500',
             'foto' => 'required|string|mimes:png,jpg,jpeg'
         ];
+
+        $mensaje = [
+            'required' => 'El campo :attribute es obligatorio',
+            'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
+            'min' => 'La contraseña no puede ser menor de :min caracteres'
+        ];
         
         $user = User::findOrFail($id);
         $user->nombre = $request->nombre;
@@ -279,12 +295,6 @@ class UserControllerApi extends Controller
             $user->foto = 'img/user/' . $fileName;
         }
 
-        $mensaje = [
-            'required' => 'El campo :attribute es obligatorio',
-            'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
-            'min' => 'La contraseña no puede ser menor de :min caracteres'
-        ];
-
         $this->validate($request, $campo, $mensaje);
 
         $datosUser = request()->only(['nombre', 'telefono', 'email', 'password', 'biografia', 'foto']);
@@ -305,49 +315,15 @@ class UserControllerApi extends Controller
      */
     public function destroy($id)
     {
-        User::destroy($id);
+        $user = User::findOrFail($id);
 
-        return response()->json([
-            'mensaje' => 'Se ha eliminado el usuario #' . $id
-        ]);
-    }
+        if ($user == auth()->user()) {
+            User::destroy($id);
 
-    public function addCategorias(Request $request) 
-    {
-        $user = User::find($request->user_id);
-
-        $categoriasUsuario = $user->categorias->pluck('id')->toArray();
-
-        if (count($user->categorias) < 3) {
-            if (!in_array($request->categoria_id, $categoriasUsuario)) {
-                $user->categorias()->attach($request->categoria_id);
-            
-                return response()->json([
-                    'mensaje' => 'La categoría se ha añadido a tus intereses'
-                ]);
-
-            } else {
-                return response()->json([
-                    'mensaje' => 'Esa categoría ya la has añadido'
-                ]);
-            }
-
-        } else {
             return response()->json([
-                'mensaje' => 'No puedes tener más de tres categorías'
+                'mensaje' => 'Se ha eliminado el usuario #' . $id
             ]);
         }
-    }
-
-    public function deleteCategorias(Request $request)
-    {
-        $user = User::find($request->user_id);
-
-        $user->categorias()->detach($request->categoria_id);
-
-        return response()->json([
-            'mensaje' => 'La categoría se ha eliminado de tus intereses'
-        ]);
     }
 
     public function unirseEvento(Request $request)
@@ -357,19 +333,21 @@ class UserControllerApi extends Controller
         $eventosUsuario = $user->eventos->pluck('id')->toArray();
 
         if (!in_array($request->evento_id, $eventosUsuario)) {
-            $evento = Evento::find($request->evento_id);
+            //$evento = Evento::find($request->evento_id);
+            $evento = Evento::where('id', $request->evento_id)->first();
 
             if ($evento->tipo == 'público') {
-                $user->eventos()->attach($request->evento_id);
-                $evento->estado = 1;
+                $user->eventos()->attach($request->evento_id, ['estado' => 1]);
 
                 return response()->json([
                     'mensaje' => 'Te has unido a este evento'
                 ]);
 
             } else {
-                $user->eventos()->attach($request->evento_id);
-                $evento->estado = 0;
+                $user->eventos()->attach($request->evento_id, ['estado' => 0]);
+
+                // Notificación para el organizador del evento
+                $evento->user->notify(new JoinEventNotification($user, $evento));
 
                 return response()->json([
                     'mensaje' => 'Pendiente de que te acepten en este evento'
@@ -377,8 +355,102 @@ class UserControllerApi extends Controller
             }
 
         } else {
+            //if ($user->eventosAsistidos()->estado == 1) {
+                return response()->json([
+                    'mensaje' => 'Ya te has unido a este evento'
+                ]);
+            /*} else {
+                return response()->json([
+                    'mensaje' => 'Pendiente de que te acepten en este evento'
+                ]);
+            }*/
+        }
+
+        /*$user = auth()->user();
+        $eventosUsuario = $user->eventos->pluck('id');
+
+        if (!$eventosUsuario->contains($request->evento_id)) {
+            $evento = Evento::find($request->evento_id);
+
+            if ($evento->tipo == 'público') {
+                $user->eventos()->attach($request->evento_id, ['estado' => 1]);
+
+                return response()->json([
+                    'mensaje' => 'Te has unido a este evento'
+                ]);
+
+            } else {
+                $user->eventos()->attach($request->evento_id, ['estado' => 0]);
+
+                // Notificación para el organizador del evento
+                $evento->user->notify(new JoinEventNotification($user, $evento));
+
+                return response()->json([
+                    'mensaje' => 'Pendiente de que te acepten en este evento'
+                ]);
+            }
+        } else {
             return response()->json([
                 'mensaje' => 'Ya te has unido a este evento'
+            ]);
+        }*/
+    }
+
+    public function eventoAceptado($eventoId, $userId)
+    {
+        $evento = Evento::find($eventoId);
+        $user = User::find($userId);
+
+        $user->eventos()->updateExistingPivot($eventoId, ['estado' => 1]);
+
+        // Notificar al usuario que su solicitud ha sido aceptada
+        $user->notify(new AcceptedEventNotification($evento));
+
+        return response()->json([
+            'mensaje' => 'El usuario ha sido aceptado en el evento'
+        ]);
+    }
+
+    public function eventoCancelado($eventoId, $userId)
+    {
+        $evento = Evento::find($eventoId);
+        $user = User::find($userId);
+
+        $evento->usuarios()->detach($user->id);
+
+        return response()->json([
+            'mensaje' => 'El usuario no ha sido aceptado en el evento'
+        ]);
+    }
+
+    public function follow(Request $request)
+    {
+        $usuario = auth()->user();
+        $idSeguido = $request->input('id_usuario_seguido');
+
+        if (!$usuario->follows->contains($idSeguido)) {
+            $usuario->follows()->attach($idSeguido);
+
+            return response()->json([
+                'mensaje' => 'Has comenzado a seguir al usuario ' . $idSeguido
+            ]);
+        } else {
+            return response()->json([
+                'mensaje' => 'Ya sigues a este usuario'
+            ]);
+        }
+    }
+
+    public function unfollow(Request $request)
+    {
+        $usuario = auth()->user();
+        $idSeguido = $request->input('id_usuario_seguido');
+
+        if ($usuario->follows->contains($idSeguido)) {
+            $usuario->follows()->detach($idSeguido);
+
+            return response()->json([
+                'mensaje' => 'Has dejado de seguir al usuario ' . $idSeguido
             ]);
         }
     }

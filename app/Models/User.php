@@ -20,7 +20,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     public function categorias() {
-        return $this->belongsToMany(Categoria::class, 'categoria_users');
+        return $this->belongsToMany(Categoria::class, 'categoria_users', 'user_id', 'categoria_id');
     }
 
     public function eventoCreado() {
@@ -35,13 +35,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Comentario::class);
     }
 
-    public function resenas()
-    {
+    public function resenas() {
         return $this->belongsToMany(User::class, 'resenas', 'id_usuario_emisor', 'id_usuario_receptor',);
     }
 
-    public function mensajesRecibidos()
-    {
+    public function mensajesRecibidos() {
         return $this->hasMany(Resena::class, 'id_usuario_receptor');
     }
 
@@ -58,20 +56,18 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function follows() {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'followers');
     }
 
     public function followers() {
         return $this->belongsToMany(User::class);
     }
 
-    public function eventosCreados()
-    {
+    public function eventosCreados() {
         return $this->hasMany(Evento::class, 'user_id');
     }
 
-    public function eventosAsistidos()
-    {
+    public function eventosAsistidos() {
         return $this->belongsToMany(Evento::class, 'evento_users', 'user_id', 'evento_id');
     }
 
