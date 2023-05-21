@@ -6,6 +6,7 @@ use App\Models\Evento;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Categoria;
+use App\Models\EventoUser;
 use Carbon\Carbon;
 
 class EventoController extends Controller
@@ -57,7 +58,15 @@ class EventoController extends Controller
 
         $evento->save();
 
-        return redirect()->route('events.index')->with('success', 'se creo un nuevo evento.');
+        // Agregar usuarios relacionados al evento con el estado por defecto "false"
+        $usuariosSeleccionados = $request->input('usuarios', []);
+        $usuarios = User::whereIn('id', $usuariosSeleccionados)->get();
+        
+        foreach ($usuarios as $usuario) {
+            $evento->usuariosAsistentes()->attach($usuario, ['estado' => false]);
+        }
+
+        return redirect()->route('events.index')->with('success', 'Se creó un nuevo evento.');
     }
 
     /**
@@ -80,26 +89,15 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    /*public function edit(Evento $event)
-    {
-        $categorias = Categoria::all();
-        $users = User::all();
-
-        return view('event.edit', compact('event', 'categorias', 'users'));
-    }*/
-
-    /*public function edit($id)
-    {
-        $evento = Evento::findOrFail($id);
-        $users = User::all(); // Obtén los usuarios desde el modelo User (ajusta el modelo según tu estructura)
-        $categorias = Categoria::all(); // Obtén las categorías desde el modelo Categoria (ajusta el modelo según tu estructura)
-
-        return view('event.edit', compact('evento', 'users', 'categorias'));
-    }*/
     public function edit($id)
     {
         $event = Evento::with('user', 'categoria')->findOrFail($id);
-        $users = User::all();
+        $users = User::where('id', '!=', $event->user_id)
+                    ->whereDoesntHave('eventosAsistidos', function ($query) use ($event) {
+                        $query->where('evento_id', $event->id)
+                            ->where('estado', true);
+                    })
+                    ->get();
         $categorias = Categoria::all();
 
         return view('event.edit', compact('event', 'users', 'categorias'));
@@ -112,39 +110,13 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    /*public function update(Request $request, Evento $evento)
-    {
-        $validatedData = $this->validateEventData($request);
-
-        $evento->fill($validatedData);
-
-        if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
-
-            // Eliminar imagen anterior si existe
-            if (!empty($evento->imagen)) {
-                $oldFilePath = public_path('storage/' . $evento->imagen);
-                if (file_exists($oldFilePath)) {
-                    unlink($oldFilePath);
-                }
-            }
-
-            $file->storeAs('public/img/event', $fileName);
-            $evento->imagen = 'img/event/' . $fileName;
-        }
-
-        $evento->save();
-
-        return redirect()->route('events.index')->with('success', 'Datos del evento actualizados correctamente.');
-    }*/
 
     public function update(Request $request, $id)
     {
         $validatedData = $this->validateEventData($request);
 
         $evento = Evento::findOrFail($id);
-        
+
         $evento->fill($validatedData);
 
         if ($request->hasFile('imagen')) {
@@ -164,6 +136,21 @@ class EventoController extends Controller
         }
 
         $evento->save();
+
+        // Actualizar usuarios relacionados al evento con el estado existente
+        $usuariosSeleccionados = $request->input('usuarios', []);
+        $usuariosAntiguos = $evento->usuariosAsistentes()->pluck('user_id')->toArray();
+
+        $usuariosEliminar = array_diff($usuariosAntiguos, $usuariosSeleccionados);
+        $usuariosAgregar = array_diff($usuariosSeleccionados, $usuariosAntiguos);
+
+        // Eliminar usuarios deseleccionados
+        $evento->usuariosAsistentes()->detach($usuariosEliminar);
+
+        // Agregar nuevos usuarios y actualizar el estado existente
+        foreach ($usuariosAgregar as $usuarioAgregar) {
+            $evento->usuariosAsistentes()->attach($usuarioAgregar, ['estado' => false]);
+        }
 
         return redirect()->route('events.index')->with('success', 'Datos del evento actualizados correctamente.');
     }

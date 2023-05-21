@@ -31,7 +31,7 @@
                 <label for="usuarios" class="col-md-4 col-form-label text-md-end">Organizador:</label>
                 <div class="col-md-6">
                     <select name="user_id" id="users" class="js-example-basic-multiple" title="Selecciona el organizador" required>
-                        <option value="" disabled selected>Selecciona organizador</option>
+                        <option value="" disabled>Selecciona organizador</option>
                         @isset($users)
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}" @if ($event->user_id == $user->id) selected @endif>{{ $user->nombre }}</option>
@@ -53,6 +53,7 @@
                     @if(isset($event->imagen))
                         <div class="mt-3 text-center">
                             <img src="{{ asset('storage/' . $event->imagen) }}" alt="Imagen del evento" style="width: 250px;" class="rounded">
+                            <input type="hidden" name="imagen_old" value="{{ $event->imagen }}">
                         </div>
                     @endif
                 </div>
@@ -71,6 +72,20 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row mb-3">
+                <label for="usuarios" class="col-md-4 col-form-label text-md-end">Usuarios:</label>
+                <div class="col-md-6">
+                    <select name="usuarios[]" id="usuarios" class="js-example-basic-multiple" multiple>
+                        @foreach ($users as $user)
+                            @if (!$user->eventosAsistidos->where('id', $event->id)->where('pivot.estado', true)->count())
+                                <option value="{{ $user->id }}" @if(in_array($user->id, $event->usuariosAsistentes->pluck('id')->toArray())) selected @endif>{{ $user->nombre }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
 
             <div class="row mb-3">
                 <label for="n_participantes" class="col-md-4 col-form-label text-md-end">Número de participantes:</label>
@@ -153,7 +168,7 @@
 <script>
     function updateFileName(input) {
         var fileName = input.files[0].name;
-        document.getElementById('foto-label').textContent = fileName;
+        document.getElementById('imagen-label').textContent = fileName;
     }
     //Extensión de la funcionalidad de javascript para SELECT2
     $(document).ready(function() {
