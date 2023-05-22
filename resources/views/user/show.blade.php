@@ -87,7 +87,7 @@
             <hr>
             
             <div class="row mt-3">
-                <div class="col-md">
+                <div class="col-md-7">
                     <h5><strong>Reseñas recibidas:</strong></h5>
                     
                     <div class="resenas-scroll" style="max-height: 400px; overflow: auto;">
@@ -108,6 +108,37 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la reseña?')" class="btn btn-link text-danger">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+                
+                <div class="col-md-5">
+                    <h5><strong>Usuarios seguidos:</strong></h5>
+                    
+                    <div class="follows-scroll" style="max-height: 400px; overflow: auto;">
+                        @if ($user->follows->isEmpty())
+                            <p>No sigue a ningún usuario.</p>
+                        @else
+                            @foreach ($user->follows as $followedUser)
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="mr-3">
+                                        <img src="{{ asset('storage/' . $followedUser->foto) }}" alt="{{ $followedUser->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                    </div>
+                                    <div>
+                                        <p><strong>{{ $followedUser->nombre }}</strong></p>
+                                    </div>
+                                    <div>
+                                        <form action="{{ route('follows.destroy', $followedUser->pivot->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" onclick="return confirm('¿Está seguro de que desea dejar de seguir a este usuario?')" class="btn btn-link text-danger">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>

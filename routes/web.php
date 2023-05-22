@@ -8,6 +8,7 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\EventoUserController;
+use App\Http\Controllers\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('categorias', CategoriaController::class);
     Route::resource('resenas', ResenaController::class);
     Route::resource('eventousers', EventoUserController::class);
-    
+    Route::resource('follows', FollowController::class);
 
 });
 

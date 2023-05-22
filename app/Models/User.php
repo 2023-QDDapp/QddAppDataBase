@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function follows() {
-        return $this->belongsToMany(User::class, 'followers');
+        return $this->belongsToMany(User::class, 'followers', 'id_usuario_seguido', 'id_usuario_seguidor')->withPivot('id');
     }
 
     public function followers() {

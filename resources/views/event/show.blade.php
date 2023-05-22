@@ -81,7 +81,7 @@
                                         <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la relación?')" class="btn btn-link text-danger">
+                                            <button type="submit" onclick="return confirm('¿Está seguro de eliminar al usuario del evento?')" class="btn btn-link text-danger">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
@@ -107,14 +107,14 @@
                                         <form action="{{ route('eventousers.update', $user->pivot->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PUT')
-                                            <button type="submit" class="btn btn-link text-success" onclick="return confirm('¿Está seguro de que desea cambiar el estado?')">
+                                            <button type="submit" class="btn btn-link text-success" onclick="return confirm('¿Está seguro de que desea aceptar al usuario en el evento?')">
                                                 <i class="fas fa-check"></i>
                                             </button>
                                         </form>
                                         <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la relación?')" class="btn btn-link text-danger">
+                                            <button type="submit" onclick="return confirm('¿Está seguro de eliminar al usuario del evento?')" class="btn btn-link text-danger">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
