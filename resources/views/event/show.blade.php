@@ -3,9 +3,9 @@
 @section('content')
 
 <div class="container">
-    @if (session('message'))
+    @if(session('success'))
         <div class="alert alert-success">
-            {{ session('message') }}
+            {{ session('success') }}
         </div>
     @endif
     <div class="card">
@@ -71,20 +71,42 @@
                 <div class="col-md-6">
                     <strong>Asistentes:</strong>
                     <hr>
-                    <div style="max-height: 300px; overflow-y: auto;"> 
+                    <div style="max-height: 300px; overflow-y: auto;">
                         @forelse ($event->usuariosAsistentes as $user)
                             @if ($user->pivot->estado == true)
                                 <div class="d-flex align-items-center mb-3">
                                     <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                                     <p class="ml-3 mb-0"><strong>{{ $user->nombre }}</strong></p>
                                     <div class="ml-auto">
-                                        <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¿Está seguro de eliminar al usuario del evento?')" class="btn btn-link text-danger">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                        <!-- Botón de eliminar con modal -->
+                                        <button type="button" class="btn btn-link text-danger" data-toggle="modal" data-target="#deleteUserModal{{ $user->pivot->id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+            
+                                        <!-- Modal de confirmación de eliminación -->
+                                        <div class="modal fade" id="deleteUserModal{{ $user->pivot->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel{{ $user->pivot->id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteUserModalLabel{{ $user->pivot->id }}">Confirmar eliminación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Está seguro de eliminar al usuario del evento?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                        <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>
@@ -94,7 +116,7 @@
                         @endforelse
                     </div>
                 </div>
-                <div class="col-md-6" >
+                <div class="col-md-6">
                     <strong>Pendientes:</strong>
                     <hr>
                     <div style="max-height: 300px; overflow-y: auto;">
@@ -104,20 +126,65 @@
                                     <img src="{{ asset('storage/' . $user->foto) }}" alt="{{ $user->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                                     <p class="ml-3 mb-0"><strong>{{ $user->nombre }}</strong></p>
                                     <div class="ml-auto">
-                                        <form action="{{ route('eventousers.update', $user->pivot->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-link text-success" onclick="return confirm('¿Está seguro de que desea aceptar al usuario en el evento?')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¿Está seguro de eliminar al usuario del evento?')" class="btn btn-link text-danger">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                        <!-- Botón de aceptar con modal -->
+                                        <button type="button" class="btn btn-link text-success" data-toggle="modal" data-target="#acceptUserModal{{ $user->pivot->id }}">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+            
+                                        <!-- Modal de confirmación de aceptación -->
+                                        <div class="modal fade" id="acceptUserModal{{ $user->pivot->id }}" tabindex="-1" role="dialog" aria-labelledby="acceptUserModalLabel{{ $user->pivot->id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="acceptUserModalLabel{{ $user->pivot->id }}">Confirmar aceptación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Está seguro de que desea aceptar al usuario como asistente?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                        <form action="{{ route('eventousers.update', $user->pivot->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="btn btn-success">Aceptar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <!-- Botón de eliminar con modal -->
+                                        <button type="button" class="btn btn-link text-danger" data-toggle="modal" data-target="#deleteUserModal{{ $user->pivot->id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+            
+                                        <!-- Modal de confirmación de eliminación -->
+                                        <div class="modal fade" id="deleteUserModal{{ $user->pivot->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel{{ $user->pivot->id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteUserModalLabel{{ $user->pivot->id }}">Confirmar eliminación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Está seguro de eliminar al usuario del evento?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                        <form action="{{ route('eventousers.destroy', $user->pivot->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>
@@ -128,6 +195,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
         <div class="card-footer custom-header-footer">
             <a class="btn btn-primary" href="{{ route('events.index') }}">Volver</a>

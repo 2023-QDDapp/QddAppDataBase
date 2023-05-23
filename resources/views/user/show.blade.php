@@ -89,7 +89,7 @@
             <div class="row mt-3">
                 <div class="col-md-7">
                     <h5><strong>Reseñas recibidas:</strong></h5>
-                    
+            
                     <div class="resenas-scroll" style="max-height: 400px; overflow: auto;">
                         @if ($mensajesRecibidos->isEmpty())
                             <p>No tiene reseñas.</p>
@@ -104,13 +104,35 @@
                                         <p><em>{{ $mensaje->mensaje }}</em></p>
                                     </div>
                                     <div>
-                                        <form action="{{ route('resenas.destroy', $mensaje->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar la reseña?')" class="btn btn-link text-danger">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                        <!-- Botón de eliminar con modal -->
+                                        <button type="button" class="btn btn-link text-danger" data-toggle="modal" data-target="#deleteReviewModal{{ $mensaje->id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+            
+                                        <!-- Modal de confirmación de eliminación -->
+                                        <div class="modal fade" id="deleteReviewModal{{ $mensaje->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteReviewModalLabel{{ $mensaje->id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteReviewModalLabel{{ $mensaje->id }}">Confirmar eliminación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Está seguro de que desea eliminar la reseña?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                        <form action="{{ route('resenas.destroy', $mensaje->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>
@@ -118,10 +140,9 @@
                         @endif
                     </div>
                 </div>
-                
+            
                 <div class="col-md-5">
                     <h5><strong>Usuarios seguidos:</strong></h5>
-                    
                     <div class="follows-scroll" style="max-height: 400px; overflow: auto;">
                         @if ($user->follows->isEmpty())
                             <p>No sigue a ningún usuario.</p>
@@ -135,13 +156,35 @@
                                         <p><strong>{{ $followedUser->nombre }}</strong></p>
                                     </div>
                                     <div>
-                                        <form action="{{ route('follows.destroy', $followedUser->pivot->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¿Está seguro de que desea dejar de seguir a este usuario?')" class="btn btn-link text-danger">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                        <!-- Botón de eliminar con modal -->
+                                        <button type="button" class="btn btn-link text-danger" data-toggle="modal" data-target="#unfollowUserModal{{ $followedUser->pivot->id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+            
+                                        <!-- Modal de confirmación de eliminación -->
+                                        <div class="modal fade" id="unfollowUserModal{{ $followedUser->pivot->id }}" tabindex="-1" role="dialog" aria-labelledby="unfollowUserModalLabel{{ $followedUser->pivot->id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="unfollowUserModalLabel{{ $followedUser->pivot->id }}">Confirmar eliminación</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Eliminar seguidor usuario de la lista de seguidores?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                        <form action="{{ route('follows.destroy', $followedUser->pivot->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>

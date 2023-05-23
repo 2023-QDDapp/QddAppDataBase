@@ -72,7 +72,7 @@ class EventoUserController extends Controller
         $eventouser->estado = true;
         $eventouser->save();
 
-        return redirect()->back()->with('message', 'Usuario añadido a asistentes.');
+        return redirect()->back()->with('success', 'Usuario añadido a asistentes.');
     }
 
     /**
