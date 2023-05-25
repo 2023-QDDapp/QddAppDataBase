@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\UserControllerApi;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\V1\RegisterApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,10 @@ Route::post('/users/unfollow', 'App\Http\Controllers\V1\UserControllerApi@unfoll
 Route::post('/users/events/join', 'App\Http\Controllers\V1\UserControllerApi@unirseEvento'); // Solicitar unirse a un evento
 Route::post('/events/{eventoId}/aceptar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoAceptado'); // Aceptar usuario a un evento
 Route::post('/events/{eventoId}/denegar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoCancelado'); // Denegar usuario en un evento
+
+//Ruta para el registro y verificación del emil
+Route::post('register', [RegisterApiController::class, 'register']);
+Route::get('verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEmail'])->name('api.verify.email');
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
