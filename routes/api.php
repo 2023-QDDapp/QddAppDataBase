@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\UserControllerApi;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\V1\RegisterApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +73,10 @@ Route::post('/events/{eventoId}/aceptar/{userId}', 'App\Http\Controllers\V1\User
 Route::post('/events/{eventoId}/denegar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoCancelado'); // Denegar usuario en un evento
 
 Route::post('/resenas', 'App\Http\Controllers\V1\ResenaControllerApi@store'); // Crear una reseña
+
+//Ruta para el registro y verificación del emil
+Route::post('register', [RegisterApiController::class, 'register']);
+Route::get('verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEmail'])->name('api.verify.email');
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
