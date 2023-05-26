@@ -11,7 +11,7 @@ class Evento extends Model
 
     protected $fillable = [
         'user_id', 'categoria_id', 'titulo', 'fecha_hora_inicio', 'fecha_hora_fin', 
-        'descripcion', 'imagen', 'tipo', 'location', 'latitud', 'longitud', 'n_participantes'
+        'descripcion', 'imagen', 'tipo', 'location', 'latitud', 'longitud'
     ];
 
     public function user() {

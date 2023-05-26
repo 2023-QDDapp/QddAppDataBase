@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class EventoControllerApi extends Controller
@@ -19,14 +18,51 @@ class EventoControllerApi extends Controller
      */
     public function index()
     {
-        $evento = Evento::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
-            ->join('users', 'eventos.user_id', '=', 'users.id')
+        // Obtenemos todos los eventos
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->paginate(20);
+            ->get();
 
-        return response()->json(
-            $evento
-        );
+        // Por cada evento obtenido...
+        foreach ($eventos as $evento) {
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $imagenUrl = null;
+            if ($evento->imagen_evento) {
+                $imagenUrl = asset('storage/' . $evento->imagen_evento);
+            }
+
+            // Obtenemos los datos de los organizadores
+            $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+                ->join('eventos', 'eventos.user_id', '=', 'users.id')
+                ->where('eventos.id', $evento->id_evento)
+                ->first();
+
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $fotoUrl = null;
+            if ($user->foto_organizador) {
+                $fotoUrl = asset('storage/' . $user->foto_organizador);
+            }
+
+            // Guardamos cada evento con sus datos correspondientes
+            $results = [
+                'id_evento' => $evento->id_evento,
+                'id_organizador' => $user->id_organizador,
+                'organizador' => $user->organizador,
+                'foto_organizador' => $fotoUrl,
+                'edad' => $user->edad,
+                'titulo' => $evento->titulo,
+                'imagen_evento' => $imagenUrl,
+                'inicio' => $evento->fecha_hora_inicio,
+                'fin' => $evento->fecha_hora_fin,
+                'categoria' => $evento->categoria
+            ];
+
+            // Y lo almacenamos en un array
+            $datosEventos[] = $results;
+        }
+
+        // Devolvemos un único objeto con todos los eventos
+        return response()->json($datosEventos);
     }
 
     /**
@@ -69,14 +105,13 @@ class EventoControllerApi extends Controller
         $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
         $evento->fecha_hora_fin = $request->fecha_hora_fin;
         $evento->descripcion = $request->descripcion;
-        $evento->imagen = $request->imagen;
         $evento->tipo = $request->tipo;
         $evento->location = $request->location;
         $evento->latitud = $request->latitud;
         $evento->longitud = $request->longitud;
 
         // Guardar la foto
-        /* if ($request->has('imagen')) {
+        if ($request->has('imagen')) {
             $base64Image = $request->input('imagen');
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
@@ -84,8 +119,8 @@ class EventoControllerApi extends Controller
             $fileName = 'event_' . time() . '.jpg'; // Nombre del archivo
             $filePath = 'public/img/event/' . $fileName; // Ruta donde se guarda la foto
             Storage::put($filePath, $data);
-            $evento->foto = 'img/event/' . $fileName;
-        } */
+            $evento->imagen = 'img/event/' . $fileName;
+        }
 
         $this->validate($request, $campo, $mensaje);
         $evento->save();
@@ -105,44 +140,89 @@ class EventoControllerApi extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // Muestra la pantalla detalle de un evento
     public function showDetailEvent($id)
     {
-        $event = Evento::select('eventos.id AS id_evento', 'eventos.*', 'users.id AS id_organizador', 'users.nombre', 'users.foto', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'categorias.*')
-            ->join('users', 'users.id', '=', 'eventos.user_id')
+        // Obtenemos el evento por la ID
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'eventos.location', 'eventos.latitud', 'eventos.longitud', 'eventos.tipo', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
             ->where('eventos.id', $id)
             ->get();
 
-        $evento = $event->first();
+        // Por cada evento obtenido...
+        foreach ($eventos as $evento) {
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $imagenUrl = null;
+            if ($evento->imagen_evento) {
+                $imagenUrl = asset('storage/' . $evento->imagen_evento);
+            }
 
-        $datosAsistentes = User::join('evento_users', 'users.id', '=', 'evento_users.user_id')
-            ->where('evento_users.evento_id', $id)
-            ->where('evento_users.estado', '=', 1)
-            ->get(['users.id', 'users.nombre', 'users.foto']);
+            // Obtenemos los datos de los organizadores
+            $user = User::select('users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+                ->join('eventos', 'eventos.user_id', '=', 'users.id')
+                ->where('eventos.id', $evento->id_evento)
+                ->first();
 
-        $datosEvento = [
-            'id_evento' => $evento->id_evento,
-            'titulo' => $evento->titulo,
-            'organizador' => $evento->nombre,
-            'id_organizador' => $evento->id_organizador,
-            'foto_organizador' => $evento->foto,
-            'edad' => $evento->edad,
-            'descripcion' => $evento->descripcion,
-            'imagen_evento' => $evento->imagen,
-            'fecha_hora_inicio' => $evento->fecha_hora_inicio,
-            'fecha_hora_fin' => $evento->fecha_hora_fin,
-            'location' => $evento->location,
-            'latitud' => $evento->latitud,
-            'longitud' => $evento->longitud,
-            'id_categoria' => $evento->categoria_id,
-            'categoria' => $evento->categoria,
-            'num_participantes' => $evento->n_participantes,
-            'asistentes' => $datosAsistentes
-        ];
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $fotoUrl = null;
+            if ($user->foto_organizador) {
+                $fotoUrl = asset('storage/' . $user->foto_organizador);
+            }
 
-        return response()->json(
-            $datosEvento
-        );
+            // Obtenemos los asistentes de cada evento
+            $asistentes = User::join('evento_users', 'users.id', '=', 'evento_users.user_id')
+                ->where('evento_users.evento_id', $evento->id_evento)
+                ->where('evento_users.estado', 1)
+                ->get(['users.id', 'users.nombre', 'users.foto']);
+
+            // Por cada asistente...
+            foreach ($asistentes as $asistente) {
+                // Cambiamos la ruta de la foto
+                $fotoAsistenteUrl = null;
+                if ($asistente->foto) {
+                    $fotoAsistenteUrl = asset('storage/' . $asistente->foto);
+                }
+
+                // Y guardamos los datos en un array
+                $asistenteData = [
+                    'id' => $asistente->id,
+                    'nombre' => $asistente->nombre,
+                    'foto' => $fotoAsistenteUrl,
+                ];
+
+                // Para asignarlos a una variable
+                $asistentesData[] = $asistenteData;
+            }
+
+            // Contamos los particpantes
+            $num_participantes = count($asistentes);
+
+            // Guardamos todos los datos definitivos
+            $results = [
+                'id_evento' => $evento->id_evento,
+                'id_organizador' => $user->id_organizador,
+                'organizador' => $user->organizador,
+                'foto_organizador' => $fotoUrl,
+                'edad' => $user->edad,
+                'titulo' => $evento->titulo,
+                'imagen_evento' => $imagenUrl,
+                'inicio' => $evento->fecha_hora_inicio,
+                'fin' => $evento->fecha_hora_fin,
+                'location' => $evento->location,
+                'latitud' => $evento->latitud,
+                'longitud' => $evento->longitud,
+                'tipo' => $evento->tipo,
+                'num_participantes' => $num_participantes,
+                'categoria' => $evento->categoria,
+                'asistentes' => $asistentesData
+            ];
+
+            // Y los almacenamos en otra variable
+            $datosEventos[] = $results;
+        }
+
+        // Devolvemos un único objeto con todos los eventos
+        return response()->json($datosEventos);
     }
 
     public function filtrar(Request $request)
@@ -179,13 +259,9 @@ class EventoControllerApi extends Controller
             $query->where('location', 'LIKE', '%' . $request->input('location') . '%');
         }
 
-        //
-
         $eventos = $query->get();
 
-        return response()->json(
-            $eventos
-        );
+        return response()->json($eventos);
     }
 
     /**

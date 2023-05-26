@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\UserControllerApi;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,17 +50,17 @@ Route::prefix('v1')->group(function(){
 
 
 Route::get('/users/{id}/following', 'App\Http\Controllers\V1\UserControllerApi@showFollowing'); //Muestra los seguidos de un usuario
+Route::get('/events/filter', 'App\Http\Controllers\V1\EventoControllerApi@filtrar'); // Filtro de búsqueda
 Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@showDetailEvent'); // Muestra el detalle de un evento
 Route::get('/users/{id}/pantallaseguidos', 'App\Http\Controllers\V1\UserControllerApi@pantallaSeguidos'); // Muestra los eventos de quien sigues
 
-Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
+Route::get('/users/{id}/show', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
 
 Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
 
 Route::get('/users/{id}/events', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser'); // Muestra eventos de un usuario
 Route::get('/users/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
 //Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
-Route::get('/events/filter', 'App\Http\Controllers\V1\EventoControllerApi@filtrar'); // Filtro de búsqueda
 
 Route::post('/users/follow', 'App\Http\Controllers\V1\UserControllerApi@follow'); // Seguir a un usuario
 Route::post('/users/unfollow', 'App\Http\Controllers\V1\UserControllerApi@unfollow'); // Dejar de seguir a un usuario
@@ -71,6 +69,8 @@ Route::post('/users/unfollow', 'App\Http\Controllers\V1\UserControllerApi@unfoll
 Route::post('/users/events/join', 'App\Http\Controllers\V1\UserControllerApi@unirseEvento'); // Solicitar unirse a un evento
 Route::post('/events/{eventoId}/aceptar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoAceptado'); // Aceptar usuario a un evento
 Route::post('/events/{eventoId}/denegar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoCancelado'); // Denegar usuario en un evento
+
+Route::post('/resenas', 'App\Http\Controllers\V1\ResenaControllerApi@store'); // Crear una reseña
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 

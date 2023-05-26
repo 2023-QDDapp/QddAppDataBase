@@ -31,7 +31,6 @@ class EventoSeeder extends Seeder
             $modelo->location = $item['location'];
             $modelo->latitud = $item['latitud'];
             $modelo->longitud = $item['longitud'];
-            $modelo->n_participantes = $item['n_participantes'];
             $modelo->save();
         }
     }

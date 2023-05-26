@@ -28,7 +28,6 @@ class CreateEventosTable extends Migration
             $table->string('location');
             $table->double('latitud');
             $table->double('longitud');
-            $table->integer('n_participantes')->default(1);
             $table->timestamps();
         });
     }

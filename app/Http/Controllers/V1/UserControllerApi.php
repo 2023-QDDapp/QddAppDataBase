@@ -13,7 +13,6 @@ use App\Models\Follower;
 use App\Models\Resena;
 use App\Notifications\AcceptedEventNotification;
 use App\Notifications\JoinEventNotification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserControllerApi extends Controller
@@ -44,8 +43,10 @@ class UserControllerApi extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // Crear un usuario
     public function store(Request $request)
     {
+        // Escribimos los campos que se van a validar
         $campo = [
             'nombre' => 'required|string|max:255',
             'telefono' => 'required|string|max:9|unique:users',
@@ -57,6 +58,7 @@ class UserControllerApi extends Controller
             'categorias' => 'required|array|size:3'
         ];
 
+        // Con el mensaje de error correspondiente
         $mensaje = [
             'required' => 'El campo :attribute es obligatorio',
             'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
@@ -66,6 +68,7 @@ class UserControllerApi extends Controller
 
         $categoriasSeleccionadas = $request->input('categorias');
 
+        // Almacenamos los datos
         $user = new User;
         $user->nombre = $request->nombre;
         $user->telefono = $request->telefono;
@@ -74,7 +77,7 @@ class UserControllerApi extends Controller
         $user->fecha_nacimiento = $request->fecha_nacimiento;
         $user->biografia = $request->biografia;
         
-        // Guardar la foto
+        // Guardamos la foto
         if ($request->has('foto')) {
             $base64Image = $request->input('foto');
             list($type, $data) = explode(';', $base64Image);
@@ -86,11 +89,14 @@ class UserControllerApi extends Controller
             $user->foto = 'img/user/' . $fileName;
         }
 
+        // Validamos y guardamos
         $this->validate($request, $campo, $mensaje);
         $user->save();
 
+        // Añadimos las categorías elegidas al usuario
         $user->categorias()->attach($categoriasSeleccionadas);
 
+        // Devolvemos el usuario creado
         return response()->json([
             'mensaje' => 'El usuario ha sido registrado correctamente',
             'user' => $user
@@ -103,38 +109,46 @@ class UserControllerApi extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // Mostrar un usuario
     public function show($id)
 	{
+        // Obtenemos un usuario
 		$user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
 			->where('users.id', $id)
 			->first();
 
+        // Comprobamos que existe
 		if (!$user) {
 			return response()->json([
 				'mensaje' => 'El usuario no existe'
 			], 404);
 		}
 
+        // Modificamos la foto
 		$fotoUrl = null;
 		if ($user->foto) {
 			$fotoUrl = asset('storage/' . $user->foto);
 		}
 
+        // Obtenemos sus categorías elegidas
 		$categorias = Categoria::select('categorias.id', 'categorias.categoria')
 			->join('categoria_users', 'categorias.id', '=', 'categoria_users.categoria_id')
 			->where('categoria_users.user_id', $id)
 			->get();
 
+        // Obtenemos las reseñas que otros usuarios le han dejado
 		$resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'users.foto', 'resenas.mensaje')
 			->join('users', 'users.id', '=', 'resenas.id_usuario_emisor')
 			->where('resenas.id_usuario_receptor', $id)
 			->get();
-        //transformar las imagenes de los usuarios que mandan reseñas
+
+        //Transformamos las imágenes de los usuarios que mandan reseñas
         $resenas->transform(function ($resena) {
             $resena->foto = url('storage/' . $resena->foto);
             return $resena;
         });
 
+        // Guardamos los datos
 		$datosUsuario = [
 			'id' => $user->id,
 			'nombre' => $user->nombre,
@@ -145,92 +159,235 @@ class UserControllerApi extends Controller
 			'valoraciones' => $resenas
 		];
 
+        // Devolvemos el objeto
 		return response()->json($datosUsuario);
 	}
 
+    // Listado de eventos creados por un usuario
     public function showEventosUser($id)
     {
-        $user = User::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
-            ->join('eventos', 'eventos.user_id', '=', 'users.id')
+        // Obtenemos los datos de un usuario por la ID
+        $user = User::select('users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+            ->where('users.id', $id)
+            ->first();
+
+        // Comprobamos que el usuario existe
+        if (!$user) {
+            return response()->json([
+                'mensaje' => 'El usuario no existe'
+            ], 404);
+        }
+
+        // Cambiamos la URL de la imagen
+        $fotoUrl = null;
+        if ($user->foto_organizador) {
+            $fotoUrl = asset('storage/' . $user->foto_organizador);
+        }
+
+        // Obtenemos los eventos que ha creado el usuario
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.categoria')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
             ->where('eventos.user_id', $id)
             ->get();
 
-        return response()->json(
-            $user
-        );
+        // Cambiamos de nuevo la ruta de la imagen
+        $eventos->transform(function ($evento) {
+            $evento->imagen_evento = url('storage/' . $evento->imagen_evento);
+            return $evento;
+        });
+
+        // Guardamos los datos correspondientes
+        $datosUsuario = [
+			'id' => $user->id_organizador,
+			'organizador' => $user->organizador,
+			'foto' => $fotoUrl,
+			'edad' => $user->edad,
+            'eventos' => $eventos
+		];
+
+        // Devolvemos el objeto
+		return response()->json($datosUsuario);
     }
 
+    // Eventos de la pantalla 'Para ti'
     public function pantallaParaTi($id)
     {
+        // Obtenemos las categorías elegidas por los usuarios
         $categoria = CategoriaUser::select('categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'categorias.id', '=', 'categoria_users.categoria_id')
             ->where('categoria_users.user_id', $id)
             ->get();
         
+        // Decodificamos el resultado para obtener un objeto
         $objeto = json_decode($categoria);
 
+        // Lo recorremos y almacenamos las IDs de las categorías en un array
         foreach ($objeto as $objetos) {
             $idCategoria[] = $objetos->id_categoria;
         }
 
-        $eventos = Evento::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
-            ->join('users', 'eventos.user_id', '=', 'users.id')
+        // Obtenemos los eventos de cada categoría
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
             ->orderBy('eventos.fecha_hora_inicio')
             ->whereIn('eventos.categoria_id', $idCategoria)
             ->get();
 
-        return response()->json(
-            $eventos
-        );
+        // Por cada evento obtenido...
+        foreach ($eventos as $evento) {
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $imagenUrl = null;
+            if ($evento->imagen_evento) {
+                $imagenUrl = asset('storage/' . $evento->imagen_evento);
+            }
+
+            // Obtenemos los datos de los usuarios organizadores
+            $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+                ->join('eventos', 'eventos.user_id', '=', 'users.id')
+                ->where('eventos.id', $evento->id_evento)
+                ->first();
+
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $fotoUrl = null;
+            if ($user->foto_organizador) {
+                $fotoUrl = asset('storage/' . $user->foto_organizador);
+            }
+
+            // Guardamos cada evento con sus datos correspondientes
+            $results = [
+                'id_evento' => $evento->id_evento,
+                'id_organizador' => $user->id_organizador,
+                'organizador' => $user->organizador,
+                'foto_organizador' => $fotoUrl,
+                'edad' => $user->edad,
+                'titulo' => $evento->titulo,
+                'descripcion' => $evento->descripcion,
+                'imagen_evento' => $imagenUrl,
+                'inicio' => $evento->fecha_hora_inicio,
+                'fin' => $evento->fecha_hora_fin,
+                'categoria' => $evento->categoria
+            ];
+
+            // Y lo almacenamos en un array
+            $datosEventos[] = $results;
+        }
+
+        // Devolvemos un único objeto con todos los eventos
+        return response()->json($datosEventos);
     }
 
+    // Listado de usuarios seguidos
     public function showFollowing($id)
     {
-        $user = User::select('users.*', 'followers.id_usuario_seguido')
-            ->join('followers', 'users.id', '=', 'followers.id_usuario_seguidor')
+        // Obtenemos el usuario por la ID
+        $user = User::select('users.id', 'users.nombre', 'users.foto')
             ->where('users.id', $id)
+            ->first();
+
+        // Cambiamos la ruta de la imagen
+        $fotoUrl = null;
+        if ($user->foto) {
+            $fotoUrl = asset('storage/' . $user->foto);
+        }
+
+        // Obtenemos los usuarios que sigue
+        $seguidos = Follower::select('users.id', 'users.nombre', 'users.foto')
+            ->join('users', 'users.id', '=', 'followers.id_usuario_seguido')
+            ->where('followers.id_usuario_seguidor', $id)
             ->get();
 
-        $usuario = $user->first();
-        $seguidos = $user->pluck('id_usuario_seguido')->toArray();
-        $datosSeguidos = User::whereIn('id', $seguidos)->get(['id', 'nombre', 'foto']);
-
+        // Y los almacenamos en un array vacío provisional
         $datosUsuario = [
-            'id' => $usuario->id,
-            'nombre' => $usuario->nombre,
-            'foto' => $usuario->foto,
-            'siguiendo' => $datosSeguidos
+            'id' => $user->id,
+            'nombre' => $user->nombre,
+            'foto' => $fotoUrl,
+            'siguiendo' => []
         ];
-         
-        return response()->json(
-            $datosUsuario
-        );
+
+        // Por cada usuario seguido obtenido...
+        foreach ($seguidos as $seguido) {
+            // Cambiamos la URL de la imagen
+            $fotoSeguidoUrl = null;
+            if ($seguido->foto) {
+                $fotoSeguidoUrl = asset('storage/' . $seguido->foto);
+            }
+
+            // Y añadimos todos los datos modificados al array vacío anterior
+            $datosUsuario['siguiendo'][] = [
+                'id' => $seguido->id,
+                'nombre' => $seguido->nombre,
+                'foto' => $fotoSeguidoUrl
+            ];
+        }
+
+        return response()->json($datosUsuario);
     }
 
+    // Eventos de la pantalla 'Seguidos'
     public function pantallaSeguidos($id)
     {
+        // Obtenemos los seguidos de un usuario por la ID
         $seguidos = Follower::select('id_usuario_seguido')
             ->where('id_usuario_seguidor', $id)
             ->get();
 
+        // Decodificamos el resultado para obtener un objeto
         $objeto = json_decode($seguidos);
 
+        // Lo recorremos y almacenamos las IDs de los seguidos en un array
         foreach ($objeto as $objetos) {
             $idSeguido[] = $objetos->id_usuario_seguido;
         }
 
-        $eventos = Evento::select('eventos.id AS id_evento', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'), 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'categorias.id AS id_categoria', 'categorias.categoria')
+        // Obtenemos los eventos creados por los usuarios seguidos
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.descripcion', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('users', 'eventos.user_id', '=', 'users.id')
             ->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
             ->orderBy('eventos.fecha_hora_inicio')
             ->whereIn('eventos.user_id', $idSeguido)
             ->get();
 
-        return response()->json(
-            $eventos
-        );
+        // Por cada evento obtenido...
+        foreach ($eventos as $evento) {
+            // Cambiamos la ruta de la imagen
+            $imagenUrl = null;
+            if ($evento->imagen_evento) {
+                $imagenUrl = asset('storage/' . $evento->imagen_evento);
+            }
+
+            // Obtenemos los datos del usuario organizador
+            $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+                ->join('eventos', 'eventos.user_id', '=', 'users.id')
+                ->where('eventos.id', $evento->id_evento)
+                ->first();
+
+            // Cambiamos también la ruta de sus fotos
+            $fotoUrl = null;
+            if ($user->foto_organizador) {
+                $fotoUrl = asset('storage/' . $user->foto_organizador);
+            }
+
+            // Guardamos cada evento con sus datos correspondientes
+            $results = [
+                'id_evento' => $evento->id_evento,
+                'id_organizador' => $user->id_organizador,
+                'organizador' => $user->organizador,
+                'foto_organizador' => $fotoUrl,
+                'edad' => $user->edad,
+                'titulo' => $evento->titulo,
+                'descripcion' => $evento->descripcion,
+                'imagen_evento' => $imagenUrl,
+                'inicio' => $evento->fecha_hora_inicio,
+                'fin' => $evento->fecha_hora_fin,
+                'categoria' => $evento->categoria
+            ];
+
+            // Y los alamcenamos en un array
+            $datosEventos[] = $results;
+        }
+
+        // Devolvemos un solo objeto con todos los eventos
+        return response()->json($datosEventos);
     }
 
     /**
@@ -423,7 +580,7 @@ class UserControllerApi extends Controller
         ]);
     }
 
-    public function follow(Request $request)
+    /*public function follow(Request $request)
     {
         $usuario = auth()->user();
         $idSeguido = $request->input('id_usuario_seguido');
@@ -453,5 +610,5 @@ class UserControllerApi extends Controller
                 'mensaje' => 'Has dejado de seguir al usuario ' . $idSeguido
             ]);
         }
-    }
+    }*/
 }
