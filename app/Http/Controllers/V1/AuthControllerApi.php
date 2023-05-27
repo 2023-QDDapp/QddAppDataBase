@@ -40,7 +40,18 @@ class AuthControllerApi extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        return response()->json(compact('token'));
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'nombre' => $user->nombre,
+                'email' => $user->email,
+                'telefono' => $user->telefono,
+                'fecha_nacimiento' => $user->fecha_nacimiento,
+                'biografia' => $user->biografia,
+                'foto' => asset('storage/' . $user->foto),
+            ]
+        ]);
     }
 
     public function logout(Request $request)
