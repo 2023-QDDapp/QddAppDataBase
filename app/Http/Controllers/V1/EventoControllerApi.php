@@ -52,8 +52,8 @@ class EventoControllerApi extends Controller
                 'edad' => $user->edad,
                 'titulo' => $evento->titulo,
                 'imagen_evento' => $imagenUrl,
-                'inicio' => $evento->fecha_hora_inicio,
-                'fin' => $evento->fecha_hora_fin,
+                'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+                'fecha_hora_fin' => $evento->fecha_hora_fin,
                 'categoria' => $evento->categoria
             ];
 
@@ -89,7 +89,7 @@ class EventoControllerApi extends Controller
             'imagen' => 'required|string|mimes:png,jpg,jpeg',
             'tipo' => 'required|string',
             'location' => 'required|string',
-            'longitud' => 'required|numeric|between:-180,180',
+            'longitud' => 'required|string|between:-180,180',
             'latitud' => 'required|string|between:-90,90',
         ];
 
@@ -100,18 +100,20 @@ class EventoControllerApi extends Controller
         ];
 
         $evento = new Evento;
+        $evento->user_id = $request->user_id;
         $evento->categoria_id = $request->categoria_id;
         $evento->titulo = $request->titulo;
         $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
         $evento->fecha_hora_fin = $request->fecha_hora_fin;
         $evento->descripcion = $request->descripcion;
+        $evento->imagen = $request->imagen;
         $evento->tipo = $request->tipo;
         $evento->location = $request->location;
         $evento->latitud = $request->latitud;
         $evento->longitud = $request->longitud;
 
         // Guardar la foto
-        if ($request->has('imagen')) {
+        /* if ($request->has('imagen')) {
             $base64Image = $request->input('imagen');
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
@@ -120,13 +122,13 @@ class EventoControllerApi extends Controller
             $filePath = 'public/img/event/' . $fileName; // Ruta donde se guarda la foto
             Storage::put($filePath, $data);
             $evento->imagen = 'img/event/' . $fileName;
-        }
+        } */
 
         $this->validate($request, $campo, $mensaje);
         $evento->save();
 
-        $user = User::find($request->user_id);
-        $user->eventos()->attach($request->evento_id, ['estado' => 1]);
+        // $user = User::find($request->user_id);
+        // $user->eventos()->attach($evento->id, ['estado' => 1]);
 
         return response()->json([
             'mensaje' => 'El evento ha sido creado correctamente',
@@ -184,21 +186,21 @@ class EventoControllerApi extends Controller
                 }
 
                 // Y guardamos los datos en un array
-                $asistenteData = [
+                $datosAsistente = [
                     'id' => $asistente->id,
                     'nombre' => $asistente->nombre,
                     'foto' => $fotoAsistenteUrl,
                 ];
 
                 // Para asignarlos a una variable
-                $asistentesData[] = $asistenteData;
+                $asistentesData[] = $datosAsistente;
             }
 
             // Contamos los particpantes
             $num_participantes = count($asistentes);
 
             // Guardamos todos los datos definitivos
-            $results = [
+            $datosEventos = [
                 'id_evento' => $evento->id_evento,
                 'id_organizador' => $user->id_organizador,
                 'organizador' => $user->organizador,
@@ -206,8 +208,8 @@ class EventoControllerApi extends Controller
                 'edad' => $user->edad,
                 'titulo' => $evento->titulo,
                 'imagen_evento' => $imagenUrl,
-                'inicio' => $evento->fecha_hora_inicio,
-                'fin' => $evento->fecha_hora_fin,
+                'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+                'fecha_hora_fin' => $evento->fecha_hora_fin,
                 'location' => $evento->location,
                 'latitud' => $evento->latitud,
                 'longitud' => $evento->longitud,
@@ -216,12 +218,9 @@ class EventoControllerApi extends Controller
                 'categoria' => $evento->categoria,
                 'asistentes' => $asistentesData
             ];
-
-            // Y los almacenamos en otra variable
-            $datosEventos[] = $results;
         }
 
-        // Devolvemos un único objeto con todos los eventos
+        // Devolvemos el evento
         return response()->json($datosEventos);
     }
 

@@ -56,7 +56,7 @@ Route::get('/events/filter', 'App\Http\Controllers\V1\EventoControllerApi@filtra
 Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@showDetailEvent'); // Muestra el detalle de un evento
 Route::get('/users/{id}/pantallaseguidos', 'App\Http\Controllers\V1\UserControllerApi@pantallaSeguidos'); // Muestra los eventos de quien sigues
 
-Route::get('/users/{id}/show', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
+Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
 
 Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
 

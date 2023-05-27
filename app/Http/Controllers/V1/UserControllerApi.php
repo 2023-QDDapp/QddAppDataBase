@@ -54,7 +54,7 @@ class UserControllerApi extends Controller
             'password' => 'nullable|string|min:6',
             'fecha_nacimiento' => 'required|date',
             'biografia' => 'required|string|max:500',
-            'foto' => 'required|string|mimes:png,jpg,jpeg',
+            'foto' => 'required|string',
             'categorias' => 'required|array|size:3'
         ];
 
@@ -66,8 +66,6 @@ class UserControllerApi extends Controller
             'size' => 'No puedes elegir más de tres categorías'
         ];
 
-        $categoriasSeleccionadas = $request->input('categorias');
-
         // Almacenamos los datos
         $user = new User;
         $user->nombre = $request->nombre;
@@ -76,6 +74,7 @@ class UserControllerApi extends Controller
         $user->password = $request->password;
         $user->fecha_nacimiento = $request->fecha_nacimiento;
         $user->biografia = $request->biografia;
+        $categoriasSeleccionadas = $request->input('categorias');
         
         // Guardamos la foto
         if ($request->has('foto')) {
@@ -96,11 +95,14 @@ class UserControllerApi extends Controller
         // Añadimos las categorías elegidas al usuario
         $user->categorias()->attach($categoriasSeleccionadas);
 
-        // Devolvemos el usuario creado
-        return response()->json([
+        $data = [
             'mensaje' => 'El usuario ha sido registrado correctamente',
-            'user' => $user
-        ]);
+            'user' => $user,
+            'categorias' => $categoriasSeleccionadas
+        ];
+
+        // Devolvemos el usuario creado
+        return response()->json($data);
     }
 
     /**
@@ -263,8 +265,8 @@ class UserControllerApi extends Controller
                 'titulo' => $evento->titulo,
                 'descripcion' => $evento->descripcion,
                 'imagen_evento' => $imagenUrl,
-                'inicio' => $evento->fecha_hora_inicio,
-                'fin' => $evento->fecha_hora_fin,
+                'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+                'fecha_hora_fin' => $evento->fecha_hora_fin,
                 'categoria' => $evento->categoria
             ];
 
@@ -377,8 +379,8 @@ class UserControllerApi extends Controller
                 'titulo' => $evento->titulo,
                 'descripcion' => $evento->descripcion,
                 'imagen_evento' => $imagenUrl,
-                'inicio' => $evento->fecha_hora_inicio,
-                'fin' => $evento->fecha_hora_fin,
+                'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+                'fecha_hora_fin' => $evento->fecha_hora_fin,
                 'categoria' => $evento->categoria
             ];
 
