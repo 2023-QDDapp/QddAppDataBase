@@ -28,7 +28,13 @@ class Admin extends Model implements Authenticatable
     //la codificacion de la contraseña aunque venga por JSON, lo hace automaticamente una vez detecta password
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = bcrypt($value);
+        if (strpos($value, '$2y$') === 0) {
+            // La contraseña ya está codificada, no es necesario volver a codificarla
+            $this->attributes['password'] = $value;
+        } else {
+            // La contraseña no está codificada, se debe aplicar bcrypt()
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 
 }
