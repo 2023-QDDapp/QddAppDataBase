@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class AuthControllerApi extends Controller
 {
@@ -24,6 +25,13 @@ class AuthControllerApi extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        // Verificar si el correo electrónico está verificado
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user && !$user->is_verified) {
+            return response()->json(['error' => 'email_not_verified'], 401);
+        }
+        
         try {
             if (! $token = Auth::guard('api')->attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
@@ -32,7 +40,18 @@ class AuthControllerApi extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        return response()->json(compact('token'));
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'nombre' => $user->nombre,
+                'email' => $user->email,
+                'telefono' => $user->telefono,
+                'fecha_nacimiento' => $user->fecha_nacimiento,
+                'biografia' => $user->biografia,
+                'foto' => asset('storage/' . $user->foto),
+            ]
+        ]);
     }
 
     public function logout(Request $request)

@@ -82,7 +82,7 @@ class UserControllerApi extends Controller
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
-            $fileName = 'user_' . time() . '.jpg'; // Nombre del archivo
+            $fileName = time() . '.jpg'; // Nombre del archivo
             $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
             Storage::put($filePath, $data);
             $user->foto = 'img/user/' . $fileName;
@@ -442,7 +442,7 @@ class UserControllerApi extends Controller
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
-            $fileName = 'user_' . time() . '.jpg'; // Nombre del archivo
+            $fileName = time() . '.jpg'; // Nombre del archivo
             $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
             Storage::put($filePath, $data);
 

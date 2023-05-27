@@ -25,11 +25,15 @@ class RegisterApiController extends Controller
         ]);
 
         // Decodificar y guardar la foto
-        $fotoBase64 = $request->foto;
-        $fotoDecodificada = base64_decode($fotoBase64);
-        $fileName = 'user_' . time() . '.jpg';
-        $filePath = 'public/img/user/' . $fileName;
-        Storage::put($filePath, $fotoDecodificada);
+        if ($request->has('foto')) {
+            $base64Image = $request->input('foto');
+            list($type, $data) = explode(';', $base64Image);
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+            $fileName = time() . '.jpg';
+            $filePath = 'public/img/user/' . $fileName;
+            Storage::put($filePath, $data);
+        }
 
         $user = User::create([
             'nombre' => $request->nombre,
@@ -47,6 +51,8 @@ class RegisterApiController extends Controller
 
         return response()->json(['message' => 'Usuario registrado exitosamente. Por favor, verifique su correo electrónico.'], 201);
     }
+
+
 
     private function sendVerificationEmail(User $user)
     {

@@ -3,20 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
     protected $table = 'users';
 
     protected $fillable = [
-        'nombre', 'telefono', 'email', 'password', 'fecha_nacimiento', 'biografia', 'foto'
+        'nombre', 'telefono', 'email', 'password', 'fecha_nacimiento', 'biografia', 'foto', 'verification_token'
     ];
 
     public function categorias() {
@@ -71,7 +72,15 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Evento::class, 'evento_users', 'user_id', 'evento_id');
     }
 
-
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
+    }
 
     // API
     public function getJWTIdentifier() {
@@ -88,9 +97,14 @@ class User extends Authenticatable implements JWTSubject
         return Carbon::parse($this->fecha_nacimiento)->age;
     }
 
-    //la codificacion de la contraseña aunque venga por JSON, lo hace automaticamente una vez detecta password
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = bcrypt($value);
+        if (strpos($value, '$2y$') === 0) {
+            // La contraseña ya está codificada, no es necesario volver a codificarla
+            $this->attributes['password'] = $value;
+        } else {
+            // La contraseña no está codificada, se debe aplicar bcrypt()
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 }
