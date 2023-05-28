@@ -40,23 +40,44 @@
                         <a href="{{ route('admins.show', $admin->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
                         <a href="{{ route('admins.edit', $admin->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
                         @if (auth()->user()->is_super_admin && $admin->id !== auth()->user()->id)
-                            <form action="{{ route('admins.destroy', $admin->id) }}" method="post">
-                                @csrf
-                                {{ method_field('DELETE') }}
-                                <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar el administrador #{{ $admin->id}}?')" class="btn">
-                                    <i class="fas fa-trash-alt text-danger"></i>
-                                </button>
-                            </form>
+                            <button type="button" class="btn" data-toggle="modal" data-target="#deleteAdminModal{{ $admin->id }}">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </button>
                         @endif
                     </div>
                 </td>
             </tr>
+            <!-- Modal de eliminación -->
+            <div class="modal fade" id="deleteAdminModal{{ $admin->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteAdminModal{{ $admin->id }}Label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteAdminModal{{ $admin->id }}Label">Eliminar administrador</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea eliminar al administrador <strong>#{{ $admin->id }}</strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <form action="{{ route('admins.destroy', $admin->id) }}" method="post">
+                                @csrf
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endforeach
             
         </tbody>
     </table>
 </div>
 @endsection
+
 
 
 
@@ -100,4 +121,3 @@ $(document).ready(function(){
 });
 </script>
 @endsection
-

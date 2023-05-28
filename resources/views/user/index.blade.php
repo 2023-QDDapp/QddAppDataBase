@@ -40,22 +40,43 @@
                     <div class="btn-group" role="group">
                         <a href="{{ route('users.show', $user->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
                         <a href="{{ route('users.edit', $user->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="post">
-                            @csrf
-                            {{ method_field('DELETE') }}
-                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar al usuario #{{ $user->id}}?')" class="btn">
-                                <i class="fas fa-trash-alt text-danger"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="btn" data-toggle="modal" data-target="#deleteUserModal{{ $user->id }}">
+                            <i class="fas fa-trash-alt text-danger"></i>
+                        </button>
                     </div>
                 </td>
             </tr>
+            <!-- Modal de eliminación -->
+            <div class="modal fade" id="deleteUserModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModal{{ $user->id }}Label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModal{{ $user->id }}Label">Eliminar usuario</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea eliminar al usuario <strong>#{{ $user->id }}</strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <form action="{{ route('users.destroy', $user->id) }}" method="post">
+                                @csrf
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endforeach
             
         </tbody>
     </table>
 </div>
 @endsection
+
 
 
 

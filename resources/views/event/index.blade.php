@@ -41,21 +41,42 @@
                     <div class="btn-group" role="group">
                         <a href="{{ route('events.show', $event->id) }}" class="btn"><i class="fas fa-eye text-primary"></i></a>
                         <a href="{{ route('events.edit', $event->id) }}" class="btn"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <form action="{{ route('events.destroy', $event->id) }}" method="post">
-                            @csrf
-                            {{ method_field('DELETE') }}
-                            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar al usuario #{{ $event->id}}?')" class="btn">
-                                <i class="fas fa-trash-alt text-danger"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="btn" data-toggle="modal" data-target="#deleteEventModal{{ $event->id }}">
+                            <i class="fas fa-trash-alt text-danger"></i>
+                        </button>
                     </div>
                 </td>
             </tr>
+            <!-- Modal de eliminación -->
+            <div class="modal fade" id="deleteEventModal{{ $event->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteEventModal{{ $event->id }}Label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteEventModal{{ $event->id }}Label">Eliminar evento</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea eliminar el evento <strong>#{{ $event->id }}</strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <form action="{{ route('events.destroy', $event->id) }}" method="post">
+                                @csrf
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endforeach
         </tbody>
     </table>
 </div>
 @endsection
+
 
 
 
@@ -99,4 +120,3 @@ $(document).ready(function(){
 });
 </script>
 @endsection
-
