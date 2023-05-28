@@ -83,6 +83,7 @@ Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 Route::middleware('jwt.auth')->group(function () {
 
     // Usuarios
+    Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
     //Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
     Route::post('/users', 'App\Http\Controllers\V1\UserControllerApi@store'); // Crea un nuevo usuario
     Route::put('/users/{id}/edit', 'App\Http\Controllers\V1\UserControllerApi@update'); // Edita un usuario
