@@ -13,6 +13,7 @@ use App\Models\Follower;
 use App\Models\Resena;
 use App\Notifications\AcceptedEventNotification;
 use App\Notifications\JoinEventNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserControllerApi extends Controller
@@ -92,13 +93,25 @@ class UserControllerApi extends Controller
         $this->validate($request, $campo, $mensaje);
         $user->save();
 
+        // Modificamos la foto
+		$fotoUrl = null;
+		if ($user->foto) {
+			$fotoUrl = asset('storage/' . $user->foto);
+		}
+
         // Añadimos las categorías elegidas al usuario
         $user->categorias()->attach($categoriasSeleccionadas);
 
         $data = [
             'mensaje' => 'El usuario ha sido registrado correctamente',
-            'user' => $user,
-            'categorias' => $categoriasSeleccionadas
+            'id' => $user->id,
+			'nombre' => $user->nombre,
+			'foto' => $fotoUrl,
+            'email' => $user->email,
+            'password' => $user->password,
+			'fecha_nacimiento' => $user->fecha_nacimiento,
+			'biografia' => $user->biografia,
+			'intereses' => $categoriasSeleccionadas,
         ];
 
         // Devolvemos el usuario creado
@@ -412,14 +425,15 @@ class UserControllerApi extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
+        
         $campo = [
             'nombre' => 'required|string|max:255',
             'telefono' => 'required|string|max:9|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'nullable|string|min:6',
-            'fecha_nacimiento' => 'required|date',
             'biografia' => 'required|string|max:500',
-            'foto' => 'required|string|mimes:png,jpg,jpeg'
+            'foto' => 'required|string'
         ];
 
         $mensaje = [
@@ -428,13 +442,14 @@ class UserControllerApi extends Controller
             'min' => 'La contraseña no puede ser menor de :min caracteres'
         ];
         
-        $user = User::findOrFail($id);
         $user->nombre = $request->nombre;
         $user->telefono = $request->telefono;
         $user->email = $request->email;
-        $user->password = $request->password;
-        $user->fecha_nacimiento = $request->fecha_nacimiento;
         $user->biografia = $request->biografia;
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
 
         // Guardar la foto
         if ($request->has('foto')) {
@@ -456,7 +471,7 @@ class UserControllerApi extends Controller
 
         $this->validate($request, $campo, $mensaje);
 
-        $datosUser = request()->only(['nombre', 'telefono', 'email', 'password', 'biografia', 'foto']);
+        $datosUser = request();
 
         $user = User::where('id', '=', $id)->update($datosUser);
 
@@ -524,35 +539,6 @@ class UserControllerApi extends Controller
                 ]);
             }*/
         }
-
-        /*$user = auth()->user();
-        $eventosUsuario = $user->eventos->pluck('id');
-
-        if (!$eventosUsuario->contains($request->evento_id)) {
-            $evento = Evento::find($request->evento_id);
-
-            if ($evento->tipo == 'público') {
-                $user->eventos()->attach($request->evento_id, ['estado' => 1]);
-
-                return response()->json([
-                    'mensaje' => 'Te has unido a este evento'
-                ]);
-
-            } else {
-                $user->eventos()->attach($request->evento_id, ['estado' => 0]);
-
-                // Notificación para el organizador del evento
-                $evento->user->notify(new JoinEventNotification($user, $evento));
-
-                return response()->json([
-                    'mensaje' => 'Pendiente de que te acepten en este evento'
-                ]);
-            }
-        } else {
-            return response()->json([
-                'mensaje' => 'Ya te has unido a este evento'
-            ]);
-        }*/
     }
 
     public function eventoAceptado($eventoId, $userId)
@@ -582,22 +568,62 @@ class UserControllerApi extends Controller
         ]);
     }
 
-    /*public function follow(Request $request)
+    public function follow(Request $request)
     {
+        /*$usuario = auth()->user();
+        $idSeguido = $request->input('id_usuario_seguido');
+
+        $usuarioSeguido = User::find($idSeguido);
+
+        // Verificar si el usuario ya está siendo seguido
+        $isFollowing = Follower::where('id_usuario_seguidor', $usuario->id)
+            ->where('id_usuario_seguido', $usuarioSeguido->id)
+            ->exists();
+
+        if ($isFollowing) {
+            return response()->json([
+                'mensaje' => 'Ya sigues a este usuario'
+            ], 400);
+        }
+
+        $usuario->following()->attach($idSeguido);
+        return response()->json([
+            'mensaje' => 'Has comenzado a seguir al usuario ' . $usuarioSeguido->id
+        ]);*/
+
         $usuario = auth()->user();
         $idSeguido = $request->input('id_usuario_seguido');
 
-        if (!$usuario->follows->contains($idSeguido)) {
-            $usuario->follows()->attach($idSeguido);
+        $usuarioSeguido = User::find($idSeguido);
+
+        // Verificar si se encontró el usuario a seguir
+        if ($usuarioSeguido) {
+            // Verificar si el usuario ya está siendo seguido
+            $isFollowing = Follower::where('id_usuario_seguidor', $usuario->id)
+                ->where('id_usuario_seguido', $usuarioSeguido->id)
+                ->exists();
+
+            if ($isFollowing) {
+                return response()->json([
+                    'mensaje' => 'Ya sigues a este usuario'
+                ], 400);
+            }
+
+            $follower = new Follower();
+            $follower->id_usuario_seguidor = $usuario->id;
+            $follower->id_usuario_seguido = $usuarioSeguido->id;
+            $follower->save();
 
             return response()->json([
-                'mensaje' => 'Has comenzado a seguir al usuario ' . $idSeguido
+                'mensaje' => 'Has comenzado a seguir al usuario ' . $usuarioSeguido->id
             ]);
         } else {
             return response()->json([
-                'mensaje' => 'Ya sigues a este usuario'
-            ]);
-        }
+                'mensaje' => 'Usuario a seguir no encontrado'
+            ], 404);
+}
+
+
     }
 
     public function unfollow(Request $request)
@@ -605,12 +631,17 @@ class UserControllerApi extends Controller
         $usuario = auth()->user();
         $idSeguido = $request->input('id_usuario_seguido');
 
-        if ($usuario->follows->contains($idSeguido)) {
-            $usuario->follows()->detach($idSeguido);
+        $usuarioSeguido = User::find($idSeguido);
 
-            return response()->json([
-                'mensaje' => 'Has dejado de seguir al usuario ' . $idSeguido
-            ]);
+        // Verificar si el usuario ya está siendo seguido
+        if ($this->isFollowing($usuario)) {
+            return false; // El usuario ya está siendo seguido
         }
-    }*/
+
+        $this->following()->detach($usuario->id);
+        return response()->json([
+            'mensaje' => 'Has dejado de seguir al usuario ' . $usuarioSeguido->id
+        ]);
+    }
+
 }

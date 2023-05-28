@@ -93,6 +93,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/events', 'App\Http\Controllers\V1\EventoControllerApi@index'); // Muestra todos los eventos
     //Route::get('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@show'); // Muestra eventos con participantes*
     Route::post('/events', 'App\Http\Controllers\V1\EventoControllerApi@store'); // Crea un evento
+    Route::put('/events/{id}/edit', 'App\Http\Controllers\V1\EventoControllerApi@update'); // Edita un evento
     Route::delete('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
 

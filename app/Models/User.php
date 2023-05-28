@@ -56,20 +56,22 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
-    public function follows() {
-        return $this->belongsToMany(User::class, 'followers', 'id_usuario_seguido', 'id_usuario_seguidor')->withPivot('id');
-    }
-
-    public function followers() {
-        return $this->belongsToMany(User::class);
-    }
-
     public function eventosCreados() {
         return $this->hasMany(Evento::class, 'user_id');
     }
 
     public function eventosAsistidos() {
         return $this->belongsToMany(Evento::class, 'evento_users', 'user_id', 'evento_id');
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'id_usuario_seguidor', 'id_usuario_seguido');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'followed_id', 'follower_id')->withTimestamps();
     }
 
     /**

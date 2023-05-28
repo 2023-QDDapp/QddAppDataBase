@@ -61,7 +61,7 @@ class EventoControllerApi extends Controller
             $datosEventos[] = $results;
         }
 
-        // Devolvemos un único objeto con todos los eventos
+        // Devolvemos todos los eventos
         return response()->json($datosEventos);
     }
 
@@ -86,7 +86,7 @@ class EventoControllerApi extends Controller
         $campo = [
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
-            'imagen' => 'required|string|mimes:png,jpg,jpeg',
+            'imagen' => 'required|string',
             'tipo' => 'required|string',
             'location' => 'required|string',
             'longitud' => 'required|string|between:-180,180',
@@ -106,33 +106,49 @@ class EventoControllerApi extends Controller
         $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
         $evento->fecha_hora_fin = $request->fecha_hora_fin;
         $evento->descripcion = $request->descripcion;
-        $evento->imagen = $request->imagen;
         $evento->tipo = $request->tipo;
         $evento->location = $request->location;
         $evento->latitud = $request->latitud;
         $evento->longitud = $request->longitud;
 
         // Guardar la foto
-        /* if ($request->has('imagen')) {
+        if ($request->has('imagen')) {
             $base64Image = $request->input('imagen');
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
-            $fileName = 'event_' . time() . '.jpg'; // Nombre del archivo
+            $fileName = time() . '.jpg'; // Nombre del archivo
             $filePath = 'public/img/event/' . $fileName; // Ruta donde se guarda la foto
             Storage::put($filePath, $data);
             $evento->imagen = 'img/event/' . $fileName;
-        } */
+        }
 
         $this->validate($request, $campo, $mensaje);
         $evento->save();
 
-        // $user = User::find($request->user_id);
-        // $user->eventos()->attach($evento->id, ['estado' => 1]);
+        // Modificamos la imagen
+		$imagenUrl = null;
+		if ($evento->imagen) {
+			$imagenUrl = asset('storage/' . $evento->imagen);
+		}
+
+        $user = User::find($request->user_id);
+        $user->eventos()->attach($evento->id, ['estado' => 1]);
 
         return response()->json([
             'mensaje' => 'El evento ha sido creado correctamente',
-            'evento' => $evento
+            'id_evento' => $evento->id,
+            'id_organizador' => $evento->user_id,
+            'titulo' => $evento->titulo,
+            'descripcion' => $evento->descripcion,
+            'imagen_evento' => $imagenUrl,
+            'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+            'fecha_hora_fin' => $evento->fecha_hora_fin,
+            'location' => $evento->location,
+            'latitud' => $evento->latitud,
+            'longitud' => $evento->longitud,
+            'tipo' => $evento->tipo,
+            'id_categoria' => $evento->categoria_id
         ]);
     }
 
@@ -207,6 +223,7 @@ class EventoControllerApi extends Controller
                 'foto_organizador' => $fotoUrl,
                 'edad' => $user->edad,
                 'titulo' => $evento->titulo,
+                'descripcion' => $evento->descripcion,
                 'imagen_evento' => $imagenUrl,
                 'fecha_hora_inicio' => $evento->fecha_hora_inicio,
                 'fecha_hora_fin' => $evento->fecha_hora_fin,
@@ -258,9 +275,50 @@ class EventoControllerApi extends Controller
             $query->where('location', 'LIKE', '%' . $request->input('location') . '%');
         }
 
-        $eventos = $query->get();
+        // Obtenemos los eventos filtrados
+        $eventos = $query->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
+            ->select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
+            ->get();
 
-        return response()->json($eventos);
+        // Por cada evento obtenido...
+        foreach ($eventos as $evento) {
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $imagenUrl = null;
+            if ($evento->imagen_evento) {
+                $imagenUrl = asset('storage/' . $evento->imagen_evento);
+            }
+
+            // Obtenemos los datos de los organizadores
+            $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+                ->join('eventos', 'eventos.user_id', '=', 'users.id')
+                ->where('eventos.id', $evento->id_evento)
+                ->first();
+
+            // Cambiamos la ruta de la imagen para que devuelva la URL correctamente
+            $fotoUrl = null;
+            if ($user->foto_organizador) {
+                $fotoUrl = asset('storage/' . $user->foto_organizador);
+            }
+
+            // Guardamos cada evento con sus datos correspondientes
+            $results = [
+                'id_evento' => $evento->id_evento,
+                'id_organizador' => $user->id_organizador,
+                'organizador' => $user->organizador,
+                'foto_organizador' => $fotoUrl,
+                'edad' => $user->edad,
+                'titulo' => $evento->titulo,
+                'imagen_evento' => $imagenUrl,
+                'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+                'fecha_hora_fin' => $evento->fecha_hora_fin,
+                'categoria' => $evento->categoria
+            ];
+
+            // Y lo almacenamos en un array
+            $datosEventos[] = $results;
+        }
+
+        return response()->json($datosEventos);
     }
 
     /**
@@ -285,10 +343,10 @@ class EventoControllerApi extends Controller
     {
         $campo = [
             'titulo' => 'required|string|max:255',
-            'fecha_hora_inicio' => 'required|datetime',
-            'fecha_hora_fin' => 'required|datetime',
+            'fecha_hora_inicio' => 'required|date',
+            'fecha_hora_fin' => 'required|date',
             'descripcion' => 'required|string|max:500',
-            'imagen' => 'required|string|mimes:png,jpg,jpeg',
+            'imagen' => 'required|string',
             'tipo' => 'required|string',
             'location' => 'required|string',
             'longitud' => 'required|numeric|between:-180,180',
@@ -334,12 +392,16 @@ class EventoControllerApi extends Controller
 
         $this->validate($request, $campo, $mensaje);
 
-        if ($evento->user_id == auth()->id()) {
+        if ($evento->user_id == auth()->user()->id) {
             $evento = Evento::where('id', '=', $id)->update();
 
             return response()->json([
                 'mensaje' => 'Se ha actualizado el evento #' . $id,
                 'evento' => $evento
+            ]);
+        } else {
+            return response()->json([
+                'mensaje' => 'No puedes editar este evento porque no es tuyo'
             ]);
         }
     }
