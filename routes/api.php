@@ -82,7 +82,7 @@ Route::get('verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEm
 
 Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
-Route::middleware('jwt.auth')->group(function () {
+Route::middleware('auth:api')->group(function () {
 
     // Usuarios
     Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
