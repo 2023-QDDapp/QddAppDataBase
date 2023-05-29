@@ -405,6 +405,57 @@ class UserControllerApi extends Controller
         return response()->json($datosEventos);
     }
 
+    public function showHistorial($id)
+    {
+        /* $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'mensaje' => 'Usuario no encontrado'
+            ], 404);
+        } */
+
+        $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+            ->join('eventos', 'eventos.user_id', '=', 'users.id')
+            ->first();
+        
+        $fotoUrl = null;
+        if ($user->foto_organizador) {
+            $fotoUrl = asset('storage/' . $user->foto_organizador);
+        }
+
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
+            ->join('categorias', 'categorias.id', '=', 'eventos.categoria_id')
+            ->join('evento_users', 'evento_users.evento_id', '=', 'eventos.id')
+            ->where('evento_users.estado', 1)
+            ->where('eventos.fecha_hora_fin', '<', NOW())
+            ->get();
+
+        foreach ($eventos as $evento) {
+            $imagenUrl = null;
+            if ($evento->imagen_evento) {
+                $imagenUrl = asset('storage/' . $evento->imagen_evento);
+            }
+
+            $data = [
+                'id_evento' => $evento->id_evento,
+                'id_organizador' => $user->id_organizador,
+                'organizador' => $user->organizador,
+                'foto_organizador' => $fotoUrl,
+                'edad' => $user->edad,
+                'titulo' => $evento->titulo,
+                'imagen_evento' => $imagenUrl,
+                'fecha_hora_inicio' => $evento->fecha_hora_inicio,
+                'fecha_hora_fin' => $evento->fecha_hora_fin,
+                'categoria' => $evento->categoria
+            ];
+
+            $datosEventos[] = $data;
+        }
+
+        return response()->json($datosEventos);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -621,9 +672,7 @@ class UserControllerApi extends Controller
             return response()->json([
                 'mensaje' => 'Usuario a seguir no encontrado'
             ], 404);
-}
-
-
+        }
     }
 
     public function unfollow(Request $request)

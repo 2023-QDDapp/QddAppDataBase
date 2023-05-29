@@ -67,6 +67,8 @@ Route::get('/users/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pant
 Route::post('/users/follow', 'App\Http\Controllers\V1\UserControllerApi@follow'); // Seguir a un usuario
 Route::post('/users/unfollow', 'App\Http\Controllers\V1\UserControllerApi@unfollow'); // Dejar de seguir a un usuario
 
+Route::get('users/{id}/historial', 'App\Http\Controllers\V1\UserControllerApi@showHistorial'); // Historial de un usuario
+
 //Notificaciones
 Route::post('/users/events/join', 'App\Http\Controllers\V1\UserControllerApi@unirseEvento'); // Solicitar unirse a un evento
 Route::post('/events/{eventoId}/aceptar/{userId}', 'App\Http\Controllers\V1\UserControllerApi@eventoAceptado'); // Aceptar usuario a un evento
@@ -96,6 +98,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::put('/events/{id}/edit', 'App\Http\Controllers\V1\EventoControllerApi@update'); // Edita un evento
     Route::delete('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
+    Route::post('/logout', 'App\Http\Controllers\V1\AuthControllerApi@logout'); // Cerrar sesión
 
     /* PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
     //Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
