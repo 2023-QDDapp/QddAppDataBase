@@ -57,8 +57,18 @@ class AuthControllerApi extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->header('Authorization');
-        JWTAuth::invalidate($token);
+        $token = JWTAuth::getToken();
+
+        if (!$token) {
+            return response()->json(['error' => 'Token not provided'], 401);
+        }
+
+        try {
+            JWTAuth::invalidate($token);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Failed to invalidate token'], 500);
+        }
+
         return response()->json(['message' => 'Successfully logged out']);
     }
 

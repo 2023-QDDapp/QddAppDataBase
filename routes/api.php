@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\UserControllerApi;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\RegisterApiController;
+use App\Http\Controllers\V1\AuthControllerApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,7 @@ Route::post('/loginApi', 'App\Http\Controllers\V1\AuthControllerApi@login');
 
 Route::middleware('auth:api')->group(function () {
 
+    
     // Usuarios
     Route::get('/categorias', 'App\Http\Controllers\V1\CategoriaControllerApi@index'); // Muestra todas las categorias
     //Route::get('/users/{id}', 'App\Http\Controllers\V1\UserControllerApi@show'); // Muestra los datos de un usuario
@@ -98,11 +100,14 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/events/{id}/edit', 'App\Http\Controllers\V1\EventoControllerApi@update'); // Edita un evento
     Route::delete('/events/{id}', 'App\Http\Controllers\V1\EventoControllerApi@destroy'); // Elimina un evento
 
-    Route::post('/logout', 'App\Http\Controllers\V1\AuthControllerApi@logout'); // Cerrar sesión
+    
 
     /* PETICIONES QUE DEBEN ESTAR DENTRO DE JWTAUTH */
     //Route::get('/user/{id}/eventos', 'App\Http\Controllers\V1\UserControllerApi@showEventosUser');
     //Route::get('/user/{id}/parati', 'App\Http\Controllers\V1\UserControllerApi@pantallaParaTi'); //Eventos para ti
+
+    Route::post('/logout', [AuthControllerApi::class, 'logout']);
+    //Route::post('/logout', 'App\Http\Controllers\V1\AuthControllerApi@logout'); // Cerrar sesión
     
 });
 
