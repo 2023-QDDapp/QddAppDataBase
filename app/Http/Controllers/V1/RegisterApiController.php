@@ -14,6 +14,7 @@ class RegisterApiController extends Controller
 {
     public function register(Request $request)
     {
+        
         $request->validate([
             'nombre' => 'required|string',
             'telefono' => 'required|string|unique:users',
@@ -61,7 +62,7 @@ class RegisterApiController extends Controller
             'token' => $user->verification_token,
         ]);
 
-        Mail::send('emails.verify', ['verificationLink' => $verificationLink], function ($message) use ($user) {
+        Mail::send('emails.verify', ['verificationLink' => $verificationLink, 'nombre' => $user->nombre], function ($message) use ($user) {
             $message->to($user->email)
                 ->subject('Verificación de correo electrónico');
         });
