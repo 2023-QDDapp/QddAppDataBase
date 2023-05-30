@@ -14,46 +14,47 @@ class RegisterApiController extends Controller
 {
     public function register(Request $request)
     {
-        
-        $request->validate([
-            'nombre' => 'required|string',
-            'telefono' => 'required|string|unique:users',
+        // Escribimos los campos que se van a validar
+        $campo = [
             'email' => 'required|email|unique:users',
-            'password' => 'required|string',
-            'fecha_nacimiento' => 'required|date',
-            'biografia' => 'required|string|max:500',
-            'foto' => 'required|string',
-        ]);
+            'password' => 'nullable|string|min:6'
+        ];
 
-        // Decodificar y guardar la foto
-        if ($request->has('foto')) {
-            $base64Image = $request->input('foto');
-            list($type, $data) = explode(';', $base64Image);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
-            $fileName = time() . '.jpg';
-            $filePath = 'public/img/user/' . $fileName;
-            Storage::put($filePath, $data);
+        // Con el mensaje de error correspondiente
+        $mensaje = [
+            'email.required' => 'El email es obligatorio',
+            'email.unique' => 'El email ya está en uso',
+            'email.email' => 'Introduce un email válido',
+            'password.min' => 'La contraseña no puede ser menor de 6 caracteres'
+        ];
+
+        // Almacenamos los datos
+        $user = new User;
+        $user->email = $request->email;
+        $user->password = $request->password;
+
+        // Validamos y guardamos
+        try {
+            $this->validate($request, $campo, $mensaje);
+            $user->save();
+
+            $data = [
+                'mensaje' => 'El usuario ha sido registrado correctamente. Por favor, verifique su correo electrónico.',
+                'id' => $user->id,
+                'email' => $user->email,
+                'password' => $user->password
+            ];
+
+            // Devolvemos el usuario creado
+            return response()->json($data);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['mensaje' => 'Los datos introducidos no son válidos']);
         }
-
-        $user = User::create([
-            'nombre' => $request->nombre,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'biografia' => $request->biografia,
-            'foto' => 'img/user/' . $fileName,
-            'verification_token' => Str::random(60),
-        ]);
 
         // Envío del correo de verificación
         $this->sendVerificationEmail($user);
-
-        return response()->json(['message' => 'Usuario registrado exitosamente. Por favor, verifique su correo electrónico.'], 201);
     }
-
-
 
     private function sendVerificationEmail(User $user)
     {
@@ -74,12 +75,92 @@ class RegisterApiController extends Controller
 
         if ($user->verification_token === $token) {
             $user->is_verified = true;
-            $user->verification_token = null;
+            $user->verification_token = null; // Establecer el campo como null en lugar de eliminarlo
             $user->save();
 
             return response()->json(['message' => 'Correo electrónico verificado correctamente.'], 200);
         }
 
         return response()->json(['error' => 'El enlace de verificación no es válido.'], 400);
+    }
+
+    public function continueRegister(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->is_verified) {
+            // Escribimos los campos que se van a validar
+            $campo = [
+                'nombre' => 'required|string|max:255',
+                'telefono' => 'required|string|max:9|unique:users,telefono',
+                'fecha_nacimiento' => 'required|date',
+                'biografia' => 'required|string|max:500',
+                'foto' => 'required|string',
+                'categorias' => 'required|array|size:3'
+            ];
+
+            // Con el mensaje de error correspondiente
+            $mensaje = [
+                'required' => 'El campo :attribute es obligatorio',
+                'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
+                'size' => 'No puedes elegir más de tres categorías'
+            ];
+
+            $user->nombre = $request->nombre;
+            $user->telefono = $request->telefono;
+            $user->fecha_nacimiento = $request->fecha_nacimiento;
+            $user->biografia = $request->biografia;
+            $categoriasSeleccionadas = $request->input('categorias');
+
+            // Guardamos la foto
+            if ($request->has('foto')) {
+                $base64Image = $request->input('foto');
+                list($type, $data) = explode(';', $base64Image);
+                list(, $data) = explode(',', $data);
+                $data = base64_decode($data);
+                $fileName = time() . '.jpg'; // Nombre del archivo
+                $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
+                Storage::put($filePath, $data);
+                $user->foto = 'img/user/' . $fileName;
+            }
+
+            // Validamos y guardamos
+            try {
+                $this->validate($request, $campo, $mensaje);
+                $user->save();
+
+                // Modificamos la foto
+                $fotoUrl = null;
+                if ($user->foto) {
+                    $fotoUrl = asset('storage/' . $user->foto);
+                }
+
+                // Añadimos las categorías elegidas al usuario
+                $user->categorias()->attach($categoriasSeleccionadas);
+
+                $user->is_registered = true;
+                $user->save();
+
+                $data = [
+                    'mensaje' => 'Registro completado correctamente.',
+                    'id' => $user->id,
+                    'nombre' => $user->nombre,
+                    'foto' => $fotoUrl,
+                    'email' => $user->email,
+                    'password' => $user->password,
+                    'fecha_nacimiento' => $user->fecha_nacimiento,
+                    'biografia' => $user->biografia,
+                    'intereses' => $categoriasSeleccionadas
+                ];
+
+                return response()->json($data, 200);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return response()->json(['mensaje' => 'Los datos introducidos no son válidos'], 400);
+            }
+        } else {
+            return response()->json([
+                'mensaje' => 'Verifique su email.'
+            ], 400);
+        }
     }
 }

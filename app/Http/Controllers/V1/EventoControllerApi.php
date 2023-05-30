@@ -318,7 +318,11 @@ class EventoControllerApi extends Controller
             $datosEventos[] = $results;
         }
 
-        return response()->json($datosEventos);
+        if (!empty($datosEventos)) {
+            return response()->json($datosEventos);
+        } else {
+            return [];
+        }
     }
 
     /**

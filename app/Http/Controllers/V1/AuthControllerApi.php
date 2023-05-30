@@ -42,16 +42,10 @@ class AuthControllerApi extends Controller
         }
 
         return response()->json([
+            'user_id' => $user->id,
             'token' => $token,
-            'user' => [
-                'id' => $user->id,
-                'nombre' => $user->nombre,
-                'email' => $user->email,
-                'telefono' => $user->telefono,
-                'fecha_nacimiento' => $user->fecha_nacimiento,
-                'biografia' => $user->biografia,
-                'foto' => asset('storage/' . $user->foto),
-            ]
+            'is_verified' => $user->is_verified,
+            'is_registered' => $user->is_registered
         ]);
     }
 

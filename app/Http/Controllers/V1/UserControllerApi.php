@@ -47,75 +47,7 @@ class UserControllerApi extends Controller
     // Crear un usuario
     public function store(Request $request)
     {
-        // Escribimos los campos que se van a validar
-        $campo = [
-            'nombre' => 'required|string|max:255',
-            'telefono' => 'required|string|max:9|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'nullable|string|min:6',
-            'fecha_nacimiento' => 'required|date',
-            'biografia' => 'required|string|max:500',
-            'foto' => 'required|string',
-            'categorias' => 'required|array|size:3'
-        ];
-
-        // Con el mensaje de error correspondiente
-        $mensaje = [
-            'required' => 'El campo :attribute es obligatorio',
-            'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
-            'min' => 'La contraseña no puede ser menor de :min caracteres',
-            'size' => 'No puedes elegir más de tres categorías'
-        ];
-
-        // Almacenamos los datos
-        $user = new User;
-        $user->nombre = $request->nombre;
-        $user->telefono = $request->telefono;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->fecha_nacimiento = $request->fecha_nacimiento;
-        $user->biografia = $request->biografia;
-        $categoriasSeleccionadas = $request->input('categorias');
-        
-        // Guardamos la foto
-        if ($request->has('foto')) {
-            $base64Image = $request->input('foto');
-            list($type, $data) = explode(';', $base64Image);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
-            $fileName = time() . '.jpg'; // Nombre del archivo
-            $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
-            Storage::put($filePath, $data);
-            $user->foto = 'img/user/' . $fileName;
-        }
-
-        // Validamos y guardamos
-        $this->validate($request, $campo, $mensaje);
-        $user->save();
-
-        // Modificamos la foto
-		$fotoUrl = null;
-		if ($user->foto) {
-			$fotoUrl = asset('storage/' . $user->foto);
-		}
-
-        // Añadimos las categorías elegidas al usuario
-        $user->categorias()->attach($categoriasSeleccionadas);
-
-        $data = [
-            'mensaje' => 'El usuario ha sido registrado correctamente',
-            'id' => $user->id,
-			'nombre' => $user->nombre,
-			'foto' => $fotoUrl,
-            'email' => $user->email,
-            'password' => $user->password,
-			'fecha_nacimiento' => $user->fecha_nacimiento,
-			'biografia' => $user->biografia,
-			'intereses' => $categoriasSeleccionadas,
-        ];
-
-        // Devolvemos el usuario creado
-        return response()->json($data);
+        //
     }
 
     /**
@@ -288,7 +220,11 @@ class UserControllerApi extends Controller
         }
 
         // Devolvemos un único objeto con todos los eventos
-        return response()->json($datosEventos);
+        if (!empty($datosEventos)) {
+            return response()->json($datosEventos);
+        } else {
+            return [];
+        }
     }
 
     // Listado de usuarios seguidos
@@ -335,7 +271,11 @@ class UserControllerApi extends Controller
             ];
         }
 
-        return response()->json($datosUsuario);
+        if (!empty($datosUsuario)) {
+            return response()->json($datosUsuario);
+        } else {
+            return [];
+        }
     }
 
     // Eventos de la pantalla 'Seguidos'
@@ -402,7 +342,11 @@ class UserControllerApi extends Controller
         }
 
         // Devolvemos un solo objeto con todos los eventos
-        return response()->json($datosEventos);
+        if (!empty($datosEventos)) {
+            return response()->json($datosEventos);
+        } else {
+            return [];
+        }
     }
 
     public function showHistorial($id)
