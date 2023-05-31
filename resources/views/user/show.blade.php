@@ -144,10 +144,10 @@
                 <div class="col-md-5">
                     <h5><strong>Usuarios seguidos:</strong></h5>
                     <div class="follows-scroll" style="max-height: 400px; overflow: auto;">
-                        @if ($user->follows->isEmpty())
+                        @if ($followingUsers->isEmpty())
                             <p>No sigue a ningún usuario.</p>
                         @else
-                            @foreach ($user->follows as $followedUser)
+                            @foreach ($followingUsers as $followedUser)
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="mr-3">
                                         <img src="{{ asset('storage/' . $followedUser->foto) }}" alt="{{ $followedUser->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
@@ -160,7 +160,7 @@
                                         <button type="button" class="btn btn-link text-danger" data-toggle="modal" data-target="#unfollowUserModal{{ $followedUser->pivot->id }}">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
-            
+                
                                         <!-- Modal de confirmación de eliminación -->
                                         <div class="modal fade" id="unfollowUserModal{{ $followedUser->pivot->id }}" tabindex="-1" role="dialog" aria-labelledby="unfollowUserModalLabel{{ $followedUser->pivot->id }}" aria-hidden="true">
                                             <div class="modal-dialog" role="document">

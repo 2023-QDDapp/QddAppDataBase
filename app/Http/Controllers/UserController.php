@@ -76,11 +76,11 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('categorias', 'eventosCreados', 'eventosAsistidos', 'follows');
+        $user->load('categorias', 'eventosCreados', 'eventosAsistidos', 'following');
+        $followingUsers = $user->following;
         $mensajesRecibidos = $user->mensajesRecibidos;
-    
 
-        return view('user.show', compact('user', 'mensajesRecibidos'));
+        return view('user.show', compact('user', 'followingUsers', 'mensajesRecibidos'));
     }
 
     /**
