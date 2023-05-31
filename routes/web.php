@@ -29,6 +29,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
+Route::get('/verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEmail'])->name('verification.verify');
+
 Route::middleware(['auth'])->group(function () {
 
     Route::resource('admins', AdminController::class);

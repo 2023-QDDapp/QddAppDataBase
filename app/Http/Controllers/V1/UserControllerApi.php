@@ -351,17 +351,14 @@ class UserControllerApi extends Controller
 
     public function showHistorial($id)
     {
-        /* $user = User::find($id);
+        $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+            ->find($id);
 
         if (!$user) {
             return response()->json([
                 'mensaje' => 'Usuario no encontrado'
             ], 404);
-        } */
-
-        $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
-            ->join('eventos', 'eventos.user_id', '=', 'users.id')
-            ->first();
+        }
         
         $fotoUrl = null;
         if ($user->foto_organizador) {
@@ -370,9 +367,12 @@ class UserControllerApi extends Controller
 
         $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'categorias.id', '=', 'eventos.categoria_id')
-            ->join('evento_users', 'evento_users.evento_id', '=', 'eventos.id')
-            ->where('evento_users.estado', 1)
-            ->where('eventos.fecha_hora_fin', '<', NOW())
+            ->join('evento_users', function ($join) {
+                $join->on('evento_users.evento_id', '=', 'eventos.id')
+                    ->where('evento_users.user_id', '=', Auth::id())
+                    ->where('evento_users.estado', '=', 1);
+            })
+            ->where('eventos.fecha_hora_fin', '<', DB::raw('NOW()'))
             ->get();
 
         foreach ($eventos as $evento) {
@@ -397,7 +397,11 @@ class UserControllerApi extends Controller
             $datosEventos[] = $data;
         }
 
-        return response()->json($datosEventos);
+        if (!empty($datosEventos)) {
+            return response()->json($datosEventos);
+        } else {
+            return [];
+        }
     }
 
     /**

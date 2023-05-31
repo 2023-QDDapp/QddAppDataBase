@@ -4,11 +4,14 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 
 class RegisterApiController extends Controller
 {
@@ -32,6 +35,7 @@ class RegisterApiController extends Controller
         $user = new User;
         $user->email = $request->email;
         $user->password = $request->password;
+        $user->verification_token = substr(str_shuffle(MD5(microtime())), 0, 30);
 
         // Validamos y guardamos
         try {
@@ -45,15 +49,15 @@ class RegisterApiController extends Controller
                 'password' => $user->password
             ];
 
+            // Envío del correo de verificación
+            $this->sendVerificationEmail($user);
+
             // Devolvemos el usuario creado
             return response()->json($data);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['mensaje' => 'Los datos introducidos no son válidos']);
         }
-
-        // Envío del correo de verificación
-        $this->sendVerificationEmail($user);
     }
 
     private function sendVerificationEmail(User $user)
