@@ -567,78 +567,32 @@ class UserControllerApi extends Controller
         ]);
     }
 
-    public function follow(Request $request)
+    public function followUser(Request $request, $userId)
     {
-        /*$usuario = auth()->user();
-        $idSeguido = $request->input('id_usuario_seguido');
-
-        $usuarioSeguido = User::find($idSeguido);
-
-        // Verificar si el usuario ya está siendo seguido
-        $isFollowing = Follower::where('id_usuario_seguidor', $usuario->id)
-            ->where('id_usuario_seguido', $usuarioSeguido->id)
-            ->exists();
-
-        if ($isFollowing) {
-            return response()->json([
-                'mensaje' => 'Ya sigues a este usuario'
-            ], 400);
+        $user = $request->user();
+        
+        // Verificar si el usuario autenticado ya sigue al usuario especificado
+        if ($user->following()->where('id_usuario_seguido', $userId)->exists()) {
+            return response()->json(['message' => 'Ya sigues a este usuario'], 400);
         }
-
-        $usuario->following()->attach($idSeguido);
-        return response()->json([
-            'mensaje' => 'Has comenzado a seguir al usuario ' . $usuarioSeguido->id
-        ]);*/
-
-        $usuario = auth()->user();
-        $idSeguido = $request->input('id_usuario_seguido');
-
-        $usuarioSeguido = User::find($idSeguido);
-
-        // Verificar si se encontró el usuario a seguir
-        if ($usuarioSeguido) {
-            // Verificar si el usuario ya está siendo seguido
-            $isFollowing = Follower::where('id_usuario_seguidor', $usuario->id)
-                ->where('id_usuario_seguido', $usuarioSeguido->id)
-                ->exists();
-
-            if ($isFollowing) {
-                return response()->json([
-                    'mensaje' => 'Ya sigues a este usuario'
-                ], 400);
-            }
-
-            $follower = new Follower();
-            $follower->id_usuario_seguidor = $usuario->id;
-            $follower->id_usuario_seguido = $usuarioSeguido->id;
-            $follower->save();
-
-            return response()->json([
-                'mensaje' => 'Has comenzado a seguir al usuario ' . $usuarioSeguido->id
-            ]);
-        } else {
-            return response()->json([
-                'mensaje' => 'Usuario a seguir no encontrado'
-            ], 404);
-        }
+        
+        $user->following()->attach($userId);
+        
+        return response()->json(['message' => 'Ahora sigues a este usuario'], 200);
     }
 
-    public function unfollow(Request $request)
+    public function unfollowUser(Request $request, $userId)
     {
-        $usuario = auth()->user();
-        $idSeguido = $request->input('id_usuario_seguido');
-
-        $usuarioSeguido = User::find($idSeguido);
-
-        // Verificar si el usuario ya está siendo seguido
-        if ($this->isFollowing($usuario)) {
-            return false; // El usuario ya está siendo seguido
+        $user = $request->user();
+        
+        // Verificar si el usuario autenticado sigue al usuario especificado por $userId
+        if (!$user->following()->where('id_usuario_seguido', $userId)->exists()) {
+            return response()->json(['message' => 'No sigues a este usuario'], 400);
         }
-
-        $this->following()->detach($usuario->id);
-        return response()->json([
-            'mensaje' => 'Has dejado de seguir al usuario ' . $usuarioSeguido->id
-        ]);
+        
+        $user->following()->detach($userId);
+        
+        return response()->json(['message' => 'Ya no sigues a este usuario'], 200);
     }
 
 }

@@ -21,8 +21,8 @@ Route::get('/users/{id}/events', [UserControllerApi::class, 'showEventosUser']);
 Route::get('/users/{id}/parati', [UserControllerApi::class, 'pantallaParaTi']); //Eventos para ti
 //Route::get('/events', [EventoControllerApi::class, 'index']); // Muestra todos los eventos
 
-Route::post('/users/follow', [UserControllerApi::class, 'follow']); // Seguir a un usuario
-Route::post('/users/unfollow', [UserControllerApi::class, 'unfollow']); // Dejar de seguir a un usuario
+//Route::post('/users/follow', [UserControllerApi::class, 'follow']); // Seguir a un usuario
+//Route::post('/users/unfollow', [UserControllerApi::class, 'unfollow']); // Dejar de seguir a un usuario
 
 Route::get('users/{id}/historial', [UserControllerApi::class, 'showHistorial']); // Historial de un usuario
 
@@ -55,6 +55,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/events', [EventoControllerApi::class, 'store']); // Crea un evento
     Route::put('/events/{id}/edit', [EventoControllerApi::class, 'update']); // Edita un evento
     Route::delete('/events/{id}', [EventoControllerApi::class, 'destroy']); // Elimina un evento
+
+    //seguir usuario/dejar de seguir a usuario
+    Route::post('/users/{userId}/follow', [UserControllerApi::class, 'followUser']);
+    Route::post('/users/{userId}/unfollow', [UserControllerApi::class, 'unfollowUser']);
 
     Route::post('/logout', [AuthControllerApi::class, 'logout']); // Cerrar sesión
     
