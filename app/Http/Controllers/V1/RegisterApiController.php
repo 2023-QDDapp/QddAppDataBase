@@ -4,14 +4,9 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
 
 class RegisterApiController extends Controller
 {
@@ -73,7 +68,7 @@ class RegisterApiController extends Controller
         });
     }
 
-    public function verifyEmail(Request $request, $id, $token)
+    public function verifyEmail($id, $token)
     {
         $user = User::findOrFail($id);
 
@@ -167,4 +162,18 @@ class RegisterApiController extends Controller
             ], 400);
         }
     }
+
+    public function verifyPhoneNumber(Request $request)
+    {
+        $telefono = $request->telefono;
+
+        $exists = User::where('telefono', $telefono)->exists();
+
+        if (!$exists) {
+            return response()->json(['mensaje' => 'El teléfono es válido']);
+        } else {
+            return response()->json(['mensaje' => 'El teléfono ya existe']);
+        }
+    }
+
 }

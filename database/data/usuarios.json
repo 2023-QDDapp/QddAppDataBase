@@ -5,7 +5,7 @@
         "telefono": "644977970",
         "email": "alvaro.garvin@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "1988-12-08 15:30:00",
+        "fecha_nacimiento": "1988-12-08",
         "biografia": "Soy un chico simpatico que le gusta hacer amigos",
         "foto": "img/user/1684955090.jpg"
     },
@@ -15,7 +15,7 @@
         "telefono": "683748001",
         "email": "paco.fernandez@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Me gusta hacer barbacoas y comer con la familia",
         "foto": "img/user/1684954770.jpg"
     },
@@ -25,7 +25,7 @@
         "telefono": "645820193",
         "email": "maria.becerro@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Soy una chica que le gusta el deporte y comer",
         "foto": "img/user/1684955408.jpg"
     },
@@ -35,7 +35,7 @@
         "telefono": "678234510",
         "email": "julia.simarro@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Soy una chica muy tranquila y me gusta salir a meditar",
         "foto": "img/user/1684954793.jpg"
     },
@@ -45,7 +45,7 @@
         "telefono": "690347183",
         "email": "jose.guzman@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Soy un chico simpatico que le gusta la ciencia y las matematicas",
         "foto": "img/user/1684955127.jpg"
     },
@@ -55,7 +55,7 @@
         "telefono": "635846920",
         "email": "sofia.martinez@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Me gustan hacer deporte, salir de fiesta y comer con la familia",
         "foto": "img/user/1684955147.jpg"
     },
@@ -65,7 +65,7 @@
         "telefono": "625483479",
         "email": "jose.alcazar@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Soy un tipo familiar",
         "foto": "img/user/1684955174.jpg"
     },
@@ -75,7 +75,7 @@
         "telefono": "639386168",
         "email": "lucia.garcia@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Me gustan conocer gente y tener una noche loca",
         "foto": "img/user/1684955186.jpg"
     },
@@ -85,7 +85,7 @@
         "telefono": "636834103",
         "email": "ongombo.gualg@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Me gusta irme de cervezas con mis amigos",
         "foto": "img/user/1684955196.jpg"
     },
@@ -95,7 +95,7 @@
         "telefono": "627927245",
         "email": "javier.romera@escuelaestech.es",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Me gusta irme de cervezas con mis amigos",
         "foto": "img/user/1684955213.jpg"
     },
@@ -105,7 +105,7 @@
         "telefono": "123456789",
         "email": "juanperez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Estudiante de ingeniería",
         "foto": "img/user/1684955228.jpg"
     },
@@ -115,7 +115,7 @@
         "telefono": "987654321",
         "email": "mariagarcia@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Programadora",
         "foto": "img/user/1684955267.jpg"
     },
@@ -125,7 +125,7 @@
         "telefono": "698125609",
         "email": "luisamartinez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Diseñadora gráfica",
         "foto": "img/user/1684955279.jpg"
     },
@@ -135,7 +135,7 @@
         "telefono": "612095478",
         "email": "pedrosanchez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Analista de sistemas",
         "foto": "img/user/1684955352.jpg"
     },
@@ -145,7 +145,7 @@
         "telefono": "690440032",
         "email": "anatorres@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Desarrolladora web",
         "foto": "img/user/1684955397.jpg"
     },
@@ -155,7 +155,7 @@
         "telefono": "677210988",
         "email": "carlosgomez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Estudiante de medicina",
         "foto": "img/user/1684955574.jpg"
     },
@@ -165,7 +165,7 @@
         "telefono": "657320911",
         "email": "sofiarodriguez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Ingeniera química",
         "foto": "img/user/1684955623.jpg"
     },
@@ -175,7 +175,7 @@
         "telefono": "654098765",
         "email": "jorgeramirez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Arquitecto",
         "foto": "img/user/1684955378.jpg"
     },
@@ -185,7 +185,7 @@
         "telefono": "651234500",
         "email": "monicamedina@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Consultora de negocios",
         "foto": "img/user/1684955604.jpg"
     },
@@ -195,7 +195,7 @@
         "telefono": "672948394",
         "email": "fernandogutierrez@example.com",
         "password": "password",
-        "fecha_nacimiento": "2003-03-23 15:30:00",
+        "fecha_nacimiento": "2003-03-23",
         "biografia": "Consultor de negocios",
         "foto": "img/user/1684955253.jpg"
     }

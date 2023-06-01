@@ -7,7 +7,6 @@ use App\Http\Controllers\V1\EventoControllerApi;
 use App\Http\Controllers\V1\CategoriaControllerApi;
 use App\Http\Controllers\V1\AuthControllerApi;
 
-
 Route::get('/users/{id}/following', [UserControllerApi::class, 'showFollowing']); //Muestra los seguidos de un usuario
 Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda
 Route::get('/events/{id}', [EventoControllerApi::class, 'showDetailEvent']); // Muestra el detalle de un evento
@@ -37,6 +36,7 @@ Route::post('/resenas', [ResenaControllerApi::class, 'store']); // Crear una res
 Route::post('/register', [RegisterApiController::class, 'register']);
 Route::get('/verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEmail'])->name('api.verify.email');
 Route::post('/continue/register/{id}', [RegisterApiController::class, 'continueRegister']); // Continúa el registro una vez se ha verificado el email
+Route::post('/validate/phone', [RegisterApiController::class, 'verifyPhoneNumber']); // Comprobar si existe el número de teléfono
 
 Route::post('/loginApi', [AuthControllerApi::class, 'login']);
 

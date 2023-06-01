@@ -20,8 +20,8 @@ class CreateEventosTable extends Migration
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
             $table->string('titulo');
-            $table->dateTime('fecha_hora_inicio');
-            $table->dateTime('fecha_hora_fin');
+            $table->dateTime('fecha_hora_inicio')->format('Y-m-d H:i');
+            $table->dateTime('fecha_hora_fin')->format('Y-m-d H:i');
             $table->string('descripcion', 500);
             $table->string('imagen');
             $table->string('tipo');

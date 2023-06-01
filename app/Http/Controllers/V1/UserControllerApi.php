@@ -230,30 +230,11 @@ class UserControllerApi extends Controller
     // Listado de usuarios seguidos
     public function showFollowing($id)
     {
-        // Obtenemos el usuario por la ID
-        $user = User::select('users.id', 'users.nombre', 'users.foto')
-            ->where('users.id', $id)
-            ->first();
-
-        // Cambiamos la ruta de la imagen
-        $fotoUrl = null;
-        if ($user->foto) {
-            $fotoUrl = asset('storage/' . $user->foto);
-        }
-
         // Obtenemos los usuarios que sigue
         $seguidos = Follower::select('users.id', 'users.nombre', 'users.foto')
             ->join('users', 'users.id', '=', 'followers.id_usuario_seguido')
             ->where('followers.id_usuario_seguidor', $id)
             ->get();
-
-        // Y los almacenamos en un array vacío provisional
-        $datosUsuario = [
-            'id' => $user->id,
-            'nombre' => $user->nombre,
-            'foto' => $fotoUrl,
-            'siguiendo' => []
-        ];
 
         // Por cada usuario seguido obtenido...
         foreach ($seguidos as $seguido) {
@@ -264,11 +245,13 @@ class UserControllerApi extends Controller
             }
 
             // Y añadimos todos los datos modificados al array vacío anterior
-            $datosUsuario['siguiendo'][] = [
+            $results = [
                 'id' => $seguido->id,
                 'nombre' => $seguido->nombre,
                 'foto' => $fotoSeguidoUrl
             ];
+
+            $datosUsuario[] = $results;
         }
 
         if (!empty($datosUsuario)) {
@@ -351,8 +334,9 @@ class UserControllerApi extends Controller
 
     public function showHistorial($id)
     {
-        $user = User::select('users.id AS id_organizador','users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
-            ->find($id);
+        $user = User::select('users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+            ->where('users.id', $id)
+            ->first();
 
         if (!$user) {
             return response()->json([
@@ -367,11 +351,9 @@ class UserControllerApi extends Controller
 
         $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->join('categorias', 'categorias.id', '=', 'eventos.categoria_id')
-            ->join('evento_users', function ($join) {
-                $join->on('evento_users.evento_id', '=', 'eventos.id')
-                    ->where('evento_users.user_id', '=', Auth::id())
-                    ->where('evento_users.estado', '=', 1);
-            })
+            ->join('evento_users', 'evento_users.evento_id', '=', 'eventos.id')
+            ->where('evento_users.user_id', '=', Auth::id())
+            ->where('evento_users.estado', '=', 1)
             ->where('eventos.fecha_hora_fin', '<', DB::raw('NOW()'))
             ->get();
 
@@ -424,31 +406,37 @@ class UserControllerApi extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = Auth::user();
-        
         $campo = [
-            'nombre' => 'required|string|max:255',
-            'telefono' => 'required|string|max:9|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'nullable|string|min:6',
-            'biografia' => 'required|string|max:500',
-            'foto' => 'required|string'
+            'titulo' => 'required|string|max:255',
+            'fecha_hora_inicio' => 'required|date',
+            'fecha_hora_fin' => 'required|date',
+            'descripcion' => 'required|string|max:500',
+            'imagen' => 'required|string',
+            'tipo' => 'required|string',
+            'location' => 'required|string',
+            'longitud' => 'required|numeric|between:-180,180',
+            'latitud' => 'required|string|between:-90,90',
         ];
 
         $mensaje = [
             'required' => 'El campo :attribute es obligatorio',
             'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
-            'min' => 'La contraseña no puede ser menor de :min caracteres'
+            'between' => 'El campo :attribute debe estar entre :between'
         ];
-        
-        $user->nombre = $request->nombre;
-        $user->telefono = $request->telefono;
-        $user->email = $request->email;
-        $user->biografia = $request->biografia;
 
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
+        $evento = Evento::findOrFail($id);
+
+        if ($evento->user_id != auth()->user()->id) {
+            return response()->json([
+                'mensaje' => 'No puedes editar este evento porque no es tuyo'
+            ]);
         }
+
+        $evento->categoria_id = $request->categoria_id;
+        $evento->titulo = $request->titulo;
+        $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
+        $evento->fecha_hora_fin = $request->fecha_hora_fin;
+        $evento->descripcion = $request->descripcion;
 
         // Guardar la foto
         if ($request->has('foto')) {
@@ -456,27 +444,29 @@ class UserControllerApi extends Controller
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
-            $fileName = time() . '.jpg'; // Nombre del archivo
-            $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
-            Storage::put($filePath, $data);
+            $fileName = 'event_' . time() . '.jpg'; // Nombre del archivo
+            $filePath = 'public/img/event/' . $fileName; // Ruta donde se guarda la foto
 
             // Eliminar la foto anterior si existe
-            if ($user->foto) {
-                Storage::delete($user->foto);
+            if ($evento->foto) {
+                Storage::delete($evento->foto);
             }
 
-            $user->foto = 'img/user/' . $fileName;
+            Storage::put($filePath, $data);
+            $evento->foto = 'img/event/' . $fileName;
         }
 
+        $evento->tipo = $request->tipo;
+        $evento->location = $request->location;
+        $evento->latitud = $request->latitud;
+        $evento->longitud = $request->longitud;
+
         $this->validate($request, $campo, $mensaje);
-
-        $datosUser = request();
-
-        $user = User::where('id', '=', $id)->update($datosUser);
+        $evento->save();
 
         return response()->json([
-            'mensaje' => 'Se ha actualizado el usuario #' . $id,
-            'user' => $user
+            'mensaje' => 'Evento actualizado correctamente',
+            'evento' => $evento
         ]);
     }
 

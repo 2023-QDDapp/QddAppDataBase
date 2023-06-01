@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
@@ -64,8 +63,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->belongsToMany(Evento::class, 'evento_users', 'user_id', 'evento_id');
     }
 
-    public function following()
-    {
+    public function following() {
         return $this->belongsToMany(User::class, 'followers', 'id_usuario_seguidor', 'id_usuario_seguido')->withPivot('id');
     }
 

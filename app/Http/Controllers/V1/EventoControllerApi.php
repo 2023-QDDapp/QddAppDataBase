@@ -83,6 +83,9 @@ class EventoControllerApi extends Controller
      */
     public function store(Request $request)
     {
+        // Obtener el ID del usuario logeado
+        $id_organizador = $request->user()->id;
+
         $campo = [
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
@@ -100,7 +103,7 @@ class EventoControllerApi extends Controller
         ];
 
         $evento = new Evento;
-        $evento->user_id = $request->user_id;
+        $evento->user_id = $id_organizador;
         $evento->categoria_id = $request->categoria_id;
         $evento->titulo = $request->titulo;
         $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
@@ -132,7 +135,7 @@ class EventoControllerApi extends Controller
 			$imagenUrl = asset('storage/' . $evento->imagen);
 		}
 
-        $user = User::find($request->user_id);
+        $user = User::find($id_organizador);
         $user->eventos()->attach($evento->id, ['estado' => 1]);
 
         return response()->json([
@@ -275,9 +278,19 @@ class EventoControllerApi extends Controller
             $query->where('location', 'LIKE', '%' . $request->input('location') . '%');
         }
 
+        // Latitud
+        if ($request->has('latitud')) {
+            $query->where('latitud', $request->input('latitud'));
+        }
+
+        // Longitud
+        if ($request->has('longitud')) {
+            $query->where('longitud', $request->input('longitud'));
+        }
+
         // Obtenemos los eventos filtrados
         $eventos = $query->join('categorias', 'eventos.categoria_id', '=', 'categorias.id')
-            ->select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
+            ->select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'eventos.tipo', 'categorias.id AS id_categoria', 'categorias.categoria')
             ->get();
 
         // Por cada evento obtenido...
@@ -311,6 +324,7 @@ class EventoControllerApi extends Controller
                 'imagen_evento' => $imagenUrl,
                 'fecha_hora_inicio' => $evento->fecha_hora_inicio,
                 'fecha_hora_fin' => $evento->fecha_hora_fin,
+                //'tipo' => $evento->tipo,
                 'categoria' => $evento->categoria
             ];
 
@@ -364,6 +378,13 @@ class EventoControllerApi extends Controller
         ];
 
         $evento = Evento::findOrFail($id);
+
+        if ($evento->user_id != auth()->user()->id) {
+            return response()->json([
+                'mensaje' => 'No puedes editar este evento porque no es tuyo'
+            ]);
+        }
+
         $evento->categoria_id = $request->categoria_id;
         $evento->titulo = $request->titulo;
         $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
@@ -384,7 +405,6 @@ class EventoControllerApi extends Controller
             $fileName = 'event_' . time() . '.jpg'; // Nombre del archivo
             $filePath = 'public/img/event/' . $fileName; // Ruta donde se guarda la foto
             Storage::put($filePath, $data);
-            $evento->foto = 'img/event/' . $fileName;
 
             // Eliminar la foto anterior si existe
             if ($evento->foto) {
@@ -395,19 +415,12 @@ class EventoControllerApi extends Controller
         }
 
         $this->validate($request, $campo, $mensaje);
+        $evento->save();
 
-        if ($evento->user_id == auth()->user()->id) {
-            $evento = Evento::where('id', '=', $id)->update();
-
-            return response()->json([
-                'mensaje' => 'Se ha actualizado el evento #' . $id,
-                'evento' => $evento
-            ]);
-        } else {
-            return response()->json([
-                'mensaje' => 'No puedes editar este evento porque no es tuyo'
-            ]);
-        }
+        return response()->json([
+            'mensaje' => 'Evento actualizado correctamente',
+            'evento' => $evento
+        ]);
     }
 
     /**
