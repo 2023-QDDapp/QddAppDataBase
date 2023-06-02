@@ -15,6 +15,7 @@ use App\Notifications\AcceptedEventNotification;
 use App\Notifications\JoinEventNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserControllerApi extends Controller
 {
@@ -334,25 +335,11 @@ class UserControllerApi extends Controller
 
     public function showHistorial($id)
     {
-        $user = User::select('users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
-            ->where('users.id', $id)
-            ->first();
-
-        if (!$user) {
-            return response()->json([
-                'mensaje' => 'Usuario no encontrado'
-            ], 404);
-        }
-        
-        $fotoUrl = null;
-        if ($user->foto_organizador) {
-            $fotoUrl = asset('storage/' . $user->foto_organizador);
-        }
-
-        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria')
+        $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, users.fecha_nacimiento, NOW()) AS edad'))
             ->join('categorias', 'categorias.id', '=', 'eventos.categoria_id')
             ->join('evento_users', 'evento_users.evento_id', '=', 'eventos.id')
-            ->where('evento_users.user_id', '=', Auth::id())
+            ->join('users', 'users.id', '=', 'eventos.user_id')
+            ->where('evento_users.user_id', $id)
             ->where('evento_users.estado', '=', 1)
             ->where('eventos.fecha_hora_fin', '<', DB::raw('NOW()'))
             ->get();
@@ -363,12 +350,17 @@ class UserControllerApi extends Controller
                 $imagenUrl = asset('storage/' . $evento->imagen_evento);
             }
 
+            $fotoUrl = null;
+            if ($evento->foto_organizador) {
+                $fotoUrl = asset('storage/' . $evento->foto_organizador);
+            }
+
             $data = [
                 'id_evento' => $evento->id_evento,
-                'id_organizador' => $user->id_organizador,
-                'organizador' => $user->organizador,
+                'id_organizador' => $evento->id_organizador,
+                'organizador' => $evento->organizador,
                 'foto_organizador' => $fotoUrl,
-                'edad' => $user->edad,
+                'edad' => $evento->edad,
                 'titulo' => $evento->titulo,
                 'imagen_evento' => $imagenUrl,
                 'fecha_hora_inicio' => $evento->fecha_hora_inicio,
@@ -406,37 +398,35 @@ class UserControllerApi extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+
         $campo = [
-            'titulo' => 'required|string|max:255',
-            'fecha_hora_inicio' => 'required|date',
-            'fecha_hora_fin' => 'required|date',
-            'descripcion' => 'required|string|max:500',
-            'imagen' => 'required|string',
-            'tipo' => 'required|string',
-            'location' => 'required|string',
-            'longitud' => 'required|numeric|between:-180,180',
-            'latitud' => 'required|string|between:-90,90',
+            'nombre' => 'string|max:255',
+            'password' => 'string|min:6',
+            'biografia' => 'string|max:500',
+            'foto' => 'string'
         ];
 
         $mensaje = [
-            'required' => 'El campo :attribute es obligatorio',
             'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
-            'between' => 'El campo :attribute debe estar entre :between'
+            'min' => 'La contraseña no puede ser menor de :min caracteres'
         ];
 
-        $evento = Evento::findOrFail($id);
+        $datosUser = $request->only(['nombre', 'password', 'biografia', 'foto']);
+        
+        // Validar los datos
+        $validator = Validator::make($datosUser, $campo, $mensaje);
 
-        if ($evento->user_id != auth()->user()->id) {
+        if ($validator->fails()) {
             return response()->json([
-                'mensaje' => 'No puedes editar este evento porque no es tuyo'
-            ]);
+                'mensaje' => 'Error en los datos proporcionados',
+                'errores' => $validator->errors()
+            ], 400);
         }
 
-        $evento->categoria_id = $request->categoria_id;
-        $evento->titulo = $request->titulo;
-        $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
-        $evento->fecha_hora_fin = $request->fecha_hora_fin;
-        $evento->descripcion = $request->descripcion;
+        if ($request->filled('password')) {
+            $datosUser['password'] = bcrypt($request->password);
+        }
 
         // Guardar la foto
         if ($request->has('foto')) {
@@ -444,29 +434,24 @@ class UserControllerApi extends Controller
             list($type, $data) = explode(';', $base64Image);
             list(, $data) = explode(',', $data);
             $data = base64_decode($data);
-            $fileName = 'event_' . time() . '.jpg'; // Nombre del archivo
-            $filePath = 'public/img/event/' . $fileName; // Ruta donde se guarda la foto
+            $fileName = time() . '.jpg'; // Nombre del archivo
+            $filePath = 'public/img/user/' . $fileName; // Ruta donde se guarda la foto
+            Storage::put($filePath, $data);
 
             // Eliminar la foto anterior si existe
-            if ($evento->foto) {
-                Storage::delete($evento->foto);
+            if ($user->foto) {
+                Storage::delete($user->foto);
             }
 
-            Storage::put($filePath, $data);
-            $evento->foto = 'img/event/' . $fileName;
+            $datosUser['foto'] = 'img/user/' . $fileName;
         }
 
-        $evento->tipo = $request->tipo;
-        $evento->location = $request->location;
-        $evento->latitud = $request->latitud;
-        $evento->longitud = $request->longitud;
-
-        $this->validate($request, $campo, $mensaje);
-        $evento->save();
+        $user->fill($datosUser);
+        $user->save();
 
         return response()->json([
-            'mensaje' => 'Evento actualizado correctamente',
-            'evento' => $evento
+            'mensaje' => 'Se ha actualizado el usuario #' . $id,
+            'user' => $user
         ]);
     }
 
@@ -563,12 +548,12 @@ class UserControllerApi extends Controller
         
         // Verificar si el usuario autenticado ya sigue al usuario especificado
         if ($user->following()->where('id_usuario_seguido', $userId)->exists()) {
-            return response()->json(['message' => 'Ya sigues a este usuario'], 400);
+            return response()->json(['mensaje' => 'Ya sigues a este usuario'], 400);
         }
         
         $user->following()->attach($userId);
         
-        return response()->json(['message' => 'Ahora sigues a este usuario'], 200);
+        return response()->json(['mensaje' => 'Ahora sigues a este usuario'], 200);
     }
 
     public function unfollowUser(Request $request, $userId)
@@ -577,12 +562,12 @@ class UserControllerApi extends Controller
         
         // Verificar si el usuario autenticado sigue al usuario especificado por $userId
         if (!$user->following()->where('id_usuario_seguido', $userId)->exists()) {
-            return response()->json(['message' => 'No sigues a este usuario'], 400);
+            return response()->json(['mensaje' => 'No sigues a este usuario'], 400);
         }
         
         $user->following()->detach($userId);
         
-        return response()->json(['message' => 'Ya no sigues a este usuario'], 200);
+        return response()->json(['mensaje' => 'Ya no sigues a este usuario'], 200);
     }
 
 }

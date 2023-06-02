@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterApiController extends Controller
 {
@@ -34,8 +35,14 @@ class RegisterApiController extends Controller
 
         // Validamos y guardamos
         try {
-            $this->validate($request, $campo, $mensaje);
-            $user->save();
+            $validator = Validator::make($request->all(), $campo, $mensaje);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'mensaje' => 'Error en los datos proporcionados',
+                    'errores' => $validator->errors()
+                ], 400);
+            }
 
             $data = [
                 'mensaje' => 'El usuario ha sido registrado correctamente. Por favor, verifique su correo electrónico.',
@@ -125,8 +132,14 @@ class RegisterApiController extends Controller
 
             // Validamos y guardamos
             try {
-                $this->validate($request, $campo, $mensaje);
-                $user->save();
+                $validator = Validator::make($request->all(), $campo, $mensaje);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'mensaje' => 'Error en los datos proporcionados',
+                        'errores' => $validator->errors()
+                    ], 400);
+                }
 
                 // Modificamos la foto
                 $fotoUrl = null;

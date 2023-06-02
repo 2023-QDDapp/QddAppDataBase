@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class EventoControllerApi extends Controller
 {
@@ -126,8 +127,14 @@ class EventoControllerApi extends Controller
             $evento->imagen = 'img/event/' . $fileName;
         }
 
-        $this->validate($request, $campo, $mensaje);
-        $evento->save();
+        $validator = Validator::make($request->all(), $campo, $mensaje);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'mensaje' => 'Error en los datos proporcionados',
+                'errores' => $validator->errors()
+            ], 400);
+        }
 
         // Modificamos la imagen
 		$imagenUrl = null;
@@ -359,42 +366,43 @@ class EventoControllerApi extends Controller
      */
     public function update(Request $request, $id)
     {
+        $evento = Evento::findOrFail($id);
+
+        // Verificar si el usuario autenticado es el organizador del evento
+        if ($evento->user_id != auth()->user()->id) {
+            return response()->json([
+                'mensaje' => 'No puedes editar este evento porque no eres el organizador'
+            ]);
+        }
+
         $campo = [
-            'titulo' => 'required|string|max:255',
-            'fecha_hora_inicio' => 'required|date',
-            'fecha_hora_fin' => 'required|date',
-            'descripcion' => 'required|string|max:500',
-            'imagen' => 'required|string',
-            'tipo' => 'required|string',
-            'location' => 'required|string',
-            'longitud' => 'required|numeric|between:-180,180',
-            'latitud' => 'required|string|between:-90,90',
+            'titulo' => 'string|max:255',
+            'fecha_hora_inicio' => 'date',
+            'fecha_hora_fin' => 'date',
+            'descripcion' => 'string|max:500',
+            'imagen' => 'string',
+            'tipo' => 'string',
+            'location' => 'string',
+            'longitud' => 'numeric|between:-180,180',
+            'latitud' => 'string|between:-90,90',
         ];
 
         $mensaje = [
-            'required' => 'El campo :attribute es obligatorio',
             'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
             'between' => 'El campo :attribute debe estar entre :between'
         ];
 
-        $evento = Evento::findOrFail($id);
+        $datosEvento = $request->only(array_keys($campo));
 
-        if ($evento->user_id != auth()->user()->id) {
+        // Validar los datos del evento
+        $validator = Validator::make($datosEvento, $campo, $mensaje);
+
+        if ($validator->fails()) {
             return response()->json([
-                'mensaje' => 'No puedes editar este evento porque no es tuyo'
-            ]);
+                'mensaje' => 'Error en los datos proporcionados',
+                'errores' => $validator->errors()
+            ], 400);
         }
-
-        $evento->categoria_id = $request->categoria_id;
-        $evento->titulo = $request->titulo;
-        $evento->fecha_hora_inicio = $request->fecha_hora_inicio;
-        $evento->fecha_hora_fin = $request->fecha_hora_fin;
-        $evento->descripcion = $request->descripcion;
-        $evento->imagen = $request->imagen;
-        $evento->tipo = $request->tipo;
-        $evento->location = $request->location;
-        $evento->latitud = $request->latitud;
-        $evento->longitud = $request->longitud;
 
         // Guardar la foto
         if ($request->has('foto')) {
@@ -414,11 +422,12 @@ class EventoControllerApi extends Controller
             $evento->foto = 'img/event/' . $fileName;
         }
 
-        $this->validate($request, $campo, $mensaje);
+        // Actualizar los datos del evento con los parámetros proporcionados
+        $evento->fill($datosEvento);
         $evento->save();
 
         return response()->json([
-            'mensaje' => 'Evento actualizado correctamente',
+            'mensaje' => 'Se ha actualizado el evento #' . $id,
             'evento' => $evento
         ]);
     }
