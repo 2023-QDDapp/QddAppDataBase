@@ -35,14 +35,8 @@ class RegisterApiController extends Controller
 
         // Validamos y guardamos
         try {
-            $validator = Validator::make($request->all(), $campo, $mensaje);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'mensaje' => 'Error en los datos proporcionados',
-                    'errores' => $validator->errors()
-                ], 400);
-            }
+            $this->validate($request, $campo, $mensaje);
+            $user->save();
 
             $data = [
                 'mensaje' => 'El usuario ha sido registrado correctamente. Por favor, verifique su correo electrónico.',

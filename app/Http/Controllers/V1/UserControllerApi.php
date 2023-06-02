@@ -13,7 +13,6 @@ use App\Models\Follower;
 use App\Models\Resena;
 use App\Notifications\AcceptedEventNotification;
 use App\Notifications\JoinEventNotification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
