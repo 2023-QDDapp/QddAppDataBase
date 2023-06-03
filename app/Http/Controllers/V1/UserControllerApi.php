@@ -18,44 +18,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UserControllerApi extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // Crear un usuario
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     // Mostrar un usuario
     public function show($id)
 	{
@@ -270,8 +232,12 @@ class UserControllerApi extends Controller
             ->get();
 
         // Decodificamos el resultado para obtener un objeto
-        $objeto = json_decode($seguidos);
-
+        if (!$seguidos->isEmpty()) {
+            $objeto = json_decode($seguidos);
+        } else {
+            return [];
+        }
+        
         // Lo recorremos y almacenamos las IDs de los seguidos en un array
         foreach ($objeto as $objetos) {
             $idSeguido[] = $objetos->id_usuario_seguido;
@@ -377,24 +343,6 @@ class UserControllerApi extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -454,12 +402,6 @@ class UserControllerApi extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -552,7 +494,7 @@ class UserControllerApi extends Controller
         
         $user->following()->attach($userId);
         
-        return response()->json(['mensaje' => 'Ahora sigues a este usuario'], 200);
+        return response()->json(['mensaje' => 'Ahora sigues al usuario #' . $userId], 200);
     }
 
     public function unfollowUser(Request $request, $userId)
@@ -566,7 +508,7 @@ class UserControllerApi extends Controller
         
         $user->following()->detach($userId);
         
-        return response()->json(['mensaje' => 'Ya no sigues a este usuario'], 200);
+        return response()->json(['mensaje' => 'Ya no sigues al usuario #' . $userId], 200);
     }
 
 }
