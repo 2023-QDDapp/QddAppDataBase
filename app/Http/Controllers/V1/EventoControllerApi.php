@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Models\Evento;
 use App\Models\User;
+use App\Models\EventoUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -399,5 +400,37 @@ class EventoControllerApi extends Controller
                 'mensaje' => 'Se ha eliminado el evento #' . $id
             ]);
         }
+    }
+
+    public function userRelationEvent($eventoId)
+    {
+       $usuarioId = auth()->user()->id;
+
+       // Verifica si el usuario es el organizador del evento
+       $esOrganizador = Evento::where('id', $eventoId)
+           ->where('user_id', $usuarioId)
+           ->exists();
+
+       if ($esOrganizador) {
+           // El usuario es el organizador del evento
+           $estado = 'organizador';
+       } else {
+           // Verifica si el usuario está relacionado con el evento como asistente
+           $relacion = EventoUser::where('evento_id', $eventoId)
+               ->where('user_id', $usuarioId)
+               ->first();
+
+           if ($relacion) {
+               // El usuario está relacionado con el evento
+               $estado = $relacion->estado;
+           } else {
+               // El usuario no está relacionado con el evento
+               $estado = null;
+           }
+       }
+
+       return response()->json([
+           'relacion' => $estado
+       ]);
     }
 }

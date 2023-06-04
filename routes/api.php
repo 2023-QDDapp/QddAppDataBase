@@ -47,6 +47,9 @@ Route::middleware('auth:api')->group(function () {
     // Reseñas
     Route::post('/resenas', [ResenaControllerApi::class, 'store']); // Crear una reseña
 
+    //relación del usuario con 
+    Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']);
+
     // Cerrar sesión
     Route::post('/logout', [AuthControllerApi::class, 'logout']); // Cerrar sesión
 });

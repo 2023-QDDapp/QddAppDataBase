@@ -92,12 +92,7 @@ class EventoController extends Controller
     public function edit($id)
     {
         $event = Evento::with('user', 'categoria')->findOrFail($id);
-        $users = User::where('id', '!=', $event->user_id)
-                    ->whereDoesntHave('eventosAsistidos', function ($query) use ($event) {
-                        $query->where('evento_id', $event->id)
-                            ->where('estado', true);
-                    })
-                    ->get();
+        $users = User::all();
         $categorias = Categoria::all();
 
         return view('event.edit', compact('event', 'users', 'categorias'));
