@@ -218,7 +218,7 @@ class EventoControllerApi extends Controller
                 'tipo' => $evento->tipo,
                 'num_participantes' => $num_participantes,
                 'categoria' => $evento->categoria,
-                'asistentes' => $asistentesData
+                'asistentes' => $asistentesData ?? []
             ];
         }
 
