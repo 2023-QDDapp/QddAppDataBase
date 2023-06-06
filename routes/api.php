@@ -9,7 +9,7 @@ use App\Http\Controllers\V1\AuthControllerApi;
 use App\Http\Controllers\V1\ResenaControllerApi;
 
 // Notificaciones
-Route::post('/users/events/join', [UserControllerApi::class, 'unirseEvento']); // Solicitar unirse a un evento
+
 Route::post('/events/{eventoId}/aceptar/{userId}', [UserControllerApi::class, 'eventoAceptado']); // Aceptar usuario a un evento
 Route::post('/events/{eventoId}/denegar/{userId}', [UserControllerApi::class, 'eventoCancelado']); // Denegar usuario en un evento
 
@@ -33,7 +33,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users/{id}/following', [UserControllerApi::class, 'showFollowing']); // Muestra los seguidos de un usuario
     Route::post('/users/{id}/follow', [UserControllerApi::class, 'followUser']); // Seguir usuario
     Route::post('/users/{id}/unfollow', [UserControllerApi::class, 'unfollowUser']); // Dejar de seguir usuario
+    Route::post('/users/{id}/verifyFollowing', [UserControllerApi::class, 'verifyFollowing']); // Comprueba si sigues a un usuario
 
+    Route::post('/events/{eventoId}/join', [UserControllerApi::class, 'unirseEvento']); // Solicitar unirse a un evento
+    
     // Eventos
     Route::get('/events', [EventoControllerApi::class, 'index']); // Muestra todos los eventos
     Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda

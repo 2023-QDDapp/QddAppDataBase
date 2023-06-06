@@ -331,7 +331,7 @@ class EventoControllerApi extends Controller
         if ($evento->user_id != auth()->user()->id) {
             return response()->json([
                 'mensaje' => 'No puedes editar este evento porque no eres el organizador'
-            ]);
+            ], 400);
         }
 
         $campo = [
@@ -388,7 +388,7 @@ class EventoControllerApi extends Controller
         return response()->json([
             'mensaje' => 'Se ha actualizado el evento #' . $id,
             'evento' => $evento
-        ]);
+        ], 200);
     }
 
     public function destroy($id)
@@ -400,7 +400,7 @@ class EventoControllerApi extends Controller
 
             return response()->json([
                 'mensaje' => 'Se ha eliminado el evento #' . $id
-            ]);
+            ], 200);
         }
     }
 

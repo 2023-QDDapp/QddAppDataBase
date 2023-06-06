@@ -399,7 +399,7 @@ class UserControllerApi extends Controller
         return response()->json([
             'mensaje' => 'Se ha actualizado el usuario #' . $id,
             'user' => $user
-        ]);
+        ], 200);
     }
 
     public function destroy($id)
@@ -409,50 +409,34 @@ class UserControllerApi extends Controller
         if ($user == auth()->user()) {
             User::destroy($id);
 
-            return response()->json([
-                'mensaje' => 'Se ha eliminado el usuario #' . $id
-            ]);
+            return response()->json(['mensaje' => 'Se ha eliminado el usuario #' . $id], 200);
         }
     }
 
-    public function unirseEvento(Request $request)
+    public function unirseEvento(Request $request, $eventoId)
     {
-        $user = User::find($request->user_id);
+        $user = $request->user();
+        $evento = Evento::find($eventoId);
 
-        $eventosUsuario = $user->eventos->pluck('id')->toArray();
+        if (!$evento) {
+            return response()->json(['mensaje' => 'Evento no encontrado'], 404);
+        }
 
-        if (!in_array($request->evento_id, $eventosUsuario)) {
-            //$evento = Evento::find($request->evento_id);
-            $evento = Evento::where('id', $request->evento_id)->first();
+        // Verificar si el usuario ya está unido al evento
+        if ($user->eventosAsistidos()->where('evento_id', $eventoId)->exists()) {
+            return response()->json(['mensaje' => 'Ya estás unido a este evento'], 400);
+        }
 
-            if ($evento->tipo == 'público') {
-                $user->eventos()->attach($request->evento_id, ['estado' => 1]);
+        if ($evento->tipo) {
+            // Evento público, el usuario puede unirse directamente
+            $user->eventosAsistidos()->attach($eventoId, ['estado' => 1]);
 
-                return response()->json([
-                    'mensaje' => 'Te has unido a este evento'
-                ]);
-
-            } else {
-                $user->eventos()->attach($request->evento_id, ['estado' => 0]);
-
-                // Notificación para el organizador del evento
-                $evento->user->notify(new JoinEventNotification($user, $evento));
-
-                return response()->json([
-                    'mensaje' => 'Pendiente de que te acepten en este evento'
-                ]);
-            }
-
+            return response()->json(['mensaje' => 'Te has unido al evento'], 200);
         } else {
-            //if ($user->eventosAsistidos()->estado == 1) {
-                return response()->json([
-                    'mensaje' => 'Ya te has unido a este evento'
-                ]);
-            /*} else {
-                return response()->json([
-                    'mensaje' => 'Pendiente de que te acepten en este evento'
-                ]);
-            }*/
+            // Evento privado, el usuario debe esperar confirmación
+            $user->eventosAsistidos()->attach($eventoId, ['estado' => 0]);
+
+            return response()->json(['mensaje' => 'Pendiente de respuesta'], 200);
         }
     }
 
@@ -468,7 +452,7 @@ class UserControllerApi extends Controller
 
         return response()->json([
             'mensaje' => 'El usuario ha sido aceptado en el evento'
-        ]);
+        ], 200);
     }
 
     public function eventoCancelado($eventoId, $userId)
@@ -480,7 +464,7 @@ class UserControllerApi extends Controller
 
         return response()->json([
             'mensaje' => 'El usuario no ha sido aceptado en el evento'
-        ]);
+        ], 200);
     }
 
     public function followUser(Request $request, $userId)
@@ -511,4 +495,14 @@ class UserControllerApi extends Controller
         return response()->json(['mensaje' => 'Ya no sigues al usuario #' . $userId], 200);
     }
 
+    public function verifyFollowing(Request $request, $userId)
+    {
+        $user = $request->user();
+
+        if (!$user->following()->where('id_usuario_seguido', $userId)->exists()) {
+            return response()->json(['mensaje' => 'Seguir'], 200);
+        } else {
+            return response()->json(['mensaje' => 'Dejar de seguir'], 200);
+        }
+    }
 }
