@@ -41,13 +41,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/events', [EventoControllerApi::class, 'store']); // Crea un evento
     Route::put('/events/{id}/edit', [EventoControllerApi::class, 'update']); // Edita un evento
     Route::delete('/events/{id}', [EventoControllerApi::class, 'destroy']); // Elimina un evento
-<<<<<<< Updated upstream
-    
-=======
     Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda
     Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']);//relación del usuario con el evento
 
->>>>>>> Stashed changes
     // Categorías
     Route::get('/categorias', [CategoriaControllerApi::class, 'index']); // Muestra todas las categorias
 
