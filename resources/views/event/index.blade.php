@@ -1,5 +1,7 @@
 @extends('layouts.private')
 
+@section('title', "Qdd - Listado de eventos")
+
 @section('content')
 <div class="container">
     @if (Session::has('mensaje'))

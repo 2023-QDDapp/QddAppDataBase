@@ -2,6 +2,8 @@
 
 @section('content')
 
+@section('title', "Qdd - Detalle de evento")
+
 <div class="container">
     @if(session('success'))
         <div class="alert alert-success">

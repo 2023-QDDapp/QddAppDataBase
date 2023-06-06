@@ -1,5 +1,7 @@
 @extends('layouts.private')
 
+@section('title', "Qdd - Detalle de usuario")
+
 @section('content')
 
 <div class="container">

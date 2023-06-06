@@ -63,7 +63,7 @@ class RegisterApiController extends Controller
             'token' => $user->verification_token,
         ]);
 
-        Mail::send('emails.verify', ['verificationLink' => $verificationLink, 'nombre' => $user->nombre], function ($message) use ($user) {
+        Mail::send('emails.verify', ['verificationLink' => $verificationLink], function ($message) use ($user) {
             $message->to($user->email)
                 ->subject('Verificación de correo electrónico');
         });
@@ -78,7 +78,7 @@ class RegisterApiController extends Controller
             $user->verification_token = null; // Establecer el campo como null en lugar de eliminarlo
             $user->save();
 
-            return response()->json(['message' => 'Correo electrónico verificado correctamente.'], 200);
+            return view('emails.email-verified', ['message' => 'Correo electrónico verificado correctamente.']);
         }
 
         return response()->json(['error' => 'El enlace de verificación no es válido.'], 400);

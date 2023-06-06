@@ -1,5 +1,7 @@
 @extends('layouts.private')
 
+@section('title', "Qdd - Editar evento")
+
 @section('content')
 <div class="container">
     <form action="{{ route('events.update', $event->id) }}" method="post" enctype="multipart/form-data">

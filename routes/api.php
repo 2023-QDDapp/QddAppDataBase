@@ -6,6 +6,7 @@ use App\Http\Controllers\V1\RegisterApiController;
 use App\Http\Controllers\V1\EventoControllerApi;
 use App\Http\Controllers\V1\CategoriaControllerApi;
 use App\Http\Controllers\V1\AuthControllerApi;
+use App\Http\Controllers\V1\ResenaControllerApi;
 
 // Notificaciones
 Route::post('/users/events/join', [UserControllerApi::class, 'unirseEvento']); // Solicitar unirse a un evento
@@ -40,15 +41,18 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/events', [EventoControllerApi::class, 'store']); // Crea un evento
     Route::put('/events/{id}/edit', [EventoControllerApi::class, 'update']); // Edita un evento
     Route::delete('/events/{id}', [EventoControllerApi::class, 'destroy']); // Elimina un evento
+<<<<<<< Updated upstream
     
+=======
+    Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda
+    Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']);//relación del usuario con el evento
+
+>>>>>>> Stashed changes
     // Categorías
     Route::get('/categorias', [CategoriaControllerApi::class, 'index']); // Muestra todas las categorias
 
     // Reseñas
     Route::post('/resenas', [ResenaControllerApi::class, 'store']); // Crear una reseña
-
-    //relación del usuario con 
-    Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']);
 
     // Cerrar sesión
     Route::post('/logout', [AuthControllerApi::class, 'logout']); // Cerrar sesión
