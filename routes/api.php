@@ -35,12 +35,12 @@ Route::middleware('auth:api')->group(function () {
 
     // Eventos
     Route::get('/events', [EventoControllerApi::class, 'index']); // Muestra todos los eventos
+    Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda
     Route::get('/events/{id}', [EventoControllerApi::class, 'showDetailEvent']); // Muestra el detalle de un evento
     Route::post('/events', [EventoControllerApi::class, 'store']); // Crea un evento
     Route::put('/events/{id}/edit', [EventoControllerApi::class, 'update']); // Edita un evento
     Route::delete('/events/{id}', [EventoControllerApi::class, 'destroy']); // Elimina un evento
-    Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda
-
+    
     // Categorías
     Route::get('/categorias', [CategoriaControllerApi::class, 'index']); // Muestra todas las categorias
 

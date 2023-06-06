@@ -24,7 +24,7 @@ class CreateEventosTable extends Migration
             $table->dateTime('fecha_hora_fin')->format('Y-m-d H:i');
             $table->string('descripcion', 500);
             $table->string('imagen');
-            $table->string('tipo');
+            $table->boolean('tipo');
             $table->string('location');
             $table->double('latitud');
             $table->double('longitud');

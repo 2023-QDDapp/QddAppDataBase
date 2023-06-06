@@ -8,7 +8,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Vamos a echar un partido de futbol 7",
         "imagen": "img/event/1684956334.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": 37.76863135104762,
         "longitud": -3.77816621649918
@@ -22,7 +22,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "A jugar al parchis :)",
         "imagen": "img/event/1684956354.jpg",
-        "tipo": "privado",
+        "tipo": 0,
         "location": "Linares",
         "latitud": 37.76636265251344,
         "longitud": -3.786776049863493
@@ -36,7 +36,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Baloncesto por la mañana y lo que surja",
         "imagen": "img/event/1684956364.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": 37.776724249375505,
         "longitud": -3.787167799827603
@@ -50,7 +50,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Escalada en la montaña",
         "imagen": "img/event/1684956377.png",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": 5.566388173618951,
         "longitud": -59.03228150033626
@@ -64,7 +64,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Buscamos jugadores para un partido de balonmano",
         "imagen": "img/event/1684956411.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": -12.093824587341,
         "longitud": -77.035299874863
@@ -78,7 +78,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Vamos a hacer una caminata en la montaña. Trae tu propia agua y comida",
         "imagen": "img/event/1684956440.jpg",
-        "tipo": "privado",
+        "tipo": 0,
         "location": "Linares",
         "latitud": -13.432135458975,
         "longitud": -71.876542187438
@@ -92,7 +92,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Vamos a ir al concierto de rock en el estadio. Entradas ya compradas",
         "imagen": "img/event/1684956459.png",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": -16.397514628975,
         "longitud": -71.536289257483
@@ -106,7 +106,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Vamos a hacer una cata de vinos en la bodega de la ciudad. Incluye degustación de quesos",
         "imagen": "img/event/1684956472.jpg",
-        "tipo": "privado",
+        "tipo": 0,
         "location": "Linares",
         "latitud": -12.057362415896,
         "longitud": -76.979846512347
@@ -120,7 +120,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Buscamos jugadores para un partido de baloncesto en el gimnasio",
         "imagen": "img/event/1684956485.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": -11.984578435670,
         "longitud": -77.064935870221
@@ -134,7 +134,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Ven a disfrutar de la música en vivo de tu artista favorito en nuestro evento.",
         "imagen": "img/event/1684956496.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": 37.7749295,
         "longitud": -12.4194155
@@ -148,7 +148,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Únete a nosotros para jugar una partida de petanca",
         "imagen": "img/event/1684956592.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": 40.7127281,
         "longitud": -14.0060152
@@ -162,7 +162,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Ven a nuestra feria de arte y conoce a los artistas locales y sus obras.",
         "imagen": "img/event/1684956518.jpg",
-        "tipo": "privado",
+        "tipo": 0,
         "location": "Linares",
         "latitud": 41.8781136,
         "longitud": -37.6297982
@@ -176,7 +176,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Participa en nuestra carrera de bicicletas y demuestra tu habilidad en la pista.",
         "imagen": "img/event/1684956529.jpg",
-        "tipo": "público",
+        "tipo": 1,
         "location": "Linares",
         "latitud": 21.5073509,
         "longitud": -9.1277583
@@ -190,7 +190,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Celebra mi cumpleaños conmigo y disfruta de una noche llena de diversión y baile.",
         "imagen": "img/event/1684956557.jpg",
-        "tipo": "privado",
+        "tipo": 0,
         "location": "Linares",
         "latitud": 34.0522342,
         "longitud": -11.2436849
@@ -204,7 +204,7 @@
         "fecha_hora_fin": "2023-04-14 13:15",
         "descripcion": "Voy a hacer un torneo de globos para pasar el rato",
         "imagen": "img/event/1684956538.jpg",
-        "tipo": "privado",
+        "tipo": 0,
         "location": "Linares",
         "latitud": 14.0522342,
         "longitud": -18.2436849

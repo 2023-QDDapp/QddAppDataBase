@@ -72,7 +72,7 @@ class EventoControllerApi extends Controller
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
             'imagen' => 'required|string',
-            'tipo' => 'required|string',
+            'tipo' => 'required|bool',
             'location' => 'required|string',
             'longitud' => 'required|string|between:-180,180',
             'latitud' => 'required|string|between:-90,90',
@@ -116,6 +116,8 @@ class EventoControllerApi extends Controller
                 'errores' => $validator->errors()
             ], 400);
         }
+
+        $evento->save();
 
         // Modificamos la imagen
 		$imagenUrl = null;
