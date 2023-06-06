@@ -40,8 +40,8 @@
                             <img src="{{ asset('storage/' . $event->creador->foto) }}" alt="{{ $event->creador->nombre }}" class="rounded-circle" style="width: 50px; height: 50px;">
                         </div>
                         <div class="col-md-6">
-                            <strong>Número de participantes:</strong>
-                            {{$event->n_participantes}}
+                            <strong>Tipo de evento:</strong>
+                            {{$event->tipo}}
                         </div>
                     </div>
                     <div class="row mt-3">
