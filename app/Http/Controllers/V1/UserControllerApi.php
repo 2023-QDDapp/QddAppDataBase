@@ -402,7 +402,9 @@ class UserControllerApi extends Controller
         }
         
         // Actualizar las categorías del usuario
-		$user->categorias()->sync($request->categorias);
+		if ($request->filled('categorias')) {
+            $user->categorias()->sync($request->categorias);
+        }
 
         $user->fill($datosUser);
         $user->save();
