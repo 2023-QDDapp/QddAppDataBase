@@ -358,6 +358,7 @@ class UserControllerApi extends Controller
             'nombre' => 'string|max:255',
             'password' => 'string|min:6',
             'biografia' => 'string|max:500',
+            'telefono' => 'string|max:9|unique:users,telefono',
             'foto' => 'string',
             'categorias' => 'array|size:3'
         ];
@@ -381,6 +382,10 @@ class UserControllerApi extends Controller
 
         if ($request->filled('password')) {
             $datosUser['password'] = bcrypt($request->password);
+        }
+        
+        if ($request->filled('telefono')) {
+            $datosUser['telefono'] = $request->telefono;
         }
 
         // Guardar la foto
