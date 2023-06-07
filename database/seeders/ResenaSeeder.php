@@ -23,6 +23,7 @@ class ResenaSeeder extends Seeder
             $modelo->id_usuario_emisor = $item['id_usuario_emisor'];
             $modelo->id_usuario_receptor = $item['id_usuario_receptor'];
             $modelo->mensaje = $item['mensaje'];
+            $modelo->valoracion = $item['valoracion'];
             $modelo->save();
         }
     }

@@ -199,6 +199,31 @@ class EventoControllerApi extends Controller
                 $asistentesData[] = $datosAsistente;
             }
 
+            // Obtenemos los asistentes de cada evento
+            $pendientes = User::join('evento_users', 'users.id', '=', 'evento_users.user_id')
+                ->where('evento_users.evento_id', $evento->id_evento)
+                ->where('evento_users.estado', 0)
+                ->get(['users.id', 'users.nombre', 'users.foto']);
+
+            // Por cada asistente...
+            foreach ($pendientes as $pendiente) {
+                // Cambiamos la ruta de la foto
+                $fotoPendienteUrl = null;
+                if ($pendiente->foto) {
+                    $fotoPendienteUrl = asset('storage/' . $pendiente->foto);
+                }
+
+                // Y guardamos los datos en un array
+                $datosPendiente = [
+                    'id' => $pendiente->id,
+                    'nombre' => $pendiente->nombre,
+                    'foto' => $fotoPendienteUrl,
+                ];
+
+                // Para asignarlos a una variable
+                $pendientesData[] = $datosPendiente;
+            }
+
             // Contamos los particpantes
             $num_participantes = count($asistentes);
 
@@ -220,7 +245,8 @@ class EventoControllerApi extends Controller
                 'tipo' => $evento->tipo,
                 'num_participantes' => $num_participantes,
                 'categoria' => $evento->categoria,
-                'asistentes' => $asistentesData ?? []
+                'asistentes' => $asistentesData ?? [],
+                'pendientes' => $pendientesData ?? []
             ];
         }
 
@@ -401,6 +427,10 @@ class EventoControllerApi extends Controller
             return response()->json([
                 'mensaje' => 'Se ha eliminado el evento #' . $id
             ], 200);
+        } else {
+            return response()->json([
+                'mensaje' => 'No puedes eliminar este evento porque no eres el organizador'
+            ], 400);
         }
     }
 

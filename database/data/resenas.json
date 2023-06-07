@@ -3,300 +3,350 @@
         "id": 1,
         "id_usuario_emisor": 5,
         "id_usuario_receptor": 7,
-        "mensaje": "El organizador del evento fue muy amable y atento en todo momento. ¡Excelente trabajo!"
+        "mensaje": "El organizador del evento fue muy amable y atento en todo momento. ¡Excelente trabajo!",
+        "valoracion": 4.5
     },
     {
         "id": 2,
         "id_usuario_emisor": 12,
         "id_usuario_receptor": 2,
-        "mensaje": "La organización del evento fue excelente, todo estuvo perfectamente planificado y coordinado. ¡Gracias!"
+        "mensaje": "La organización del evento fue excelente, todo estuvo perfectamente planificado y coordinado. ¡Gracias!",
+        "valoracion": 4.5
     },
     {
         "id": 3,
         "id_usuario_emisor": 17,
         "id_usuario_receptor": 11,
-        "mensaje": "El organizador del evento demostró gran profesionalismo y compromiso en todo momento. ¡Muy recomendable!"
+        "mensaje": "El organizador del evento demostró gran profesionalismo y compromiso en todo momento. ¡Muy recomendable!",
+        "valoracion": 5
     },
     {
         "id": 4,
         "id_usuario_emisor": 6,
         "id_usuario_receptor": 15,
-        "mensaje": "La atención al detalle por parte del organizador del evento fue impresionante. ¡Muchas gracias!"
+        "mensaje": "La atención al detalle por parte del organizador del evento fue impresionante. ¡Muchas gracias!",
+        "valoracion": 4
     },
     {
         "id": 5,
         "id_usuario_emisor": 18,
         "id_usuario_receptor": 9,
-        "mensaje": "El organizador del evento fue muy receptivo a nuestras necesidades y se aseguró de que todo saliera perfecto. ¡Muchas gracias!"
+        "mensaje": "El organizador del evento fue muy receptivo a nuestras necesidades y se aseguró de que todo saliera perfecto. ¡Muchas gracias!",
+        "valoracion": 5
     },
     {
         "id": 6,
         "id_usuario_emisor": 8,
         "id_usuario_receptor": 1,
-        "mensaje": "El organizador del evento mostró gran pasión y dedicación en su trabajo, lo que hizo que todo saliera excelente. ¡Muy recomendable!"
+        "mensaje": "El organizador del evento mostró gran pasión y dedicación en su trabajo, lo que hizo que todo saliera excelente. ¡Muy recomendable!",
+        "valoracion": 4.5
     },
     {
         "id": 7,
         "id_usuario_emisor": 13,
         "id_usuario_receptor": 3,
-        "mensaje": "El organizador del evento fue muy atento y cuidadoso en todo momento. ¡Un trabajo excelente!"
+        "mensaje": "El organizador del evento fue muy atento y cuidadoso en todo momento. ¡Un trabajo excelente!",
+        "valoracion": 4.5
     },
     {
         "id": 8,
         "id_usuario_emisor": 19,
         "id_usuario_receptor": 14,
-        "mensaje": "La organización del evento fue impecable, el organizador se aseguró de que todo saliera perfecto. ¡Muy agradecido!"
+        "mensaje": "La organización del evento fue impecable, el organizador se aseguró de que todo saliera perfecto. ¡Muy agradecido!",
+        "valoracion": 4.5
     },
     {
         "id": 9,
         "id_usuario_emisor": 4,
         "id_usuario_receptor": 20,
-        "mensaje": "El organizador del evento fue muy profesional y siempre estuvo disponible para responder cualquier pregunta que tuviéramos. ¡Gracias!"
+        "mensaje": "El organizador del evento fue muy profesional y siempre estuvo disponible para responder cualquier pregunta que tuviéramos. ¡Gracias!",
+        "valoracion": 4.5
     },
     {
         "id": 10,
         "id_usuario_emisor": 10,
         "id_usuario_receptor": 16,
-        "mensaje": "La organización del evento fue excelente, el organizador hizo un gran trabajo en todos los aspectos. ¡Muy recomendable!"
+        "mensaje": "La organización del evento fue excelente, el organizador hizo un gran trabajo en todos los aspectos. ¡Muy recomendable!",
+        "valoracion": 5
     },
     {
         "id": 11,
         "id_usuario_emisor": 3,
         "id_usuario_receptor": 6,
-        "mensaje": "El organizador del evento fue muy atento y amable en todo momento."
+        "mensaje": "El organizador del evento fue muy atento y amable en todo momento.",
+        "valoracion": 3.5
     },
     {
         "id": 12,
         "id_usuario_emisor": 9,
         "id_usuario_receptor": 2,
-        "mensaje": "Me encantó el evento organizado por este usuario. Todo salió perfecto y estuvo muy bien planificado."
+        "mensaje": "Me encantó el evento organizado por este usuario. Todo salió perfecto y estuvo muy bien planificado.",
+        "valoracion": 4
     },
     {
         "id": 13,
         "id_usuario_emisor": 4,
         "id_usuario_receptor": 17,
-        "mensaje": "El organizador de este evento fue muy profesional. Todo estuvo perfectamente organizado y la comunicación fue excelente."
+        "mensaje": "El organizador de este evento fue muy profesional. Todo estuvo perfectamente organizado y la comunicación fue excelente.",
+        "valoracion": 4.5
     },
     {
         "id": 14,
         "id_usuario_emisor": 12,
         "id_usuario_receptor": 20,
-        "mensaje": "Quiero felicitar al organizador de este evento. Todo salió muy bien y se notó que se esforzó mucho para que todo saliera perfecto."
+        "mensaje": "Quiero felicitar al organizador de este evento. Todo salió muy bien y se notó que se esforzó mucho para que todo saliera perfecto.",
+        "valoracion": 5
     },
     {
         "id": 15,
         "id_usuario_emisor": 1,
         "id_usuario_receptor": 10,
-        "mensaje": "Fue un placer asistir al evento organizado por este usuario. Todo estuvo muy bien planificado y fue muy divertido."
+        "mensaje": "Fue un placer asistir al evento organizado por este usuario. Todo estuvo muy bien planificado y fue muy divertido.",
+        "valoracion": 4.5
     },
     {
         "id": 16,
         "id_usuario_emisor": 16,
         "id_usuario_receptor": 5,
-        "mensaje": "El organizador de este evento fue muy atento y siempre estuvo disponible para cualquier consulta o problema que surgiera."
+        "mensaje": "El organizador de este evento fue muy atento y siempre estuvo disponible para cualquier consulta o problema que surgiera.",
+        "valoracion": 4
     },
     {
         "id": 17,
         "id_usuario_emisor": 7,
         "id_usuario_receptor": 18,
-        "mensaje": "Este organizador es muy bueno en lo que hace. El evento que organizó fue increíble y lo pasamos genial."
+        "mensaje": "Este organizador es muy bueno en lo que hace. El evento que organizó fue increíble y lo pasamos genial.",
+        "valoracion": 5
     },
     {
         "id": 18,
         "id_usuario_emisor": 8,
         "id_usuario_receptor": 14,
-        "mensaje": "El organizador de este evento se nota que tiene mucha experiencia en lo que hace. Todo estuvo perfectamente organizado y fue muy divertido."
+        "mensaje": "El organizador de este evento se nota que tiene mucha experiencia en lo que hace. Todo estuvo perfectamente organizado y fue muy divertido.",
+        "valoracion": 4.5
     },
     {
         "id": 19,
         "id_usuario_emisor": 15,
         "id_usuario_receptor": 11,
-        "mensaje": "Quiero agradecer al organizador de este evento por su dedicación y esfuerzo. Todo salió perfecto y fue una experiencia única."
+        "mensaje": "Quiero agradecer al organizador de este evento por su dedicación y esfuerzo. Todo salió perfecto y fue una experiencia única.",
+        "valoracion": 4
     },
     {
         "id": 20,
         "id_usuario_emisor": 19,
         "id_usuario_receptor": 13,
-        "mensaje": "Este organizador es excelente. El evento que organizó fue muy divertido y todo estuvo muy bien planificado."
+        "mensaje": "Este organizador es excelente. El evento que organizó fue muy divertido y todo estuvo muy bien planificado.",
+        "valoracion": 4.5
     },
     {
         "id": 21,
         "id_usuario_emisor": 5,
         "id_usuario_receptor": 7,
-        "mensaje": "El organizador del evento fue muy amable y servicial. Todo salió muy bien."
+        "mensaje": "El organizador del evento fue muy amable y servicial. Todo salió muy bien.",
+        "valoracion": 3.5
     },
     {
         "id": 22,
         "id_usuario_emisor": 9,
         "id_usuario_receptor": 11,
-        "mensaje": "La organización del evento fue impecable. Felicidades al organizador."
+        "mensaje": "La organización del evento fue impecable. Felicidades al organizador.",
+        "valoracion": 5
     },
     {
         "id": 23,
         "id_usuario_emisor": 4,
         "id_usuario_receptor": 8,
-        "mensaje": "El organizador no fue muy atento y hubo varios problemas durante el evento."
+        "mensaje": "El organizador no fue muy atento y hubo varios problemas durante el evento.",
+        "valoracion": 2
     },
     {
         "id": 24,
         "id_usuario_emisor": 13,
         "id_usuario_receptor": 2,
-        "mensaje": "El organizador del evento no cumplió con lo prometido en la publicidad."
+        "mensaje": "El organizador del evento no cumplió con lo prometido en la publicidad.",
+        "valoracion": 0.5
     },
     {
         "id": 25,
         "id_usuario_emisor": 6,
         "id_usuario_receptor": 10,
-        "mensaje": "El organizador del evento hizo un trabajo excepcional. Todo salió perfecto."
+        "mensaje": "El organizador del evento hizo un trabajo excepcional. Todo salió perfecto.",
+        "valoracion": 4.5
     },
     {
         "id": 26,
         "id_usuario_emisor": 15,
         "id_usuario_receptor": 18,
-        "mensaje": "El organizador del evento no estuvo a la altura de lo esperado. No lo recomendaría."
+        "mensaje": "El organizador del evento no estuvo a la altura de lo esperado. No lo recomendaría.",
+        "valoracion": 1
     },
     {
         "id": 27,
         "id_usuario_emisor": 20,
         "id_usuario_receptor": 3,
-        "mensaje": "El organizador del evento se esforzó mucho para que todo saliera bien. Felicitaciones."
+        "mensaje": "El organizador del evento se esforzó mucho para que todo saliera bien. Felicitaciones.",
+        "valoracion": 4
     },
     {
         "id": 28,
         "id_usuario_emisor": 12,
         "id_usuario_receptor": 1,
-        "mensaje": "El organizador del evento no cumplió con lo acordado. Decepcionante."
+        "mensaje": "El organizador del evento no cumplió con lo acordado. Decepcionante.",
+        "valoracion": 0.5
     },
     {
         "id": 29,
         "id_usuario_emisor": 19,
         "id_usuario_receptor": 16,
-        "mensaje": "El organizador del evento tuvo algunos problemas, pero los resolvió rápidamente y todo salió bien al final."
+        "mensaje": "El organizador del evento tuvo algunos problemas, pero los resolvió rápidamente y todo salió bien al final.",
+        "valoracion": 3
     },
     {
         "id": 30,
         "id_usuario_emisor": 14,
         "id_usuario_receptor": 17,
-        "mensaje": "El organizador del evento fue muy amable y se preocupó por hacer todo lo posible para que disfrutáramos el evento. Gracias."
+        "mensaje": "El organizador del evento fue muy amable y se preocupó por hacer todo lo posible para que disfrutáramos el evento. Gracias.",
+        "valoracion": 3.5
     },
     {
         "id": 31,
         "id_usuario_emisor": 16,
         "id_usuario_receptor": 12,
-        "mensaje": "El organizador fue muy atento y amable en todo momento, excelente servicio."
+        "mensaje": "El organizador fue muy atento y amable en todo momento, excelente servicio.",
+        "valoracion": 4.5
     },
     {
         "id": 32,
         "id_usuario_emisor": 9,
         "id_usuario_receptor": 13,
-        "mensaje": "La organización del evento fue impecable, felicidades al organizador."
+        "mensaje": "La organización del evento fue impecable, felicidades al organizador.",
+        "valoracion": 4
     },
     {
         "id": 33,
         "id_usuario_emisor": 15,
         "id_usuario_receptor": 14,
-        "mensaje": "Excelente trabajo del organizador, todo salió perfecto."
+        "mensaje": "Excelente trabajo del organizador, todo salió perfecto.",
+        "valoracion": 5
     },
     {
         "id": 34,
         "id_usuario_emisor": 11,
         "id_usuario_receptor": 20,
-        "mensaje": "La atención del organizador fue excepcional, todo salió de maravilla."
+        "mensaje": "La atención del organizador fue excepcional, todo salió de maravilla.",
+        "valoracion": 4
     },
     {
         "id": 35,
         "id_usuario_emisor": 19,
         "id_usuario_receptor": 16,
-        "mensaje": "El organizador hizo un gran trabajo, todo estuvo muy bien coordinado."
+        "mensaje": "El organizador hizo un gran trabajo, todo estuvo muy bien coordinado.",
+        "valoracion": 4.5
     },
     {
         "id": 36,
         "id_usuario_emisor": 14,
         "id_usuario_receptor": 10,
-        "mensaje": "El organizador fue muy profesional en todo momento, todo estuvo excelente."
+        "mensaje": "El organizador fue muy profesional en todo momento, todo estuvo excelente.",
+        "valoracion": 4.5
     },
     {
         "id": 37,
         "id_usuario_emisor": 17,
         "id_usuario_receptor": 20,
-        "mensaje": "El organizador hizo un trabajo increíble, todo salió mejor de lo que esperábamos."
+        "mensaje": "El organizador hizo un trabajo increíble, todo salió mejor de lo que esperábamos.",
+        "valoracion": 4
     },
     {
         "id": 38,
         "id_usuario_emisor": 12,
         "id_usuario_receptor": 18,
-        "mensaje": "El organizador fue muy detallista en todo momento, excelente trabajo."
+        "mensaje": "El organizador fue muy detallista en todo momento, excelente trabajo.",
+        "valoracion": 3.5
     },
     {
         "id": 39,
         "id_usuario_emisor": 16,
         "id_usuario_receptor": 19,
-        "mensaje": "El organizador fue muy profesional y amable en todo momento, lo recomiendo ampliamente."
+        "mensaje": "El organizador fue muy profesional y amable en todo momento, lo recomiendo ampliamente.",
+        "valoracion": 5
     },
     {
         "id": 40,
         "id_usuario_emisor": 13,
         "id_usuario_receptor": 15,
-        "mensaje": "La organización del evento fue impecable gracias al excelente trabajo del organizador."
+        "mensaje": "La organización del evento fue impecable gracias al excelente trabajo del organizador.",
+        "valoracion": 4.5
     },
     {
         "id": 41,
         "id_usuario_emisor": 10,
         "id_usuario_receptor": 4,
-        "mensaje": "El organizador hizo un trabajo excelente en la organización del evento. Todo estuvo perfectamente coordinado y la experiencia fue inolvidable."
+        "mensaje": "El organizador hizo un trabajo excelente en la organización del evento. Todo estuvo perfectamente coordinado y la experiencia fue inolvidable.",
+        "valoracion": 5
     },
     {
         "id": 42,
         "id_usuario_emisor": 5,
         "id_usuario_receptor": 13,
-        "mensaje": "La organización del evento estuvo muy bien, pero hubo algunos detalles que se podrían mejorar. Aún así, disfruté mucho y lo pasé genial."
+        "mensaje": "La organización del evento estuvo muy bien, pero hubo algunos detalles que se podrían mejorar. Aún así, disfruté mucho y lo pasé genial.",
+        "valoracion": 2.5
     },
     {
         "id": 43,
         "id_usuario_emisor": 18,
         "id_usuario_receptor": 20,
-        "mensaje": "El organizador se esmeró mucho en hacer que todo saliera bien, pero hubo algunos problemas con los horarios y la comida. A pesar de eso, me lo pasé bien."
+        "mensaje": "El organizador se esmeró mucho en hacer que todo saliera bien, pero hubo algunos problemas con los horarios y la comida. A pesar de eso, me lo pasé bien.",
+        "valoracion": 3
     },
     {
         "id": 44,
         "id_usuario_emisor": 15,
         "id_usuario_receptor": 1,
-        "mensaje": "No me gustó la forma en que el organizador manejó el evento. Hubo muchos retrasos y problemas técnicos que arruinaron la experiencia."
+        "mensaje": "No me gustó la forma en que el organizador manejó el evento. Hubo muchos retrasos y problemas técnicos que arruinaron la experiencia.",
+        "valoracion": 1
     },
     {
         "id": 45,
         "id_usuario_emisor": 7,
         "id_usuario_receptor": 16,
-        "mensaje": "El organizador del evento fue excelente. Todo estuvo muy bien organizado y no tuve ningún problema durante todo el evento."
+        "mensaje": "El organizador del evento fue excelente. Todo estuvo muy bien organizado y no tuve ningún problema durante todo el evento.",
+        "valoracion": 5
     },
     {
         "id": 46,
         "id_usuario_emisor": 9,
         "id_usuario_receptor": 12,
-        "mensaje": "La organización del evento fue buena, pero la comida no estuvo a la altura. En general, me lo pasé bien."
+        "mensaje": "La organización del evento fue buena, pero la comida no estuvo a la altura. En general, me lo pasé bien.",
+        "valoracion": 2.5
     },
     {
         "id": 47,
         "id_usuario_emisor": 3,
         "id_usuario_receptor": 14,
-        "mensaje": "El organizador hizo un gran trabajo en la organización del evento. Todo salió a la perfección y lo pasé genial."
+        "mensaje": "El organizador hizo un gran trabajo en la organización del evento. Todo salió a la perfección y lo pasé genial.",
+        "valoracion": 5
     },
     {
         "id": 48,
         "id_usuario_emisor": 20,
         "id_usuario_receptor": 8,
-        "mensaje": "El organizador del evento no estuvo a la altura. Hubo muchos problemas técnicos y retrasos que afectaron mi experiencia."
+        "mensaje": "El organizador del evento no estuvo a la altura. Hubo muchos problemas técnicos y retrasos que afectaron mi experiencia.",
+        "valoracion": 0.5
     },
     {
         "id": 49,
         "id_usuario_emisor": 2,
         "id_usuario_receptor": 19,
-        "mensaje": "El organizador hizo un buen trabajo en la organización del evento. Todo estuvo bien coordinado y no tuve problemas durante el evento."
+        "mensaje": "El organizador hizo un buen trabajo en la organización del evento. Todo estuvo bien coordinado y no tuve problemas durante el evento.",
+        "valoracion": 4.5
     },
     {
         "id": 50,
         "id_usuario_emisor": 17,
         "id_usuario_receptor": 6,
-        "mensaje": "La organización del evento fue buena, pero hubo algunos problemas con el sonido que afectaron mi experiencia. En general, me lo pasé bien."
+        "mensaje": "La organización del evento fue buena, pero hubo algunos problemas con el sonido que afectaron mi experiencia. En general, me lo pasé bien.",
+        "valoracion": 4
     }
 ]

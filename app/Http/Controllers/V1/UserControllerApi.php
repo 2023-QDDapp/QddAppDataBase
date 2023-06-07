@@ -12,7 +12,6 @@ use App\Models\Evento;
 use App\Models\Follower;
 use App\Models\Resena;
 use App\Notifications\AcceptedEventNotification;
-use App\Notifications\JoinEventNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -48,7 +47,7 @@ class UserControllerApi extends Controller
 			->get();
 
         // Obtenemos las reseñas que otros usuarios le han dejado
-		$resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'users.foto', 'resenas.mensaje')
+		$resenas = Resena::select('users.id AS id_usuario', 'users.nombre AS nombre_usuario', 'users.foto', 'resenas.mensaje', 'resenas.valoracion')
 			->join('users', 'users.id', '=', 'resenas.id_usuario_emisor')
 			->where('resenas.id_usuario_receptor', $id)
 			->get();
@@ -356,7 +355,6 @@ class UserControllerApi extends Controller
 
         $campo = [
             'nombre' => 'string|max:255',
-            'password' => 'string|min:6',
             'biografia' => 'string|max:500',
             'telefono' => 'string|max:9|unique:users,telefono',
             'foto' => 'string',
@@ -364,11 +362,10 @@ class UserControllerApi extends Controller
         ];
 
         $mensaje = [
-            'max' => 'El campo :attribute no puede ser mayor de :max caracteres',
-            'min' => 'La contraseña no puede ser menor de :min caracteres'
+            'max' => 'El campo :attribute no puede ser mayor de :max caracteres'
         ];
 
-        $datosUser = $request->only(['nombre', 'password', 'biografia', 'foto', 'categorias']);
+        $datosUser = $request->only(['nombre', 'biografia', 'foto', 'categorias']);
         
         // Validar los datos
         $validator = Validator::make($datosUser, $campo, $mensaje);
@@ -378,10 +375,6 @@ class UserControllerApi extends Controller
                 'mensaje' => 'Error en los datos proporcionados',
                 'errores' => $validator->errors()
             ], 400);
-        }
-
-        if ($request->filled('password')) {
-            $datosUser['password'] = bcrypt($request->password);
         }
         
         if ($request->filled('telefono')) {

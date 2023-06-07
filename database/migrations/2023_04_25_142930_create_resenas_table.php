@@ -20,6 +20,7 @@ class CreateResenasTable extends Migration
             $table->unsignedBigInteger('id_usuario_receptor');
             $table->foreign('id_usuario_receptor')->references('id')->on('users')->onDelete('cascade');
             $table->string('mensaje', 500);
+            $table->double('valoracion');
             $table->timestamps();
         });
     }
