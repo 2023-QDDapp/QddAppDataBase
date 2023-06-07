@@ -51,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/categorias', [CategoriaControllerApi::class, 'index']); // Muestra todas las categorias
 
     // Reseñas
-    Route::post('/resenas/{userId}', [ResenaControllerApi::class, 'store']); // Crear una reseña
+    Route::post('/resenas/{eventId}', [ResenaControllerApi::class, 'store']); // Crear una reseña
 
     // Cerrar sesión
     Route::post('/logout', [AuthControllerApi::class, 'logout']); // Cerrar sesión

@@ -14,7 +14,7 @@ class EventoUser extends Model
     ];
 
     public function eventos() {
-        return $this->belongsToMany(Evento::class);
+        return $this->belongsToMany(Evento::class, 'evento_users', 'user_id', 'evento_id');
     }
 
     public function users() {
