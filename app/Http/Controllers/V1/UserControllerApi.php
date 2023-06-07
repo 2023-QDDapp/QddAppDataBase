@@ -353,7 +353,8 @@ class UserControllerApi extends Controller
             'nombre' => 'string|max:255',
             'password' => 'string|min:6',
             'biografia' => 'string|max:500',
-            'foto' => 'string'
+            'foto' => 'string',
+            'categorias' => 'array|size:3'
         ];
 
         $mensaje = [
@@ -361,7 +362,7 @@ class UserControllerApi extends Controller
             'min' => 'La contraseña no puede ser menor de :min caracteres'
         ];
 
-        $datosUser = $request->only(['nombre', 'password', 'biografia', 'foto']);
+        $datosUser = $request->only(['nombre', 'password', 'biografia', 'foto', 'categorias']);
         
         // Validar los datos
         $validator = Validator::make($datosUser, $campo, $mensaje);
