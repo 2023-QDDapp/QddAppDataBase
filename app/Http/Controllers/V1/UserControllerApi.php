@@ -24,7 +24,7 @@ class UserControllerApi extends Controller
     public function show($id)
 	{
         // Obtenemos un usuario
-		$user = User::select('users.id', 'users.nombre', 'users.foto', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
+		$user = User::select('users.id', 'users.nombre', 'users.foto', 'users.telefono', 'users.biografia', DB::raw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, NOW()) AS edad'))
 			->where('users.id', $id)
 			->first();
 
@@ -64,6 +64,7 @@ class UserControllerApi extends Controller
 			'id' => $user->id,
 			'nombre' => $user->nombre,
 			'foto' => $fotoUrl,
+            'telefono' => $user->telefono,
 			'edad' => $user->edad,
 			'biografia' => $user->biografia,
 			'intereses' => $categorias,
