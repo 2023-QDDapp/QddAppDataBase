@@ -395,6 +395,9 @@ class UserControllerApi extends Controller
 
             $datosUser['foto'] = 'img/user/' . $fileName;
         }
+        
+        // Actualizar las categorías del usuario
+		$user->categorias()->sync($request->categorias);
 
         $user->fill($datosUser);
         $user->save();
