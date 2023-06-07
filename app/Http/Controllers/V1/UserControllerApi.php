@@ -347,7 +347,11 @@ class UserControllerApi extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        $user = $request->user();
+		
+		if ($user->id != $id) {
+			return response()->json(['mensaje' => 'No puedes actualizar este usuario porque no eres tú'], 400);
+		}
 
         $campo = [
             'nombre' => 'string|max:255',
