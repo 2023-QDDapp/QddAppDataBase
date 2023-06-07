@@ -85,14 +85,6 @@
                     </select>
                 </div>
             </div>
-
-
-            <div class="row mb-3">
-                <label for="n_participantes" class="col-md-4 col-form-label text-md-end">Número de participantes:</label>
-                <div class="col-md-6">
-                    <input type="number" class="form-control" name="n_participantes" id="n_participantes" step="any" value="{{ isset($event->n_participantes) ? $event->n_participantes : old('n_participantes') }}" required>
-                </div>
-            </div>
             
             <div class="row mb-3">
                 <label for="descripcion" class="col-md-4 col-form-label text-md-end">Descripción del evento</label>
@@ -107,8 +99,8 @@
                 <div class="col-md-6">
                     <select name="tipo" id="tipo" class="js-example-basic-multiple" title="Selecciona el tipo de evento" required>
                         <option disabled selected>Selecciona el tipo de evento</option>
-                        <option value="privado" @if ($event->tipo == "privado") selected @endif>Privado</option>
-                        <option value="público" @if ($event->tipo == "público") selected @endif>Público</option>
+                        <option value="0" @if ($event->tipo == 0) selected @endif>Privado</option>
+                        <option value="1" @if ($event->tipo == 1) selected @endif>Público</option>
                     </select>
                 </div>
             </div>

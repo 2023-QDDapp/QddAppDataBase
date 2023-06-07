@@ -41,7 +41,11 @@
                         </div>
                         <div class="col-md-6">
                             <strong>Tipo de evento:</strong>
-                            {{$event->tipo}}
+                            @if ($event->tipo == 0)
+                                Privado
+                            @else
+                                Público
+                            @endif
                         </div>
                     </div>
                     <div class="row mt-3">

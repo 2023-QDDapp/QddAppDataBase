@@ -15,6 +15,8 @@ use App\Notifications\AcceptedEventNotification;
 use App\Notifications\JoinEventNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventoMails;
 
 class UserControllerApi extends Controller
 {
@@ -435,6 +437,19 @@ class UserControllerApi extends Controller
         } else {
             // Evento privado, el usuario debe esperar confirmación
             $user->eventosAsistidos()->attach($eventoId, ['estado' => 0]);
+
+            // Obtener el creador del evento
+            $creadorEvento = User::find($evento->user_id);
+
+            // Datos para el correo
+            $data = [
+                'user' => $user,
+                'evento' => $evento,
+                'creadorEvento' => $creadorEvento,
+            ];
+
+            // Enviar correo al creador del evento
+            Mail::to($creadorEvento->email)->send(new EventoMails($data));
 
             return response()->json(['mensaje' => 'Pendiente de respuesta'], 200);
         }

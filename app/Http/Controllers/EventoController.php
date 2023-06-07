@@ -185,7 +185,7 @@ class EventoController extends Controller
             'fecha_hora_inicio' => 'required|date_format:Y-m-d\TH:i',
             'fecha_hora_fin' => 'required|date_format:Y-m-d\TH:i|after:fecha_hora_inicio',
             'descripcion' => 'required|string|max:500',
-            'tipo' => 'required|string',
+            'tipo' => 'required|boolean',
             'imagen' => 'nullable|string',
             'location' => 'required|string',
             'latitud' => 'required|numeric',
