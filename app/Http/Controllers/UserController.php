@@ -52,6 +52,7 @@ class UserController extends Controller
         $user->password = bcrypt($validatedData['password']);
         $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
         $user->biografia = $validatedData['biografia'];
+        $user->is_verified = $request->has('is_verified');
 
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
@@ -111,6 +112,7 @@ class UserController extends Controller
         $user->email = $validatedData['email'];
         $user->fecha_nacimiento = $validatedData['fecha_nacimiento'];
         $user->biografia = $validatedData['biografia'];
+        $user->is_verified = $request->has('is_verified');
 
         if (!empty($validatedData['password'])) {
             $user->password = bcrypt($validatedData['password']);

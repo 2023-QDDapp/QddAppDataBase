@@ -49,6 +49,18 @@
             </div>
 
             <div class="row mb-3">
+                <label for="is_verified" class="col-md-4 col-form-label text-md-end">Verifcar email</label>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="is_verified" name="is_verified" value="1" @if (isset($user) && $user->is_verified) checked @endif>
+                        <label class="form-check-label" for="is_verified">
+                            Marcar como verificado
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label for="categorias" class="col-md-4 col-form-label text-md-end">Categoría:</label>
                 <div class="col-md-6">
                     <select name="categorias[]" id="categorias" class="js-example-basic-multiple" multiple>
