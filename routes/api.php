@@ -9,15 +9,15 @@ use App\Http\Controllers\V1\AuthControllerApi;
 use App\Http\Controllers\V1\ResenaControllerApi;
 
 // Notificaciones
-
 Route::post('/events/{eventoId}/aceptar/{userId}', [UserControllerApi::class, 'eventoAceptado']); // Aceptar usuario a un evento
-Route::post('/events/{eventoId}/denegar/{userId}', [UserControllerApi::class, 'eventoCancelado']); // Denegar usuario en un evento
+Route::post('/events/{eventoId}/denegar/{userId}', [UserControllerApi::class, 'eventoDenegado']); // Denegar usuario en un evento
 
 // Ruta para el registro y verificación del email
 Route::post('/register', [RegisterApiController::class, 'register']);
 Route::get('/verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEmail'])->name('api.verify.email');
 Route::post('/continue/register/{id}', [RegisterApiController::class, 'continueRegister']); // Continúa el registro una vez se ha verificado el email
 Route::post('/validate/phone', [RegisterApiController::class, 'verifyPhoneNumber']); // Comprobar si existe el número de teléfono
+Route::post('/validate/email', [RegisterApiController::class, 'isEmailVerified']); // Comprobar si el email está verificado
 
 Route::post('/loginApi', [AuthControllerApi::class, 'login']); // Iniciar sesión
 

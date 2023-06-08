@@ -52,7 +52,7 @@ class RegisterApiController extends Controller
             return response()->json($data);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['mensaje' => 'Los datos introducidos no son válidos']);
+            return response()->json(['mensaje' => 'Los datos introducidos no son válidos'], 400);
         }
     }
 
@@ -179,6 +179,19 @@ class RegisterApiController extends Controller
             return response()->json(['mensaje' => 'El teléfono es válido']);
         } else {
             return response()->json(['mensaje' => 'El teléfono ya existe']);
+        }
+    }
+
+    public function isEmailVerified(Request $request)
+    {
+        $email = $request->email;
+
+        $user = User::where('email', $email)->first();
+
+        if ($user->is_verified) {
+            return response()->json(['mensaje' => 'El email está verificado']);
+        } else {
+            return response()->json(['mensaje' => 'El email no está verificado']);
         }
     }
 
