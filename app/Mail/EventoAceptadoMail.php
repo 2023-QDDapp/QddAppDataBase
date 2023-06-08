@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EventoMails extends Mailable
+class EventoAceptadoMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -34,6 +34,7 @@ class EventoMails extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.evento-mail');
+        return $this->markdown('emails.evento-aceptado')->subject($this->subject);
     }
 }
+

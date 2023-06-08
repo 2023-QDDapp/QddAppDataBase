@@ -64,8 +64,7 @@ class RegisterApiController extends Controller
         ]);
 
         Mail::send('emails.verify', ['verificationLink' => $verificationLink], function ($message) use ($user) {
-            $message->to($user->email)
-                ->subject('Verificación de correo electrónico');
+            $message->to($user->email)->subject('Verificación de correo electrónico');
         });
     }
 

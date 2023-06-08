@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EventoMails;
+use App\Mail\EventoAceptadoMail;
 
 class UserControllerApi extends Controller
 {
@@ -438,30 +439,27 @@ class UserControllerApi extends Controller
             return response()->json(['mensaje' => 'Ya estás unido a este evento'], 400);
         }
 
-        if ($evento->tipo) {
-            // Evento público, el usuario puede unirse directamente
-            $user->eventosAsistidos()->attach($eventoId, ['estado' => 1]);
+        $user->eventosAsistidos()->attach($eventoId, ['estado' => ($evento->tipo) ? 1 : 0]);
 
-            return response()->json(['mensaje' => 'Te has unido al evento'], 200);
-        } else {
-            // Evento privado, el usuario debe esperar confirmación
-            $user->eventosAsistidos()->attach($eventoId, ['estado' => 0]);
+        // Obtener el creador del evento
+        $creadorEvento = User::find($evento->user_id);
 
-            // Obtener el creador del evento
-            $creadorEvento = User::find($evento->user_id);
+        // Determinar el asunto del correo
+        $subject = ($evento->tipo) ? 'Un usuario se ha unido a tu evento' : 'Solicitud de unión a tu evento';
 
-            // Datos para el correo
-            $data = [
-                'user' => $user,
-                'evento' => $evento,
-                'creadorEvento' => $creadorEvento,
-            ];
+        // Datos para el correo
+        $data = [
+            'user' => $user,
+            'evento' => $evento,
+            'creadorEvento' => $creadorEvento,
+        ];
 
-            // Enviar correo al creador del evento
-            Mail::to($creadorEvento->email)->send(new EventoMails($data));
+        // Enviar correo al creador del evento
+        Mail::to($creadorEvento->email)->send(new EventoMails($data, $subject));
 
-            return response()->json(['mensaje' => 'Pendiente de respuesta'], 200);
-        }
+        $responseMessage = ($evento->tipo) ? 'Te has unido al evento' : 'Pendiente de respuesta';
+
+        return response()->json(['mensaje' => $responseMessage], 200);
     }
 
     public function eventoAceptado($eventoId, $userId)
@@ -471,8 +469,14 @@ class UserControllerApi extends Controller
 
         $user->eventos()->updateExistingPivot($eventoId, ['estado' => 1]);
 
-        // Notificar al usuario que su solicitud ha sido aceptada
-        $user->notify(new AcceptedEventNotification($evento));
+        // Enviar correo al usuario
+        $subject = 'Solicitud aceptada: ' . $evento->titulo;
+        $data = [
+            'evento' => $evento,
+            'user' => $user
+        ];
+
+        Mail::to($user->email)->send(new EventoAceptadoMail($data, $subject));
 
         return response()->json([
             'mensaje' => 'El usuario ha sido aceptado en el evento'

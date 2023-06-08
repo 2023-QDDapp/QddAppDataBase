@@ -18,25 +18,11 @@
             margin: 0 auto;
         }
 
-       .logo {
-			width: 400px;
-			height: 200px;
-			object-fit: contain;
-			margin-bottom: 20px;
-		}
-
-        .user-photo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 20px auto;
-        }
-
-        .user-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .logo {
+            width: 400px;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 20px;
         }
 
         p {
@@ -55,16 +41,8 @@
     <div class="container">
         <img src="{{ asset('img/logoM.png') }}" alt="Logo de la aplicación" class="logo">
 
-        <div class="user-photo">
-            <img src="{{ asset('storage/' . $data['user']->foto) }}" alt="Foto del usuario">
-        </div>
-
         <div class="border-info">
-            @if ($data['evento']->tipo)
-                <p><strong>{{ $data['user']->nombre }}</strong> se ha unido a tu evento <strong>"{{ $data['evento']->titulo }}"</strong>.</p>
-            @else
-                <p>El usuario <strong>{{ $data['user']->nombre }}</strong> ha solicitado unirse a tu evento <strong>"{{ $data['evento']->titulo }}"</strong>.</p>
-            @endif
+            <p>Has sido aceptado en el evento: <strong>{{ $data['evento']->titulo }}</strong></p>
         </div>
     </div>
 </body>
