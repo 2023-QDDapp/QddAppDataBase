@@ -435,16 +435,10 @@ class UserControllerApi extends Controller
 
         // Verificar si el usuario ya está unido al evento
         if ($user->eventosAsistidos()->where('evento_id', $eventoId)->exists()) {
-            $responseMessage = ($evento->tipo) ? 'Ya te has unido al evento' : 'Pendiente de respuesta';
-            return response()->json(['mensaje' => $responseMessage], 400);
+            return response()->json(['mensaje' => 'Ya estás unido a este evento'], 400);
         }
 
-        // Establecer relación del user con el evento
         $user->eventosAsistidos()->attach($eventoId, ['estado' => ($evento->tipo) ? 1 : 0]);
-
-        // Enviar respuesta
-        $responseMessage = ($evento->tipo) ? 'Te has unido al evento' : 'Solicitud enviada. Pendiente de respuesta';
-        return response()->json(['mensaje' => $responseMessage], 200);
 
         // Obtener el creador del evento
         $creadorEvento = User::find($evento->user_id);
@@ -456,11 +450,15 @@ class UserControllerApi extends Controller
         $data = [
             'user' => $user,
             'evento' => $evento,
-            'organizador' => $creadorEvento,
+            'creadorEvento' => $creadorEvento,
         ];
 
         // Enviar correo al creador del evento
         Mail::to($creadorEvento->email)->send(new EventoMails($data, $subject));
+
+        $responseMessage = ($evento->tipo) ? 'Te has unido al evento' : 'Pendiente de respuesta';
+
+        return response()->json(['mensaje' => $responseMessage], 200);
     }
 
     public function eventoAceptado($eventoId, $asistenteId)
@@ -479,6 +477,27 @@ class UserControllerApi extends Controller
             'mensaje' => 'Se aceptó al asistente #' . $asistenteId
         ], 200);
     }
+
+    /*public function eventoAceptado($eventoId, $userId)
+    {
+        $evento = Evento::find($eventoId);
+        $user = User::find($userId);
+
+        $user->eventos()->updateExistingPivot($eventoId, ['estado' => 1]);
+
+        // Enviar correo al usuario
+        $subject = 'Solicitud aceptada: ' . $evento->titulo;
+        $data = [
+            'evento' => $evento,
+            'user' => $user
+        ];
+
+        Mail::to($user->email)->send(new EventoAceptadoMail($data, $subject));
+
+        return response()->json([
+            'mensaje' => 'El usuario ha sido aceptado en el evento'
+        ], 200);
+    }*/
 
     public function eventoDenegado($eventoId, $asistenteId)
     {
