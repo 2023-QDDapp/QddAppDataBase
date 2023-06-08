@@ -287,15 +287,15 @@ class EventoControllerApi extends Controller
         if ($request->has('location')) {
             $query->where('location', 'LIKE', '%' . $request->input('location') . '%');
         }
-
+        
         // Latitud
         if ($request->has('latitud')) {
-            $query->where('latitud', $request->input('latitud'));
+            $query->where('latitud', 'LIKE', '%' . $request->input('latitud') . '%');
         }
 
         // Longitud
         if ($request->has('longitud')) {
-            $query->where('longitud', $request->input('longitud'));
+            $query->where('longitud', 'LIKE', '%' . $request->input('longitud') . '%');
         }
 
         // Obtenemos los eventos filtrados

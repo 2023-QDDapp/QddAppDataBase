@@ -11,7 +11,6 @@ use App\Models\CategoriaUser;
 use App\Models\Evento;
 use App\Models\Follower;
 use App\Models\Resena;
-use App\Notifications\AcceptedEventNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;

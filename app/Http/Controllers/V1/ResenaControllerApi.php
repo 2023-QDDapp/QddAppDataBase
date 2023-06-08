@@ -28,6 +28,17 @@ class ResenaControllerApi extends Controller
             ], 400);
         }
 
+        // Verificar si el usuario ya ha dejado una reseña para el mismo receptor
+        $existeResena = Resena::where('id_usuario_emisor', $user->id)
+        ->where('id_usuario_receptor', $eventoUsuario->user_id)
+        ->exists();
+
+        if ($existeResena) {
+            return response()->json([
+                'mensaje' => 'Ya has dejado una reseña en este evento'
+            ], 400);
+        }
+
         $campo = [
             'valoracion' => 'required|numeric|between:0.5,5'
         ];
