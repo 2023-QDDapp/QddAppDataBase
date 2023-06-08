@@ -435,7 +435,8 @@ class UserControllerApi extends Controller
 
         // Verificar si el usuario ya está unido al evento
         if ($user->eventosAsistidos()->where('evento_id', $eventoId)->exists()) {
-            return response()->json(['mensaje' => 'Ya estás unido a este evento'], 400);
+            $responseMessage = ($evento->tipo) ? 'Ya te has unido al evento' : 'Pendiente de respuesta';
+            return response()->json(['mensaje' => $responseMessage], 400);
         }
 
         $user->eventosAsistidos()->attach($eventoId, ['estado' => ($evento->tipo) ? 1 : 0]);
@@ -461,24 +462,7 @@ class UserControllerApi extends Controller
         return response()->json(['mensaje' => $responseMessage], 200);
     }
 
-    public function eventoAceptado($eventoId, $asistenteId)
-    {
-        $evento = Evento::findOrFail($eventoId);
-
-        // Verificar si el usuario actual es el organizador del evento
-        if ($evento->user_id !== auth()->user()->id) {
-            return response()->json(['error' => 'No puedes eliminar asistentes de este evento'], 400);
-        }
-
-        // Aceptar asistente al evento
-        $evento->asistentes()->attach($asistenteId, ['estado' => 1]);
-
-        return response()->json([
-            'mensaje' => 'Se aceptó al asistente #' . $asistenteId
-        ], 200);
-    }
-
-    /*public function eventoAceptado($eventoId, $userId)
+    public function eventoAceptado($eventoId, $userId)
     {
         $evento = Evento::find($eventoId);
         $user = User::find($userId);
@@ -497,22 +481,17 @@ class UserControllerApi extends Controller
         return response()->json([
             'mensaje' => 'El usuario ha sido aceptado en el evento'
         ], 200);
-    }*/
+    }
 
-    public function eventoDenegado($eventoId, $asistenteId)
+    public function eventoDenegado($eventoId, $userId)
     {
-        $evento = Evento::findOrFail($eventoId);
+        $evento = Evento::find($eventoId);
+        $user = User::find($userId);
 
-        // Verificar si el usuario actual es el organizador del evento
-        if ($evento->user_id !== auth()->user()->id) {
-            return response()->json(['error' => 'No puedes eliminar asistentes de este evento'], 400);
-        }
-
-        // Eliminar al asistente del evento
-        $evento->asistentes()->detach($asistenteId);
+        $user->eventosAsistidos()->detach($evento);
 
         return response()->json([
-            'mensaje' => 'Se eliminó al asistente #' . $asistenteId
+            'mensaje' => 'El usuario ha sido aceptado en el evento'
         ], 200);
     }
 
