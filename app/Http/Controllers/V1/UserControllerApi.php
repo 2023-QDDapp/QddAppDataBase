@@ -74,9 +74,10 @@ class UserControllerApi extends Controller
 		return response()->json($datosUsuario);
 	}
 
-    // Listado de eventos creados por un usuario
+    // Listado de eventos a los que asiste un usuario
     public function showEventosUser($id)
     {
+        // Obtenemos los eventos a los que asiste el usuario y que aún no han empezado
         $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, users.fecha_nacimiento, NOW()) AS edad'))
             ->join('categorias', 'categorias.id', '=', 'eventos.categoria_id')
             ->join('evento_users', 'evento_users.evento_id', '=', 'eventos.id')
@@ -86,17 +87,19 @@ class UserControllerApi extends Controller
             ->where('eventos.fecha_hora_inicio', '>', DB::raw('NOW()'))
             ->get();
 
+        // Por cada evento...
         foreach ($eventos as $evento) {
             $imagenUrl = null;
             if ($evento->imagen_evento) {
                 $imagenUrl = asset('storage/' . $evento->imagen_evento);
             }
-
+            // Cambiamos las rutas de las imágenes de eventos y usuarios
             $fotoUrl = null;
             if ($evento->foto_organizador) {
                 $fotoUrl = asset('storage/' . $evento->foto_organizador);
             }
 
+            // Almacenamos los datos
             $data = [
                 'id_evento' => $evento->id_evento,
                 'id_organizador' => $evento->id_organizador,
@@ -110,9 +113,11 @@ class UserControllerApi extends Controller
                 'categoria' => $evento->categoria
             ];
 
+            // Y los guardamos en un array
             $datosEventos[] = $data;
         }
 
+        // Devolvemos la respuesta
         if (!empty($datosEventos)) {
             return response()->json($datosEventos);
         } else {
@@ -300,8 +305,10 @@ class UserControllerApi extends Controller
         }
     }
 
+    // Historial de un usuario
     public function showHistorial($id)
     {
+        // Obtenemos los eventos a los que ha asistido
         $eventos = Evento::select('eventos.id AS id_evento', 'eventos.imagen AS imagen_evento', 'eventos.titulo', 'eventos.fecha_hora_inicio', 'eventos.fecha_hora_fin', 'categorias.id AS id_categoria', 'categorias.categoria', 'users.id AS id_organizador', 'users.nombre AS organizador', 'users.foto AS foto_organizador', DB::raw('TIMESTAMPDIFF(YEAR, users.fecha_nacimiento, NOW()) AS edad'))
             ->join('categorias', 'categorias.id', '=', 'eventos.categoria_id')
             ->join('evento_users', 'evento_users.evento_id', '=', 'eventos.id')
@@ -311,17 +318,19 @@ class UserControllerApi extends Controller
             ->where('eventos.fecha_hora_fin', '<', DB::raw('NOW()'))
             ->get();
 
+        // Por cada evento...
         foreach ($eventos as $evento) {
             $imagenUrl = null;
             if ($evento->imagen_evento) {
                 $imagenUrl = asset('storage/' . $evento->imagen_evento);
             }
-
+            // Modificamos la URL de las imágenes
             $fotoUrl = null;
             if ($evento->foto_organizador) {
                 $fotoUrl = asset('storage/' . $evento->foto_organizador);
             }
 
+            // Almacenamos los datos obtenidos
             $data = [
                 'id_evento' => $evento->id_evento,
                 'id_organizador' => $evento->id_organizador,
@@ -338,6 +347,7 @@ class UserControllerApi extends Controller
             $datosEventos[] = $data;
         }
 
+        // Devolvemos un array
         if (!empty($datosEventos)) {
             return response()->json($datosEventos);
         } else {
@@ -345,14 +355,18 @@ class UserControllerApi extends Controller
         }
     }
 
+    // Editar un usuario
     public function update(Request $request, $id)
     {
+        // Obtenemos el usuario autenticado
         $user = $request->user();
 		
+        // Comprobamos que el usuario es él mismo
 		if ($user->id != $id) {
 			return response()->json(['mensaje' => 'No puedes actualizar este usuario porque no eres tú'], 400);
 		}
 
+        // Datos que puede cambiar
         $campo = [
             'nombre' => 'string|max:255',
             'biografia' => 'string|max:500',
@@ -365,9 +379,10 @@ class UserControllerApi extends Controller
             'max' => 'El campo :attribute no puede ser mayor de :max caracteres'
         ];
 
+        // Solo puede modificar estos datos
         $datosUser = $request->only(['nombre', 'biografia', 'foto', 'categorias']);
         
-        // Validar los datos
+        // Validamos los datos
         $validator = Validator::make($datosUser, $campo, $mensaje);
 
         if ($validator->fails()) {
@@ -404,19 +419,24 @@ class UserControllerApi extends Controller
             $user->categorias()->sync($request->categorias);
         }
 
+        // Actualizamos los datos nuevos y guardamos
         $user->fill($datosUser);
         $user->save();
 
+        // Respuesta exitosa
         return response()->json([
             'mensaje' => 'Se ha actualizado el usuario #' . $id,
             'user' => $user
         ], 200);
     }
 
+    // Eliminar un usuario
     public function destroy($id)
     {
+        // Obtenemos el usuario autenticado
         $user = User::findOrFail($id);
 
+        // Si es el mismo, elimina la cuenta
         if ($user == auth()->user()) {
             User::destroy($id);
 
@@ -424,11 +444,14 @@ class UserControllerApi extends Controller
         }
     }
 
+    // Unirse a un evento
     public function unirseEvento(Request $request, $eventoId)
     {
+        // Obtener usuario autenticado y el evento al que se quiere unir
         $user = $request->user();
         $evento = Evento::find($eventoId);
 
+        // Comprobar que el evento existe
         if (!$evento) {
             return response()->json(['mensaje' => 'Evento no encontrado'], 404);
         }
@@ -439,7 +462,8 @@ class UserControllerApi extends Controller
             return response()->json(['mensaje' => $responseMessage], 400);
         }
 
-        $user->eventosAsistidos()->attach($eventoId, ['estado' => ($evento->tipo) ? 1 : 0]);
+        // Establecer la relación entre evento y usuario
+        $user->eventosAsistidos()->attach($eventoId, ['estado' => ($evento->tipo) ? 1 : 0]); // Dependiendo de si es público o privado, el estado es true o false
 
         // Obtener el creador del evento
         $creadorEvento = User::find($evento->user_id);
@@ -462,11 +486,14 @@ class UserControllerApi extends Controller
         return response()->json(['mensaje' => $responseMessage], 200);
     }
 
+    // Aceptar a un usuario en un evento
     public function eventoAceptado($eventoId, $userId)
     {
+        // Obtener el usuario autenticado y el evento
         $evento = Evento::find($eventoId);
         $user = User::find($userId);
 
+        // Actualizammos la relación a true (asistente)
         $user->eventos()->updateExistingPivot($eventoId, ['estado' => 1]);
 
         // Enviar correo al usuario
@@ -483,11 +510,14 @@ class UserControllerApi extends Controller
         ], 200);
     }
 
+    // Denegar a un usuario en un evento
     public function eventoDenegado($eventoId, $userId)
     {
+        // Obtener el usuario autenticado y el evento
         $evento = Evento::find($eventoId);
         $user = User::find($userId);
 
+        // Eliminamos la relación de la tabla
         $user->eventosAsistidos()->detach($evento);
 
         return response()->json([
@@ -495,32 +525,39 @@ class UserControllerApi extends Controller
         ], 200);
     }
 
+    // Salir de un evento
     public function abandonarEvento(Request $request, $eventoId)
     {
+        // Obtener usuario autenticado y el evento
         $user = $request->user();
         $evento = Evento::find($eventoId);
 
+        // Comprobar que el evento existe
         if (!$evento) {
             return response()->json([
                 'mensaje' => 'Evento no encontrado'
             ], 404);
         }
 
+        // Comprobar que hay relación entre evento y usuario
         if ($user->eventosAsistidos()->where('evento_id', $eventoId)->exists()) {
-            $user->eventosAsistidos()->detach($eventoId);
+            $user->eventosAsistidos()->detach($eventoId); // Eliminar la relación
 
             return response()->json([
                 'mensaje' => 'Has abandonado este evento'
             ], 200);
         }
 
+        // Mensaje de error porque el usuario no está en el evento
         return response()->json([
             'mensaje' => 'No estás en este evento'
         ], 400);
     }
 
+    // Seguir a un usuario
     public function followUser(Request $request, $userId)
     {
+        // Obtener usuario autenticado
         $user = $request->user();
         
         // Verificar si el usuario autenticado ya sigue al usuario especificado
@@ -528,13 +565,16 @@ class UserControllerApi extends Controller
             return response()->json(['mensaje' => 'Ya sigues a este usuario'], 400);
         }
         
+        // Crear la relación entre usuarios
         $user->following()->attach($userId);
         
         return response()->json(['mensaje' => 'Ahora sigues al usuario #' . $userId], 200);
     }
 
+    // Dejar de seguir a un usuario
     public function unfollowUser(Request $request, $userId)
     {
+        // Obtener usuario autenticado
         $user = $request->user();
         
         // Verificar si el usuario autenticado ya sigue al usuario especificado
@@ -542,19 +582,22 @@ class UserControllerApi extends Controller
             return response()->json(['mensaje' => 'No sigues a este usuario'], 400);
         }
         
+        // Eliminar la relación entre usuarios
         $user->following()->detach($userId);
         
         return response()->json(['mensaje' => 'Ya no sigues al usuario #' . $userId], 200);
     }
 
+    // Comprobar si un usuario sigue a otro
     public function verifyFollowing(Request $request, $userId)
     {
+        // Obtener el usuario autenticado
         $user = $request->user();
 
         if (!$user->following()->where('id_usuario_seguido', $userId)->exists()) {
-            return response()->json(['mensaje' => 'Seguir'], 200);
+            return response()->json(['mensaje' => 'Seguir'], 200); // Si no lo sigue, devuelve 'Seguir'
         } else {
-            return response()->json(['mensaje' => 'Dejar de seguir'], 200);
+            return response()->json(['mensaje' => 'Dejar de seguir'], 200); // Si lo sigue, 'Dejar de seguir'
         }
     }
 }

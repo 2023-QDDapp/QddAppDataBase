@@ -23,16 +23,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->belongsToMany(Categoria::class, 'categoria_users', 'user_id', 'categoria_id');
     }
 
-    public function eventoCreado() {
-        return $this->hasMany(Evento::class);
-    }
-
     public function eventos() {
         return $this->belongsToMany(Evento::class, 'evento_users');
-    }
-
-    public function comentarios() {
-        return $this->hasMany(Comentario::class);
     }
 
     public function resenas() {
@@ -45,10 +37,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function notificaciones() {
         return $this->hasMany(Notificacion::class);
-    }
-
-    public function bloqueos() {
-        return $this->hasMany(Bloqueo::class);
     }
 
     public function notifications() {

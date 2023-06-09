@@ -31,7 +31,6 @@ class AuthControllerApi extends Controller
         if ($user && !$user->is_verified) {
             return response()->json(['error' => 'email_not_verified'], 401);
         }
-        //dd($user->id, $user->password);
         
         try {
             if (! $token = Auth::guard('api')->attempt($credentials)) {

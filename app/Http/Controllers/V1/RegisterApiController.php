@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterApiController extends Controller
 {
+    // Registro de usuario
     public function register(Request $request)
     {
         // Escribimos los campos que se van a validar
@@ -56,6 +57,7 @@ class RegisterApiController extends Controller
         }
     }
 
+    // Enviamos el email de verificación
     private function sendVerificationEmail(User $user)
     {
         $verificationLink = route('api.verify.email', [
@@ -68,6 +70,7 @@ class RegisterApiController extends Controller
         });
     }
 
+    // Verificamos el email cuando ha pinchado el enlace del correo
     public function verifyEmail($id, $token)
     {
         $user = User::findOrFail($id);
@@ -83,10 +86,13 @@ class RegisterApiController extends Controller
         return response()->json(['error' => 'El enlace de verificación no es válido.'], 400);
     }
 
+    // Continuamos el registro
     public function continueRegister(Request $request, $id)
     {
+        // Obtenemos el usuario autenticado
         $user = User::findOrFail($id);
 
+        // Comprobamos que ya está verificado
         if ($user->is_verified) {
             // Escribimos los campos que se van a validar
             $campo = [
@@ -105,6 +111,7 @@ class RegisterApiController extends Controller
                 'size' => 'No puedes elegir más de tres categorías'
             ];
 
+            // Almacenamos los datos introducidos
             $user->nombre = $request->nombre;
             $user->telefono = $request->telefono;
             $user->fecha_nacimiento = $request->fecha_nacimiento;
@@ -143,6 +150,7 @@ class RegisterApiController extends Controller
                 // Añadimos las categorías elegidas al usuario
                 $user->categorias()->attach($categoriasSeleccionadas);
 
+                // Ponemos a true el campo del registro y guardamos
                 $user->is_registered = true;
                 $user->save();
 
@@ -169,10 +177,13 @@ class RegisterApiController extends Controller
         }
     }
 
+    // Comprobar si el número de teléfono introducido se está usando
     public function verifyPhoneNumber(Request $request)
     {
+        // Obtenemos el teléfono introducido
         $telefono = $request->telefono;
 
+        // Comprobamos si existe
         $exists = User::where('telefono', $telefono)->exists();
 
         if (!$exists) {
@@ -182,10 +193,13 @@ class RegisterApiController extends Controller
         }
     }
 
+    // Compribar si el email está verificado
     public function isEmailVerified(Request $request)
     {
+        // Obtenemos el email
         $email = $request->email;
 
+        // Y accedemos al usuario
         $user = User::where('email', $email)->first();
 
         if ($user->is_verified) {

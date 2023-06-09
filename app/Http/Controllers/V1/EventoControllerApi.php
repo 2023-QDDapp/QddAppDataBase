@@ -63,11 +63,13 @@ class EventoControllerApi extends Controller
         return response()->json($datosEventos);
     }
 
+    // Crea un nuevo evento
     public function store(Request $request)
     {
         // Obtener el ID del usuario logeado
         $id_organizador = $request->user()->id;
 
+        // Campos que hay que introducir
         $campo = [
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
@@ -84,6 +86,7 @@ class EventoControllerApi extends Controller
             'between' => 'El campo :attribute debe estar entre :between'
         ];
 
+        // Se añaden los datos recibidos a cada columna de la tabla
         $evento = new Evento;
         $evento->user_id = $id_organizador;
         $evento->categoria_id = $request->categoria_id;
@@ -108,6 +111,7 @@ class EventoControllerApi extends Controller
             $evento->imagen = 'img/event/' . $fileName;
         }
 
+        // Validamos los datos
         $validator = Validator::make($request->all(), $campo, $mensaje);
 
         if ($validator->fails()) {
@@ -117,6 +121,7 @@ class EventoControllerApi extends Controller
             ], 400);
         }
 
+        // Guardamos
         $evento->save();
 
         // Modificamos la imagen
@@ -125,10 +130,12 @@ class EventoControllerApi extends Controller
 			$imagenUrl = asset('storage/' . $evento->imagen);
 		}
 
+        // Añadimos al organizador al evento que acaba de crear
         $user = User::find($id_organizador);
         $user->eventos()->attach($evento->id, ['estado' => 1]);
 
-        return response()->json([
+        // Almacenamos los datos
+        $data = [
             'mensaje' => 'El evento ha sido creado correctamente',
             'id_evento' => $evento->id,
             'id_organizador' => $evento->user_id,
@@ -142,7 +149,10 @@ class EventoControllerApi extends Controller
             'longitud' => $evento->longitud,
             'tipo' => $evento->tipo,
             'id_categoria' => $evento->categoria_id
-        ]);
+        ];
+        
+        // Y los devolvemos
+        return response()->json($data);
     }
 
     // Muestra la pantalla detalle de un evento
@@ -254,8 +264,10 @@ class EventoControllerApi extends Controller
         return response()->json($datosEventos);
     }
 
+    // Filtro de eventos
     public function filtrar(Request $request)
     {
+        // Definimos la consulta
         $query = Evento::query();
 
         // Título
@@ -342,6 +354,7 @@ class EventoControllerApi extends Controller
             $datosEventos[] = $results;
         }
 
+        // Lo devolvemos
         if (!empty($datosEventos)) {
             return response()->json($datosEventos);
         } else {
@@ -349,8 +362,10 @@ class EventoControllerApi extends Controller
         }
     }
 
+    // Editar un evento
     public function update(Request $request, $id)
     {
+        // Obtener el evento
         $evento = Evento::findOrFail($id);
 
         // Verificar si el usuario autenticado es el organizador del evento
@@ -360,6 +375,7 @@ class EventoControllerApi extends Controller
             ], 400);
         }
 
+        // Campos que se pueden editar
         $campo = [
             'titulo' => 'string|max:255',
             'fecha_hora_inicio' => 'date',
@@ -417,10 +433,13 @@ class EventoControllerApi extends Controller
         ], 200);
     }
 
+    // Eliminar un evento
     public function destroy($id)
     {
+        // Obtener el evento
         $evento = Evento::findOrFail($id);
 
+        // Comprobar que el usuario es el organizador
         if ($evento->user_id == auth()->id()) {
             Evento::destroy($id);
 
@@ -434,35 +453,37 @@ class EventoControllerApi extends Controller
         }
     }
 
+    // Relación de evento y usuario
     public function userRelationEvent($eventoId)
     {
-       $usuarioId = auth()->user()->id;
+        // Obtener el usuario autenticado
+        $usuarioId = auth()->user()->id;
 
-       // Verifica si el usuario es el organizador del evento
-       $esOrganizador = Evento::where('id', $eventoId)
-           ->where('user_id', $usuarioId)
-           ->exists();
+        // Verifica si el usuario es el organizador del evento
+        $esOrganizador = Evento::where('id', $eventoId)
+            ->where('user_id', $usuarioId)
+            ->exists();
 
-       if ($esOrganizador) {
-           // El usuario es el organizador del evento
-           $estado = 'organizador';
-       } else {
-           // Verifica si el usuario está relacionado con el evento como asistente
-           $relacion = EventoUser::where('evento_id', $eventoId)
-               ->where('user_id', $usuarioId)
-               ->first();
+        if ($esOrganizador) {
+            // El usuario es el organizador del evento
+            $estado = 'organizador';
+        } else {
+            // Verifica si el usuario está relacionado con el evento como asistente
+            $relacion = EventoUser::where('evento_id', $eventoId)
+                ->where('user_id', $usuarioId)
+                ->first();
 
-           if ($relacion) {
-               // El usuario está relacionado con el evento
-               $estado = $relacion->estado;
-           } else {
-               // El usuario no está relacionado con el evento
-               $estado = null;
-           }
-       }
+            if ($relacion) {
+                // El usuario está relacionado con el evento
+                $estado = $relacion->estado;
+            } else {
+                // El usuario no está relacionado con el evento
+                $estado = null;
+            }
+        }
 
-       return response()->json([
-           'relacion' => $estado
-       ]);
+        return response()->json([
+            'relacion' => $estado
+        ]);
     }
 }

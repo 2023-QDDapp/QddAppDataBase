@@ -8,8 +8,6 @@ use App\Http\Controllers\V1\CategoriaControllerApi;
 use App\Http\Controllers\V1\AuthControllerApi;
 use App\Http\Controllers\V1\ResenaControllerApi;
 
-// Notificaciones
-
 // Ruta para el registro y verificación del email
 Route::post('/register', [RegisterApiController::class, 'register']);
 Route::get('/verify-email/{id}/{token}', [RegisterApiController::class, 'verifyEmail'])->name('api.verify.email');
@@ -46,15 +44,15 @@ Route::middleware('auth:api')->group(function () {
     Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']); // Relación del usuario con el evento
     Route::post('/events/{eventoId}/abandonar', [UserControllerApi::class, 'abandonarEvento']); // Salir de un evento
 
+    Route::post('/events/{eventoId}/aceptar/{userId}', [UserControllerApi::class, 'eventoAceptado']); // Aceptar usuario a un evento
+    Route::post('/events/{eventoId}/denegar/{userId}', [UserControllerApi::class, 'eventoCancelado']); // Denegar usuario en un evento
+
     // Categorías
     Route::get('/categorias', [CategoriaControllerApi::class, 'index']); // Muestra todas las categorias
 
     // Reseñas
     Route::post('/resenas/{eventId}', [ResenaControllerApi::class, 'store']); // Crear una reseña
-
-    Route::post('/events/{eventoId}/aceptar/{userId}', [UserControllerApi::class, 'eventoAceptado']); // Aceptar usuario a un evento
-    Route::post('/events/{eventoId}/denegar/{userId}', [UserControllerApi::class, 'eventoCancelado']); // Denegar usuario en un evento
-
+    
     // Cerrar sesión
     Route::post('/logout', [AuthControllerApi::class, 'logout']); // Cerrar sesión
 });
