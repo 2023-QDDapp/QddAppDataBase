@@ -49,7 +49,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="is_verified" class="col-md-4 col-form-label text-md-end">Verifcar email</label>
+                <label for="is_verified" class="col-md-4 col-form-label text-md-end">Verificar email</label>
                 <div class="col-md-6">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="is_verified" name="is_verified" value="1" @if (isset($user) && $user->is_verified) checked @endif>

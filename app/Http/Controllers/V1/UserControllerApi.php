@@ -491,8 +491,32 @@ class UserControllerApi extends Controller
         $user->eventosAsistidos()->detach($evento);
 
         return response()->json([
-            'mensaje' => 'El usuario ha sido aceptado en el evento'
+            'mensaje' => 'El usuario no ha sido aceptado en el evento'
         ], 200);
+    }
+
+    public function abandonarEvento(Request $request, $eventoId)
+    {
+        $user = $request->user();
+        $evento = Evento::find($eventoId);
+
+        if (!$evento) {
+            return response()->json([
+                'mensaje' => 'Evento no encontrado'
+            ], 404);
+        }
+
+        if ($user->eventosAsistidos()->where('evento_id', $eventoId)->exists()) {
+            $user->eventosAsistidos()->detach($eventoId);
+
+            return response()->json([
+                'mensaje' => 'Has abandonado este evento'
+            ], 200);
+        }
+
+        return response()->json([
+            'mensaje' => 'No estás en este evento'
+        ], 400);
     }
 
     public function followUser(Request $request, $userId)

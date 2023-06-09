@@ -43,7 +43,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/events/{id}/edit', [EventoControllerApi::class, 'update']); // Edita un evento
     Route::delete('/events/{id}', [EventoControllerApi::class, 'destroy']); // Elimina un evento
     Route::get('/events/filter', [EventoControllerApi::class, 'filtrar']); // Filtro de búsqueda
-    Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']);//relación del usuario con el evento
+    Route::get('events/{eventoId}/relationUser', [EventoControllerApi::class, 'userRelationEvent']); // Relación del usuario con el evento
+    Route::post('/events/{eventoId}/abandonar', [UserControllerApi::class, 'abandonarEvento']); // Salir de un evento
 
     // Categorías
     Route::get('/categorias', [CategoriaControllerApi::class, 'index']); // Muestra todas las categorias
